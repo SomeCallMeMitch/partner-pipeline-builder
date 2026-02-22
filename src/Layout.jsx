@@ -16,7 +16,20 @@ export default function Layout({ children, currentPageName }) {
     <div style={{ backgroundColor: "#0A0A12", minHeight: "100vh", color: "#F1F5F9" }}>
       <style>{`
         * { box-sizing: border-box; }
-        body { background-color: #0A0A12; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        body { background-color: #0A0A12; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; }
+
+        /* Enforce readable text sizes */
+        .text-xs { font-size: 0.82rem !important; line-height: 1.5 !important; }
+        .text-sm { font-size: 0.95rem !important; }
+        .text-base { font-size: 1.05rem !important; }
+
+        /* Lighten all grey/slate text to be readable */
+        .text-slate-400 { color: #cbd5e1 !important; }
+        .text-slate-500 { color: #b0bec5 !important; }
+        .text-slate-600 { color: #94a3b8 !important; }
+        .text-slate-700 { color: #8898aa !important; }
+        .text-slate-300 { color: #e2e8f0 !important; }
+        placeholder { color: #64748b !important; }
         .gradient-text {
           background: linear-gradient(135deg, #818CF8 0%, #C084FC 50%, #F472B6 100%);
           -webkit-background-clip: text;
