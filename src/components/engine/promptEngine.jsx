@@ -30,7 +30,7 @@ export const LLM_PROFILES = {
     shortLabel: "Sonnet",
     persona: "You are an expert business strategist helping a senior sales professional design a systematic referral partner architecture using the Dream 100 framework.",
     systemNotes: "Claude Sonnet excels at nuanced strategic synthesis, long-context reasoning, and producing executive-grade narrative output. Leverage this for framework design.",
-    formatInstruction: "Structure output as a strategic memo with executive summary, detailed sections, and a clear implementation priority matrix. Use markdown tables where comparative analysis is needed.",
+    formatInstruction: "Structure output with:\n- Executive Summary (max 200 words)\n- Structured tables\n- Bullet frameworks\n- Implementation checklist\nAvoid long narrative paragraphs.",
     strengths: "Strategic synthesis, long-form reasoning, executive narrative, nuanced analysis",
     invocation: "Paste this into Claude.ai (Sonnet model). Claude handles long structured prompts exceptionally well.",
     iterationNote: "Follow up with: 'Synthesize this into a 90-day sequenced action plan with specific milestones for each partner category.'",
@@ -254,6 +254,7 @@ For the top 5 categories identified, map the **influence chain** — who referre
 
 **Geography-Specific Lens:**
 In **${p.geography}**, which of these partner categories have the highest market concentration? Which are undersupplied or where the competition for referral relationships is lowest?
+When suggesting specific companies: Prioritize independent or locally dominant firms in ${p.geography} over national enterprise brands unless strategically justified.
 
 ${llm.formatInstruction}
 
@@ -418,6 +419,7 @@ For each side-stream category:
 - Which categories are oversupplied with professionals competing for relationships?
 - Which categories are underleveraged or relationship-sparse?
 - Locally dominant players who would be high-value anchor partners?
+- When suggesting specific companies: Prioritize independent or locally dominant firms in ${p.geography} over national enterprise brands unless strategically justified.
 
 ${referralVolumeFramework()}
 
@@ -457,7 +459,11 @@ Using the partner map from Phase 2, build the complete Dream 100 Tier Classifica
 4. **Quick-Win Tier 2 Opportunities:**
    5 categories where I could establish relationships quickly (low competition, high receptiveness).
 
-5. **Priority Matrix:**
+5. **Dream 10 Prioritized Shortlist Table:**
+   You must include a Dream 10 prioritized shortlist table with columns:
+   | Partner Category | Tier | Trust Equity (1–5) | Referral Leverage (1–5) | Ease of Access (1–5) | Rationale |
+
+6. **Priority Matrix:**
    Build a 2x2 matrix: Volume Potential (Y) × Access Speed (X). Label each partner category.
 
 ${getModel("Strategic Synthesis").formatInstruction}
