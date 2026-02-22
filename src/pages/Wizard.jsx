@@ -109,25 +109,25 @@ export default function Wizard() {
                   <div
                     className="flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold transition-all"
                     style={{
-                      background: i < currentStep ? "linear-gradient(135deg, #6366F1, #8B5CF6)" : i === currentStep ? "rgba(99,102,241,0.3)" : "rgba(255,255,255,0.05)",
-                      color: i <= currentStep ? "#fff" : "#475569",
-                      border: i === currentStep ? "1px solid rgba(99,102,241,0.5)" : "1px solid transparent",
+                      background: i < currentStep ? "linear-gradient(135deg, #3B82F6, #1D4ED8)" : i === currentStep ? "rgba(59,130,246,0.4)" : "rgba(255,255,255,0.1)",
+                      color: i <= currentStep ? "#fff" : "rgba(255,255,255,0.6)",
+                      border: i === currentStep ? "1px solid rgba(59,130,246,0.6)" : "1px solid transparent",
                     }}
                   >
                     {i < currentStep ? "✓" : i + 1}
                   </div>
                   {i < STEPS.length - 1 && (
-                    <div className="h-px w-4 sm:w-8" style={{ background: i < currentStep ? "rgba(99,102,241,0.4)" : "rgba(255,255,255,0.06)" }} />
+                    <div className="h-px w-4 sm:w-8" style={{ background: i < currentStep ? "rgba(59,130,246,0.6)" : "rgba(255,255,255,0.2)" }} />
                   )}
                 </React.Fragment>
               ))}
             </div>
             <span className="text-xs text-slate-500">{currentStep + 1} of {STEPS.length}</span>
           </div>
-          <div className="h-1 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+          <div className="h-1 rounded-full" style={{ background: "rgba(255,255,255,0.2)" }}>
             <div
               className="h-1 rounded-full transition-all duration-500"
-              style={{ width: `${progress}%`, background: "linear-gradient(90deg, #6366F1, #8B5CF6)" }}
+              style={{ width: `${progress}%`, background: "linear-gradient(90deg, #3B82F6, #1D4ED8)" }}
             />
           </div>
         </div>

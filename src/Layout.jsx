@@ -19,59 +19,59 @@ export default function Layout({ children, currentPageName }) {
         body { background-color: #0A0A12; margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 15px; }
 
         /* Enforce readable text sizes */
-        .text-xs { font-size: 0.82rem !important; line-height: 1.5 !important; }
-        .text-sm { font-size: 0.95rem !important; }
-        .text-base { font-size: 1.05rem !important; }
+        .text-xs { font-size: 0.95rem !important; line-height: 1.5 !important; }
+        .text-sm { font-size: 1.1rem !important; }
+        .text-base { font-size: 1.25rem !important; }
 
         /* Lighten all grey/slate text to be readable */
-        .text-slate-400 { color: #cbd5e1 !important; }
-        .text-slate-500 { color: #b0bec5 !important; }
-        .text-slate-600 { color: #94a3b8 !important; }
-        .text-slate-700 { color: #8898aa !important; }
-        .text-slate-300 { color: #e2e8f0 !important; }
-        placeholder { color: #64748b !important; }
+        .text-slate-400 { color: #ffffff !important; opacity: 0.9; }
+        .text-slate-500 { color: #ffffff !important; opacity: 0.85; }
+        .text-slate-600 { color: #ffffff !important; opacity: 0.8; }
+        .text-slate-700 { color: #ffffff !important; opacity: 0.75; }
+        .text-slate-300 { color: #ffffff !important; }
+        placeholder { color: #ffffff !important; opacity: 0.7; }
         .gradient-text {
-          background: linear-gradient(135deg, #818CF8 0%, #C084FC 50%, #F472B6 100%);
+          background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
         .btn-gradient {
-          background: linear-gradient(135deg, #6366F1, #8B5CF6) !important;
+          background: linear-gradient(135deg, #3B82F6, #1D4ED8) !important;
           transition: all 0.2s !important;
           color: white !important;
           border: none !important;
         }
         .btn-gradient:hover {
-          background: linear-gradient(135deg, #5558E8, #7C3AED) !important;
+          background: linear-gradient(135deg, #2563EB, #1E40AF) !important;
           transform: translateY(-1px);
         }
         .card-surface {
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.2);
           transition: all 0.2s;
         }
         .card-surface:hover {
-          background: rgba(255, 255, 255, 0.05);
-          border-color: rgba(255, 255, 255, 0.14);
+          background: rgba(255, 255, 255, 0.12);
+          border-color: rgba(255, 255, 255, 0.35);
         }
         .card-selected {
-          background: rgba(99, 102, 241, 0.12) !important;
-          border-color: rgba(99, 102, 241, 0.5) !important;
+          background: rgba(59, 130, 246, 0.2) !important;
+          border-color: rgba(59, 130, 246, 0.7) !important;
         }
         .input-dark {
-          background: rgba(255,255,255,0.04) !important;
-          border: 1px solid rgba(255,255,255,0.1) !important;
-          color: #F1F5F9 !important;
+          background: rgba(255,255,255,0.06) !important;
+          border: 1px solid rgba(255,255,255,0.2) !important;
+          color: #ffffff !important;
           border-radius: 8px;
           transition: all 0.2s;
         }
         .input-dark:focus {
-          border-color: rgba(99,102,241,0.6) !important;
+          border-color: rgba(59,130,246,0.8) !important;
           outline: none !important;
-          background: rgba(255,255,255,0.06) !important;
+          background: rgba(255,255,255,0.1) !important;
         }
-        .input-dark::placeholder { color: #475569 !important; }
+        .input-dark::placeholder { color: rgba(255,255,255,0.5) !important; }
         .scrollbar-dark::-webkit-scrollbar { width: 4px; }
         .scrollbar-dark::-webkit-scrollbar-track { background: transparent; }
         .scrollbar-dark::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
