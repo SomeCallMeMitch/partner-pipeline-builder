@@ -14,7 +14,6 @@ import { generatePrompt } from "@/components/engine/promptEngine";
 // SignupInfoDialog no longer needed in Wizard — auth happens on Landing
 
 const STEPS = [
-  { id: "industry", label: "Industry" },
   { id: "niche", label: "Niche" },
   { id: "geography", label: "Geography" },
   { id: "profile", label: "Sales Profile" },
