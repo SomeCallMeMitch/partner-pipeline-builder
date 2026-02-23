@@ -99,7 +99,7 @@ export default function Output() {
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs" style={{ background: "rgba(99,102,241,0.12)", color: "#818cf8" }}>
               {build.mode === "advanced" ? "Advanced" : "Simple"} · {build.model_selection}
             </div>
-            <Button variant="outline" size="sm" onClick={handleCopy} className="gap-1.5 text-xs h-8 border-slate-700 text-slate-300 hover:text-white hover:border-slate-500">
+            <Button variant="outline" size="sm" onClick={handleCopy} className="gap-1.5 text-xs h-8" style={{ borderColor: "rgba(255,255,255,0.25)", color: "#cbd5e1", backgroundColor: "transparent" }}>
               {copied ? <><Check className="w-3.5 h-3.5 text-green-400" /> Copied</> : <><Copy className="w-3.5 h-3.5" /> Copy</>}
             </Button>
             <Button size="sm" className="btn-gradient gap-1.5 text-xs h-8" onClick={handleDownload}>
