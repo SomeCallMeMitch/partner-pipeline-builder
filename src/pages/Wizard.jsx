@@ -83,12 +83,11 @@ export default function Wizard() {
 
   const renderStep = () => {
     switch (currentStep) {
-      case 0: return <StepIndustry value={form.industry} onChange={v => update("industry", v)} />;
-      case 1: return <StepNiche value={form.niche} onChange={v => update("niche", v)} industry={form.industry} />;
-      case 2: return <StepGeography value={form.geography} onChange={v => update("geography", v)} />;
-      case 3: return <StepSalesProfile values={form} onChange={updateProfile} />;
-      case 4: return <StepMode value={form.mode} onChange={v => update("mode", v)} couponCode={form.coupon_code} onCouponChange={v => update("coupon_code", v)} />;
-      case 5: return <StepModel selectedModel={form.model_selection} onModelChange={v => update("model_selection", v)} />;
+      case 0: return <StepNiche value={form.niche} onChange={v => update("niche", v)} industry={form.industry} />;
+      case 1: return <StepGeography value={form.geography} onChange={v => update("geography", v)} />;
+      case 2: return <StepSalesProfile values={form} onChange={updateProfile} />;
+      case 3: return <StepMode value={form.mode} onChange={v => update("mode", v)} couponCode={form.coupon_code} onCouponChange={v => update("coupon_code", v)} />;
+      case 4: return <StepModel selectedModel={form.model_selection} onModelChange={v => update("model_selection", v)} />;
       default: return null;
     }
   };
