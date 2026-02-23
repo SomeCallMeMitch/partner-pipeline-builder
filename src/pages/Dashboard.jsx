@@ -195,7 +195,8 @@ export default function Dashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex-1 text-xs h-7 border-slate-800 text-slate-400 hover:text-white"
+                  className="flex-1 text-xs h-7 border-slate-600 hover:text-white"
+                  style={{ color: "#94a3b8", backgroundColor: "transparent", borderColor: "rgba(255,255,255,0.2)" }}
                   onClick={() => navigate(createPageUrl(`Output?id=${build.id}`))}
                 >
                   View
