@@ -25,12 +25,13 @@ export default function Dashboard() {
       loadBuilds();
     }, []);
 
-  const loadBuilds = () => {
-    base44.entities.Build.list("-created_date", 50).then(b => {
-      setBuilds(b);
-      setLoading(false);
-    });
-  };
+  const loadBuilds = async () => {
+      const user = await base44.auth.me();
+      base44.entities.Build.filter({ created_by: user.email }, "-created_date", 50).then(b => {
+        setBuilds(b);
+        setLoading(false);
+      });
+    };
 
   const handleDelete = async (id) => {
     await base44.entities.Build.delete(id);
