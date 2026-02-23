@@ -18,6 +18,7 @@ export default function StepNiche({ value, onChange, industry }) {
       <div>
         <h2 className="text-2xl font-bold text-white mb-1">Define Your Niche</h2>
         <p className="text-slate-400 text-sm">Your niche determines which partner types, triggers, and scripts are generated. Be specific — the more precise, the better the output.</p>
+        <p className="text-slate-400 text-sm mt-2">You can build as many of these as you'd like — create one for first-time buyers today, then come back and build another for commercial sales later.</p>
       </div>
 
       <div>
