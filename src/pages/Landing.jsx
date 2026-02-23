@@ -27,7 +27,8 @@ export default function Landing() {
       <SignupInfoDialog
         open={showSignupDialog}
         onClose={() => setShowSignupDialog(false)}
-        onContinue={() => { setShowSignupDialog(false); base44.auth.redirectToLogin(createPageUrl("Wizard")); }}
+        onSignup={() => { setShowSignupDialog(false); base44.auth.redirectToLogin(createPageUrl("Landing")); }}
+        onLogin={() => { setShowSignupDialog(false); base44.auth.redirectToLogin(createPageUrl("Landing")); }}
       />
 
       {/* Nav */}
