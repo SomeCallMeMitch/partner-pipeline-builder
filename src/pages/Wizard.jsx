@@ -26,8 +26,6 @@ export default function Wizard() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [saving, setSaving] = useState(false);
-  const [showSignupDialog, setShowSignupDialog] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null); // "login" | "signup"
 
   const [form, setForm] = useState({
     industry: "",
