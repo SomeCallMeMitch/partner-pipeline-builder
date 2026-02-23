@@ -103,11 +103,12 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
                 <Button
                   variant="ghost"
-                  size="icon"
-                  className="text-slate-600 hover:text-red-400 h-8 w-8"
+                  size="sm"
+                  className="text-slate-400 hover:text-red-400 gap-1.5 h-8 px-3"
                   onClick={() => base44.auth.logout(createPageUrl("Landing"))}
                 >
                   <LogOut className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline text-xs">Log Out</span>
                 </Button>
               </div>
             )}
