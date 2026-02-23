@@ -102,7 +102,7 @@ export default function Wizard() {
       case 2: return <StepGeography value={form.geography} onChange={v => update("geography", v)} />;
       case 3: return <StepSalesProfile values={form} onChange={updateProfile} />;
       case 4: return <StepMode value={form.mode} onChange={v => update("mode", v)} couponCode={form.coupon_code} onCouponChange={v => update("coupon_code", v)} />;
-      case 5: return <StepModel mode={form.mode} selectedModel={form.model_selection} optimizePerPhase={form.optimize_per_phase} onModelChange={v => update("model_selection", v)} onOptimizeChange={v => update("optimize_per_phase", v)} />;
+      case 5: return <StepModel selectedModel={form.model_selection} onModelChange={v => update("model_selection", v)} />;
       default: return null;
     }
   };
