@@ -61,19 +61,7 @@ export default function StepMode({ value, onChange, couponCode, onCouponChange }
         ))}
       </div>
 
-      {value === "advanced" && (
-        <div className="pt-1">
-          <label className="text-xs text-slate-400 block mb-2">Coupon Code <span className="text-slate-600">(optional)</span></label>
-          <input
-            type="text"
-            value={couponCode}
-            onChange={e => onCouponChange(e.target.value)}
-            placeholder="Enter code if you have one"
-            className="input-dark w-full px-4 py-2.5 text-sm"
-            style={{ borderRadius: 8, maxWidth: 280 }}
-          />
-        </div>
-      )}
+
     </div>
   );
 }
