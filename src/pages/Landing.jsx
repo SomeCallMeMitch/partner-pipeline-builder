@@ -26,13 +26,9 @@ export default function Landing() {
           <span className="font-semibold text-white text-lg">Partner Pipeline Builder</span>
         </div>
         <div className="flex items-center gap-3">
-          <Link to={createPageUrl("Dashboard")}>
-            <Button variant="ghost" size="sm" className="text-white hover:text-white text-base">Sign In</Button>
-          </Link>
-          <Link to={createPageUrl("Wizard")}>
-            <Button size="sm" className="btn-gradient text-base px-5">Get Started</Button>
-          </Link>
-        </div>
+            <Button variant="ghost" size="sm" className="text-white hover:text-white text-base" onClick={() => base44.auth.redirectToLogin()}>Sign In</Button>
+            <Button size="sm" className="btn-gradient text-base px-5" onClick={() => base44.auth.redirectToLogin(window.location.href + '?signup=true')}>Create an Account</Button>
+          </div>
       </nav>
 
       {/* Hero */}
