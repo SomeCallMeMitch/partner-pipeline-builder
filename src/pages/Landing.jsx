@@ -162,7 +162,7 @@ export default function Landing() {
       </section>
 
       <footer className="border-t py-8 text-center" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-        <p className="text-white text-base" style={{ opacity: 0.5 }}>© 2026 Partner Pipeline Builder · Dream 100 Methodology</p>
+        <p className="text-white text-base" style={{ opacity: 0.5 }}>© 2026 Partner Pipeline Builder</p>
       </footer>
     </div>
   );
