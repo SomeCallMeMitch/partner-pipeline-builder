@@ -27,7 +27,7 @@ export default function Wizard() {
   const [saving, setSaving] = useState(false);
 
   const [form, setForm] = useState({
-    industry: "",
+    industry: "Real Estate",
     niche: "",
     geography: "",
     avg_deal_size: "",
