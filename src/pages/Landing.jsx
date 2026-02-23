@@ -30,7 +30,7 @@ export default function Landing() {
       <section className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}>
           <Zap className="w-4 h-4 text-indigo-300" />
-          <span className="text-base text-white font-medium">Dream 100 Methodology · AI-Optimized Prompts</span>
+          <span className="text-base text-white font-medium">AI-Optimized · Built for Real Estate & Insurance Pros</span>
         </div>
 
         <h1 className="text-5xl sm:text-6xl font-bold text-white leading-tight mb-6">
