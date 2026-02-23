@@ -11,8 +11,14 @@ export default function Landing() {
   const [showSignupDialog, setShowSignupDialog] = useState(false);
 
   useEffect(() => {
-    base44.auth.isAuthenticated().then(authed => {
-      if (authed) navigate(createPageUrl("Dashboard"));
+    base44.auth.isAuthenticated().then(async authed => {
+      if (!authed) return;
+      const builds = await base44.entities.Build.list();
+      if (builds.length === 0) {
+        navigate(createPageUrl("Wizard"));
+      } else {
+        navigate(createPageUrl("Dashboard"));
+      }
     });
   }, []);
 
