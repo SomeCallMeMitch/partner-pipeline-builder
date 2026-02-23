@@ -180,7 +180,8 @@ export default function Wizard() {
                 onClick={handleLogin}
                 disabled={!canAdvance() || saving}
                 variant="outline"
-                className="gap-2 border-slate-700 text-white hover:text-white hover:bg-slate-800"
+                style={{ borderColor: "rgba(255,255,255,0.3)", color: "#ffffff", backgroundColor: "transparent" }}
+                className="gap-2 hover:bg-slate-800"
               >
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                 Login &amp; Generate Blueprint
