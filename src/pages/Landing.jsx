@@ -8,6 +8,7 @@ import SignupInfoDialog from "@/components/SignupInfoDialog";
 
 export default function Landing() {
   const navigate = useNavigate();
+  const [showSignupDialog, setShowSignupDialog] = useState(false);
 
   useEffect(() => {
     base44.auth.isAuthenticated().then(authed => {
