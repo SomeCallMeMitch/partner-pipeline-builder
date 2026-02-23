@@ -111,6 +111,11 @@ export default function Wizard() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0A0A12" }}>
+      <SignupInfoDialog
+        open={showSignupDialog}
+        onClose={() => setShowSignupDialog(false)}
+        onContinue={() => { setShowSignupDialog(false); base44.auth.redirectToLogin(window.location.href); }}
+      />
       <div className="max-w-2xl mx-auto px-6 py-10">
 
         {/* Progress */}
