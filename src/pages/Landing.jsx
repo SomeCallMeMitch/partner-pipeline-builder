@@ -65,32 +65,32 @@ export default function Landing() {
       </section>
 
       {/* Problem / Contrast Section */}
-      <section className="max-w-4xl mx-auto px-6 py-12">
-        <div className="rounded-2xl p-10 sm:p-14" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <p className="text-base font-semibold uppercase tracking-widest text-indigo-300 mb-6 text-center">You're Already Using These</p>
+      <section className="max-w-4xl mx-auto px-6 py-16">
+        <div className="rounded-2xl p-10 sm:p-14" style={{ background: "#0F1B2E", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 10px 30px rgba(0,0,0,0.35)" }}>
+          <p className="text-base font-bold uppercase tracking-widest text-indigo-300 mb-8 text-center" style={{ letterSpacing: "0.12em" }}>You're Already Using These</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             {[
               { icon: TrendingUp, label: "Advertising", desc: "A proven way to generate awareness and inbound interest at scale." },
               { icon: Users, label: "Networking", desc: "Relationship-driven and effective for building visibility in your market." },
               { icon: RefreshCw, label: "Purchased Leads", desc: "A consistent source of volume to keep your pipeline moving." },
             ].map(({ icon: Icon, label, desc }) => (
-              <div key={label} className="text-center p-6 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(255,255,255,0.07)" }}>
+              <div key={label} className="text-center p-6 rounded-xl" style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 10px 30px rgba(0,0,0,0.35)" }}>
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(99,102,241,0.15)" }}>
                   <Icon className="w-5 h-5 text-indigo-300" />
                 </div>
-                <p className="font-semibold text-white mb-2">{label}</p>
-                <p className="text-sm text-white leading-relaxed" style={{ opacity: 0.6 }}>{desc}</p>
+                <p className="font-bold text-white mb-2 text-lg">{label}</p>
+                <p className="text-white leading-relaxed" style={{ opacity: 0.85, fontSize: "1rem", lineHeight: "1.7" }}>{desc}</p>
               </div>
             ))}
           </div>
 
           <div className="text-center" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "2.5rem" }}>
-            <p className="text-sm font-semibold uppercase tracking-widest text-blue-400 mb-4">But there's one channel most reps never systematize</p>
-            <p className="text-xl sm:text-2xl text-white font-medium leading-relaxed max-w-2xl mx-auto" style={{ opacity: 0.9 }}>
+            <p className="font-bold uppercase tracking-widest text-blue-400 mb-5" style={{ fontSize: "0.9rem", letterSpacing: "0.1em" }}>But there's one channel most reps never systematize</p>
+            <p className="text-white font-medium leading-relaxed max-w-2xl mx-auto" style={{ fontSize: "1.25rem", lineHeight: "1.75", opacity: 1 }}>
               Referral partnerships with trusted professionals who{" "}
               <span className="text-blue-400 font-semibold">already see your ideal clients — before you do.</span>
             </p>
-            <p className="mt-5 text-lg text-white" style={{ opacity: 0.65 }}>
+            <p className="mt-6 text-white max-w-2xl mx-auto" style={{ opacity: 0.9, fontSize: "1.05rem", lineHeight: "1.7" }}>
               It's additive to everything you're already doing — and it's the most stable, compounding growth channel available to you. Partner Pipeline Builder helps you build it intentionally.
             </p>
           </div>
@@ -98,47 +98,49 @@ export default function Landing() {
       </section>
 
       {/* How It Works */}
-      <section className="max-w-5xl mx-auto px-6 py-16">
-        <p className="text-center text-lg font-semibold uppercase tracking-widest text-indigo-300 mb-12">How It Works</p>
+      <section className="max-w-5xl mx-auto px-6 py-20">
+        <p className="text-center font-bold uppercase tracking-widest text-indigo-300 mb-14" style={{ fontSize: "0.9rem", letterSpacing: "0.12em" }}>How It Works</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { icon: FileText, step: "01", title: "Answer 6 Questions", desc: "Tell us your industry, niche, geography, and sales profile. Takes under 3 minutes." },
             { icon: Target, step: "02", title: "Select Your AI Model", desc: "Choose from ChatGPT, Claude, Perplexity, or Manus. Prompts are optimized per LLM's strengths." },
             { icon: Shield, step: "03", title: "Get Your Prompt Blueprint", desc: "Receive a copy-paste ready markdown file with structured Dream 100 prompts, ready to run." },
           ].map((item, i) => (
-            <div key={i} className="card-surface rounded-2xl p-8 relative">
-              <span className="absolute top-6 right-6 text-3xl font-bold" style={{ color: "rgba(99,102,241,0.12)" }}>{item.step}</span>
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: "rgba(99,102,241,0.15)" }}>
+            <div key={i} className="rounded-2xl p-8 relative" style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 10px 30px rgba(0,0,0,0.35)" }}>
+              <span className="absolute top-6 right-6 text-3xl font-bold" style={{ color: "rgba(99,102,241,0.15)" }}>{item.step}</span>
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mb-5" style={{ background: "rgba(99,102,241,0.15)" }}>
                 <item.icon className="w-6 h-6 text-indigo-300" />
               </div>
-              <h3 className="font-semibold text-white mb-3 text-xl">{item.title}</h3>
-              <p className="text-white text-lg leading-relaxed" style={{ opacity: 0.75 }}>{item.desc}</p>
+              <h3 className="font-bold text-white mb-3" style={{ fontSize: "1.2rem" }}>{item.title}</h3>
+              <p className="text-white leading-relaxed" style={{ opacity: 0.9, fontSize: "1rem", lineHeight: "1.7" }}>{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* What's Inside */}
-      <section className="max-w-5xl mx-auto px-6 py-8 pb-16">
-        <p className="text-center text-lg font-semibold uppercase tracking-widest text-indigo-300 mb-12">What You Get</p>
-        <div className="card-surface rounded-2xl p-10 sm:p-14">
+      <section className="max-w-5xl mx-auto px-6 pb-20">
+        <p className="text-center font-bold uppercase tracking-widest text-indigo-300 mb-14" style={{ fontSize: "0.9rem", letterSpacing: "0.12em" }}>What You Get</p>
+        <div className="rounded-2xl p-10 sm:p-14" style={{ background: "#0F1B2E", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 10px 30px rgba(0,0,0,0.35)" }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
-              <p className="text-base font-semibold uppercase tracking-widest text-indigo-300 mb-4">Simple Mode</p>
-              <h3 className="text-2xl font-bold text-white mb-5">Your 3-Phase Prompt Blueprint</h3>
+              <p className="font-bold uppercase tracking-widest text-indigo-300 mb-4" style={{ fontSize: "0.85rem", letterSpacing: "0.1em" }}>Simple Mode</p>
+              <h3 className="font-bold text-white mb-6" style={{ fontSize: "1.4rem" }}>Your 3-Phase Prompt Blueprint</h3>
               <ul className="space-y-4">
                 {["Strategic Mapping Prompt", "Partner Identification Prompt", "Outreach Script Prompt"].map(f => (
                   <li key={f} className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-indigo-400 flex-shrink-0" />
-                    <span className="text-white text-lg">{f}</span>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(99,102,241,0.2)" }}>
+                      <CheckCircle className="w-4 h-4 text-indigo-400" />
+                    </div>
+                    <span className="text-white" style={{ fontSize: "1.05rem" }}>{f}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <p className="text-base font-semibold uppercase tracking-widest text-purple-300 mb-4">Advanced Mode · Beta</p>
-              <h3 className="text-2xl font-bold text-white mb-5">Full 7-Phase Multi-Model System</h3>
+              <p className="font-bold uppercase tracking-widest text-purple-300 mb-4" style={{ fontSize: "0.85rem", letterSpacing: "0.1em" }}>Advanced Mode · Beta</p>
+              <h3 className="font-bold text-white mb-6" style={{ fontSize: "1.4rem" }}>Full 7-Phase Multi-Model System</h3>
               <ul className="space-y-4">
                 {[
                   "Lifecycle Trigger Mapping",
@@ -150,8 +152,10 @@ export default function Landing() {
                   "Quarterly Reinforcement System",
                 ].map(f => (
                   <li key={f} className="flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 text-purple-400 flex-shrink-0" />
-                    <span className="text-white text-lg">{f}</span>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "rgba(139,92,246,0.2)" }}>
+                      <CheckCircle className="w-4 h-4 text-purple-400" />
+                    </div>
+                    <span className="text-white" style={{ fontSize: "1.05rem" }}>{f}</span>
                   </li>
                 ))}
               </ul>
@@ -161,20 +165,21 @@ export default function Landing() {
       </section>
 
       {/* CTA */}
-      <section className="max-w-3xl mx-auto px-6 pb-24 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-5 leading-tight">
+      <section className="max-w-3xl mx-auto px-6 pb-28 text-center">
+        <h2 className="font-bold text-white mb-5 leading-tight" style={{ fontSize: "clamp(1.8rem, 4vw, 2.6rem)" }}>
           Ready to build the growth channel<br className="hidden sm:block" /> that compounds over time?
         </h2>
-        <p className="text-white text-xl mb-10" style={{ opacity: 0.8 }}>Create your first Partner Blueprint in under 10 minutes.</p>
-        <Link to={createPageUrl("Wizard")}>
-          <Button className="btn-gradient gap-2 h-14 px-12 text-lg font-semibold">
+        <p className="text-white mb-12" style={{ opacity: 0.9, fontSize: "1.15rem", lineHeight: "1.7" }}>Create your first Partner Blueprint in under 10 minutes.</p>
+        <div style={{ position: "relative", display: "inline-block" }}>
+          <div style={{ position: "absolute", inset: "-4px", borderRadius: "14px", background: "linear-gradient(135deg, #3B82F6, #1D4ED8)", filter: "blur(16px)", opacity: 0.5, zIndex: 0 }} />
+          <Button className="btn-gradient gap-2 h-14 px-12 text-lg font-semibold" style={{ position: "relative", zIndex: 1 }} onClick={() => base44.auth.redirectToLogin(createPageUrl("Wizard"))}>
             Start Building <ArrowRight className="w-5 h-5" />
           </Button>
-        </Link>
+        </div>
       </section>
 
-      <footer className="border-t py-8 text-center" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-        <p className="text-white text-base" style={{ opacity: 0.5 }}>© 2026 Partner Pipeline Builder</p>
+      <footer className="border-t py-10 text-center" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        <p className="text-white" style={{ opacity: 0.6, fontSize: "1rem" }}>© 2026 Partner Pipeline Builder</p>
       </footer>
     </div>
   );
