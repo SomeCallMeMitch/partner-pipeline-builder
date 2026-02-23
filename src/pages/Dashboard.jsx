@@ -20,8 +20,8 @@ export default function Dashboard() {
 
   useEffect(() => {
       base44.auth.isAuthenticated().then(authed => {
-        if (!authed) base44.auth.redirectToLogin(window.location.href);
-      });
+                    if (!authed) base44.auth.redirectToLogin(createPageUrl("Landing"));
+                  });
       loadBuilds();
     }, []);
 
