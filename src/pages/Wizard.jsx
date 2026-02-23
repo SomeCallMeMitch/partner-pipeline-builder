@@ -60,14 +60,9 @@ export default function Wizard() {
     return true;
   };
 
-  const handleFinish = async () => {
-      const isAuthed = await base44.auth.isAuthenticated();
-      if (!isAuthed) {
-        base44.auth.redirectToLogin(window.location.href);
-        return;
-      }
-      setSaving(true);
-      const output = generatePrompt(form);
+  const doSave = async () => {
+    setSaving(true);
+    const output = generatePrompt(form);
     const buildName = `${form.industry} · ${form.niche} · ${new Date().toLocaleDateString()}`;
     const saved = await base44.entities.Build.create({
       name: buildName,
@@ -86,6 +81,18 @@ export default function Wizard() {
       status: "complete",
     });
     navigate(createPageUrl(`Output?id=${saved.id}`));
+  };
+
+  const handleLogin = async () => {
+    const isAuthed = await base44.auth.isAuthenticated();
+    if (isAuthed) { doSave(); return; }
+    base44.auth.redirectToLogin(window.location.href);
+  };
+
+  const handleSignup = async () => {
+    const isAuthed = await base44.auth.isAuthenticated();
+    if (isAuthed) { doSave(); return; }
+    setShowSignupDialog(true);
   };
 
   const renderStep = () => {
