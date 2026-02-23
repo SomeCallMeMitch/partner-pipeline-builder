@@ -11,7 +11,7 @@ import StepSalesProfile from "@/components/wizard/StepSalesProfile";
 import StepMode from "@/components/wizard/StepMode";
 import StepModel from "@/components/wizard/StepModel";
 import { generatePrompt } from "@/components/engine/promptEngine";
-import SignupInfoDialog from "@/components/SignupInfoDialog";
+// SignupInfoDialog no longer needed in Wizard — auth happens on Landing
 
 const STEPS = [
   { id: "industry", label: "Industry" },
