@@ -56,7 +56,7 @@ export default function Wizard() {
     if (currentStep === 2) return !!form.geography.trim();
     if (currentStep === 3) return true; // profile optional
     if (currentStep === 4) return !!form.mode;
-    if (currentStep === 5) return form.optimize_per_phase || !!form.model_selection;
+    if (currentStep === 5) return !!form.model_selection;
     return true;
   };
 
