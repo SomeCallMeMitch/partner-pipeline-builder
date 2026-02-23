@@ -18,6 +18,11 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0B1220", color: "#FFFFFF", lineHeight: "1.7" }}>
+      <SignupInfoDialog
+        open={showSignupDialog}
+        onClose={() => setShowSignupDialog(false)}
+        onContinue={() => { setShowSignupDialog(false); base44.auth.redirectToLogin(createPageUrl("Wizard")); }}
+      />
 
       {/* Nav */}
       <nav className="flex items-center justify-between max-w-6xl mx-auto px-6 py-5">
