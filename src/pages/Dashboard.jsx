@@ -19,9 +19,11 @@ export default function Dashboard() {
   const [renameVal, setRenameVal] = useState("");
 
   useEffect(() => {
-    base44.auth.me().catch(() => base44.auth.redirectToLogin(window.location.href));
-    loadBuilds();
-  }, []);
+      base44.auth.isAuthenticated().then(authed => {
+        if (!authed) base44.auth.redirectToLogin(window.location.href);
+      });
+      loadBuilds();
+    }, []);
 
   const loadBuilds = () => {
     base44.entities.Build.list("-created_date", 50).then(b => {
