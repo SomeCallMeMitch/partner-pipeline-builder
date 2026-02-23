@@ -146,7 +146,7 @@ export default function Landing() {
               </ul>
             </div>
             <div>
-              <p className="font-bold uppercase tracking-widest text-purple-300 mb-4" style={{ fontSize: "0.85rem", letterSpacing: "0.1em" }}>Advanced Mode · Beta</p>
+              <p className="font-bold uppercase tracking-widest text-purple-300 mb-4" style={{ fontSize: "0.85rem", letterSpacing: "0.1em" }}>Advanced Mode</p>
               <h3 className="font-bold text-white mb-6" style={{ fontSize: "1.4rem" }}>Full 7-Phase Multi-Model System</h3>
               <ul className="space-y-4">
                 {[
