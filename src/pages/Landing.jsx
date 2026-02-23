@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Layers, Zap, Target, Users, FileText, CheckCircle, TrendingUp, Shield, RefreshCw } from "lucide-react";
+import SignupInfoDialog from "@/components/SignupInfoDialog";
 
 export default function Landing() {
   const navigate = useNavigate();
