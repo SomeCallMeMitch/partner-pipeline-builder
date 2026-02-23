@@ -55,16 +55,16 @@ export default function Landing() {
       {/* Problem / Contrast Section */}
       <section className="max-w-4xl mx-auto px-6 py-12">
         <div className="rounded-2xl p-10 sm:p-14" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <p className="text-base font-semibold uppercase tracking-widest text-indigo-300 mb-6 text-center">Sound Familiar?</p>
+          <p className="text-base font-semibold uppercase tracking-widest text-indigo-300 mb-6 text-center">You're Already Using These</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             {[
-              { icon: TrendingUp, label: "Advertising", desc: "Expensive to sustain, unpredictable returns, and increasingly competitive." },
-              { icon: Users, label: "Networking", desc: "Time-intensive with no guarantee the right relationships convert to business." },
-              { icon: RefreshCw, label: "Purchased Leads", desc: "High volume, low trust — and you're always starting from zero." },
+              { icon: TrendingUp, label: "Advertising", desc: "A proven way to generate awareness and inbound interest at scale." },
+              { icon: Users, label: "Networking", desc: "Relationship-driven and effective for building visibility in your market." },
+              { icon: RefreshCw, label: "Purchased Leads", desc: "A consistent source of volume to keep your pipeline moving." },
             ].map(({ icon: Icon, label, desc }) => (
               <div key={label} className="text-center p-6 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(255,255,255,0.07)" }}>
-                  <Icon className="w-5 h-5 text-slate-400" />
+                  <Icon className="w-5 h-5 text-indigo-300" />
                 </div>
                 <p className="font-semibold text-white mb-2">{label}</p>
                 <p className="text-sm text-white leading-relaxed" style={{ opacity: 0.6 }}>{desc}</p>
@@ -73,12 +73,13 @@ export default function Landing() {
           </div>
 
           <div className="text-center" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "2.5rem" }}>
+            <p className="text-sm font-semibold uppercase tracking-widest text-blue-400 mb-4">But there's one channel most reps never systematize</p>
             <p className="text-xl sm:text-2xl text-white font-medium leading-relaxed max-w-2xl mx-auto" style={{ opacity: 0.9 }}>
-              You likely have a current book of business and multiple lead sources. But the most stable and scalable growth channel is{" "}
-              <span className="text-blue-400 font-semibold">referral partnerships with trusted professionals who see your clients before you do.</span>
+              Referral partnerships with trusted professionals who{" "}
+              <span className="text-blue-400 font-semibold">already see your ideal clients — before you do.</span>
             </p>
             <p className="mt-5 text-lg text-white" style={{ opacity: 0.65 }}>
-              Partner Pipeline Builder helps you design that system intentionally.
+              It's additive to everything you're already doing — and it's the most stable, compounding growth channel available to you. Partner Pipeline Builder helps you build it intentionally.
             </p>
           </div>
         </div>
