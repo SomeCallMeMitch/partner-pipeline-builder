@@ -179,7 +179,7 @@ export default function Landing() {
         <p className="text-white mb-12" style={{ opacity: 0.9, fontSize: "1.15rem", lineHeight: "1.7" }}>Create your first Partner Blueprint in under 10 minutes.</p>
         <div style={{ position: "relative", display: "inline-block" }}>
           <div style={{ position: "absolute", inset: "-4px", borderRadius: "14px", background: "linear-gradient(135deg, #3B82F6, #1D4ED8)", filter: "blur(16px)", opacity: 0.5, zIndex: 0 }} />
-          <Button className="btn-gradient gap-2 h-14 px-12 text-lg font-semibold" style={{ position: "relative", zIndex: 1 }} onClick={() => setShowSignupDialog(true)}>
+          <Button className="btn-gradient gap-2 h-14 px-12 text-lg font-semibold" style={{ position: "relative", zIndex: 1 }} onClick={() => navigate(createPageUrl("Wizard"))}>
             Start Building <ArrowRight className="w-5 h-5" />
           </Button>
         </div>
