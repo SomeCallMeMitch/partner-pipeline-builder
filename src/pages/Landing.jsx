@@ -29,7 +29,7 @@ export default function Landing() {
         </div>
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" className="text-white hover:text-white text-base" onClick={() => base44.auth.redirectToLogin()}>Sign In</Button>
-          <Button size="sm" className="btn-gradient text-base px-5" onClick={() => base44.auth.redirectToLogin(createPageUrl("Wizard"))}>Create an Account</Button>
+          <Button size="sm" className="btn-gradient text-base px-5" onClick={() => setShowSignupDialog(true)}>Create an Account</Button>
         </div>
       </nav>
 
