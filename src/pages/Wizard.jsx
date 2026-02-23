@@ -50,12 +50,11 @@ export default function Wizard() {
   const updateProfile = (key, val) => setForm(f => ({ ...f, [key]: val }));
 
   const canAdvance = () => {
-    if (currentStep === 0) return !!form.industry;
-    if (currentStep === 1) return !!form.niche.trim();
-    if (currentStep === 2) return !!form.geography.trim();
-    if (currentStep === 3) return true; // profile optional
-    if (currentStep === 4) return !!form.mode;
-    if (currentStep === 5) return !!form.model_selection;
+    if (currentStep === 0) return !!form.niche.trim();
+    if (currentStep === 1) return !!form.geography.trim();
+    if (currentStep === 2) return true; // profile optional
+    if (currentStep === 3) return !!form.mode;
+    if (currentStep === 4) return !!form.model_selection;
     return true;
   };
 
