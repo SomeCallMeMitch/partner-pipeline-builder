@@ -8,6 +8,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Layers, Zap, Target, Users, FileText, CheckCircle, TrendingUp, Shield, RefreshCw } from "lucide-react";
 
 export default function Landing() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(authed => {
+      if (authed) navigate(createPageUrl("Dashboard"));
+    });
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#0A0A12" }}>
 
