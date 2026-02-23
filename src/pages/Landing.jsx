@@ -63,11 +63,11 @@ export default function Landing() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <div style={{ position: "relative" }}>
             <div style={{ position: "absolute", inset: "-4px", borderRadius: "14px", background: "linear-gradient(135deg, #3B82F6, #1D4ED8)", filter: "blur(16px)", opacity: 0.5, zIndex: 0 }} />
-            <Button className="btn-gradient gap-2 h-14 px-10 text-lg font-semibold" style={{ position: "relative", zIndex: 1 }} onClick={() => setShowSignupDialog(true)}>
-              Build My Partner System <ArrowRight className="w-5 h-5" />
-            </Button>
-          </div>
-          <p className="text-base text-white" style={{ opacity: 0.7 }}>Free to start · No credit card required</p>
+            <Button className="btn-gradient gap-2 h-14 px-10 text-lg font-semibold" style={{ position: "relative", zIndex: 1 }} onClick={() => navigate(createPageUrl("Wizard"))}>
+                  Build My Partner System <ArrowRight className="w-5 h-5" />
+                </Button>
+              </div>
+              <p className="text-base text-white" style={{ opacity: 0.7 }}>Completely free · No credit card needed</p>
         </div>
       </section>
 
