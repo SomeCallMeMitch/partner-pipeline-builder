@@ -42,7 +42,9 @@ export default function Wizard() {
   });
 
   useEffect(() => {
-    // no forced login on load — redirect only when saving
+    base44.auth.isAuthenticated().then(authed => {
+      if (!authed) base44.auth.redirectToLogin(createPageUrl("Landing"));
+    });
   }, []);
 
   const update = (key, val) => setForm(f => ({ ...f, [key]: val }));
