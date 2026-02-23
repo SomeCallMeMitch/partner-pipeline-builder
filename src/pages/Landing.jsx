@@ -15,7 +15,7 @@ export default function Landing() {
   }, []);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#0A0A12" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#0B1220", color: "#FFFFFF", lineHeight: "1.7" }}>
 
       {/* Nav */}
       <nav className="flex items-center justify-between max-w-6xl mx-auto px-6 py-5">
@@ -26,34 +26,41 @@ export default function Landing() {
           <span className="font-semibold text-white text-lg">Partner Pipeline Builder</span>
         </div>
         <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" className="text-white hover:text-white text-base" onClick={() => base44.auth.redirectToLogin()}>Sign In</Button>
-            <Button size="sm" className="btn-gradient text-base px-5" onClick={() => base44.auth.redirectToLogin(createPageUrl("Wizard"))}>Create an Account</Button>
-          </div>
+          <Button variant="ghost" size="sm" className="text-white hover:text-white text-base" onClick={() => base44.auth.redirectToLogin()}>Sign In</Button>
+          <Button size="sm" className="btn-gradient text-base px-5" onClick={() => base44.auth.redirectToLogin(createPageUrl("Wizard"))}>Create an Account</Button>
+        </div>
       </nav>
 
       {/* Hero */}
-      <section className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.25)" }}>
+      <section className="max-w-4xl mx-auto px-6 pt-28 pb-24 text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8" style={{ background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.3)" }}>
           <Zap className="w-4 h-4 text-indigo-300" />
-          <span className="text-base text-white font-medium">AI-Optimized · Built for Real Estate & Insurance Pros</span>
+          <span className="text-base text-white font-semibold">AI-Optimized · Built for Real Estate & Insurance Pros</span>
         </div>
 
-        <h1 className="text-5xl sm:text-6xl font-bold text-white leading-tight mb-6">
+        <h1 className="font-bold text-white leading-tight mb-4" style={{ fontSize: "clamp(2.6rem, 6vw, 4rem)" }}>
           The Most Stable Growth Channel<br />
-          <span className="gradient-text">You Haven't Systematized Yet</span>
+          <span style={{ background: "linear-gradient(90deg, #3B82F6, #60A5FA)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            You Haven't Systematized Yet
+          </span>
         </h1>
 
-        <p className="text-xl text-white max-w-2xl mx-auto mb-10 leading-relaxed" style={{ opacity: 0.85 }}>
+        <p className="text-lg text-white font-medium mb-3" style={{ opacity: 0.75, letterSpacing: "0.01em" }}>
+          Referral partnerships compound. Most reps never systematize them.
+        </p>
+
+        <p className="text-xl text-white max-w-2xl mx-auto mb-12 leading-relaxed" style={{ opacity: 0.9, lineHeight: "1.75" }}>
           Partner Pipeline Builder helps you design an intentional referral partner system — using AI — built on the Dream 100 methodology.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link to={createPageUrl("Wizard")}>
-            <Button className="btn-gradient gap-2 h-14 px-10 text-lg font-semibold">
+          <div style={{ position: "relative" }}>
+            <div style={{ position: "absolute", inset: "-4px", borderRadius: "14px", background: "linear-gradient(135deg, #3B82F6, #1D4ED8)", filter: "blur(16px)", opacity: 0.5, zIndex: 0 }} />
+            <Button className="btn-gradient gap-2 h-14 px-10 text-lg font-semibold" style={{ position: "relative", zIndex: 1 }} onClick={() => base44.auth.redirectToLogin(createPageUrl("Wizard"))}>
               Build My Partner System <ArrowRight className="w-5 h-5" />
             </Button>
-          </Link>
-          <p className="text-lg text-white" style={{ opacity: 0.7 }}>Free to start · No credit card required</p>
+          </div>
+          <p className="text-base text-white" style={{ opacity: 0.7 }}>Free to start · No credit card required</p>
         </div>
       </section>
 
