@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Layers, Zap, Target, Users, FileText, CheckCircle } from "lucide-react";
+import { ArrowRight, Layers, Zap, Target, Users, FileText, CheckCircle, TrendingUp, Shield, RefreshCw } from "lucide-react";
 
 export default function Landing() {
   return (
@@ -34,13 +34,12 @@ export default function Landing() {
         </div>
 
         <h1 className="text-5xl sm:text-6xl font-bold text-white leading-tight mb-6">
-          Build Your Referral<br />
-          <span className="gradient-text">Partner System Using AI</span>
+          The Most Stable Growth Channel<br />
+          <span className="gradient-text">You Haven't Systematized Yet</span>
         </h1>
 
-        <p className="text-2xl text-white max-w-2xl mx-auto mb-10 leading-relaxed" style={{ opacity: 0.85 }}>
-          Generate professional, multi-stage AI prompts engineered for the Dream 100 methodology.
-          Tailored to your industry, niche, and the exact LLM you're running them in.
+        <p className="text-xl text-white max-w-2xl mx-auto mb-10 leading-relaxed" style={{ opacity: 0.85 }}>
+          Partner Pipeline Builder helps you design an intentional referral partner system — using AI — built on the Dream 100 methodology.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -53,16 +52,49 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Problem / Contrast Section */}
+      <section className="max-w-4xl mx-auto px-6 py-12">
+        <div className="rounded-2xl p-10 sm:p-14" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
+          <p className="text-base font-semibold uppercase tracking-widest text-indigo-300 mb-6 text-center">Sound Familiar?</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            {[
+              { icon: TrendingUp, label: "Advertising", desc: "Expensive to sustain, unpredictable returns, and increasingly competitive." },
+              { icon: Users, label: "Networking", desc: "Time-intensive with no guarantee the right relationships convert to business." },
+              { icon: RefreshCw, label: "Purchased Leads", desc: "High volume, low trust — and you're always starting from zero." },
+            ].map(({ icon: Icon, label, desc }) => (
+              <div key={label} className="text-center p-6 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: "rgba(255,255,255,0.07)" }}>
+                  <Icon className="w-5 h-5 text-slate-400" />
+                </div>
+                <p className="font-semibold text-white mb-2">{label}</p>
+                <p className="text-sm text-white leading-relaxed" style={{ opacity: 0.6 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "2.5rem" }}>
+            <p className="text-xl sm:text-2xl text-white font-medium leading-relaxed max-w-2xl mx-auto" style={{ opacity: 0.9 }}>
+              You likely have a current book of business and multiple lead sources. But the most stable and scalable growth channel is{" "}
+              <span className="text-blue-400 font-semibold">referral partnerships with trusted professionals who see your clients before you do.</span>
+            </p>
+            <p className="mt-5 text-lg text-white" style={{ opacity: 0.65 }}>
+              Partner Pipeline Builder helps you design that system intentionally.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* How It Works */}
       <section className="max-w-5xl mx-auto px-6 py-16">
         <p className="text-center text-lg font-semibold uppercase tracking-widest text-indigo-300 mb-12">How It Works</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[
-            { icon: FileText, title: "Answer 6 Questions", desc: "Tell us your industry, niche, geography, and sales profile. Takes under 3 minutes." },
-            { icon: Target, title: "Select Your AI Model", desc: "Choose from ChatGPT, Claude, Perplexity, or Manus. Prompts are optimized per LLM's strengths." },
-            { icon: Users, title: "Get Your Prompt Blueprint", desc: "Receive a copy-paste ready markdown file with structured Dream 100 prompts, ready to run." },
+            { icon: FileText, step: "01", title: "Answer 6 Questions", desc: "Tell us your industry, niche, geography, and sales profile. Takes under 3 minutes." },
+            { icon: Target, step: "02", title: "Select Your AI Model", desc: "Choose from ChatGPT, Claude, Perplexity, or Manus. Prompts are optimized per LLM's strengths." },
+            { icon: Shield, step: "03", title: "Get Your Prompt Blueprint", desc: "Receive a copy-paste ready markdown file with structured Dream 100 prompts, ready to run." },
           ].map((item, i) => (
-            <div key={i} className="card-surface rounded-2xl p-8">
+            <div key={i} className="card-surface rounded-2xl p-8 relative">
+              <span className="absolute top-6 right-6 text-3xl font-bold" style={{ color: "rgba(99,102,241,0.12)" }}>{item.step}</span>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5" style={{ background: "rgba(99,102,241,0.15)" }}>
                 <item.icon className="w-6 h-6 text-indigo-300" />
               </div>
@@ -74,7 +106,8 @@ export default function Landing() {
       </section>
 
       {/* What's Inside */}
-      <section className="max-w-5xl mx-auto px-6 py-8 pb-20">
+      <section className="max-w-5xl mx-auto px-6 py-8 pb-16">
+        <p className="text-center text-lg font-semibold uppercase tracking-widest text-indigo-300 mb-12">What You Get</p>
         <div className="card-surface rounded-2xl p-10 sm:p-14">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
@@ -115,7 +148,9 @@ export default function Landing() {
 
       {/* CTA */}
       <section className="max-w-3xl mx-auto px-6 pb-24 text-center">
-        <h2 className="text-3xl font-bold text-white mb-5">Ready to build your referral pipeline?</h2>
+        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-5 leading-tight">
+          Ready to build the growth channel<br className="hidden sm:block" /> that compounds over time?
+        </h2>
         <p className="text-white text-xl mb-10" style={{ opacity: 0.8 }}>Create your first Partner Blueprint in under 10 minutes.</p>
         <Link to={createPageUrl("Wizard")}>
           <Button className="btn-gradient gap-2 h-14 px-12 text-lg font-semibold">
