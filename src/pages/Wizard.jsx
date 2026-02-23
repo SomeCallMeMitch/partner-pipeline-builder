@@ -11,6 +11,7 @@ import StepSalesProfile from "@/components/wizard/StepSalesProfile";
 import StepMode from "@/components/wizard/StepMode";
 import StepModel from "@/components/wizard/StepModel";
 import { generatePrompt } from "@/components/engine/promptEngine";
+import SignupInfoDialog from "@/components/SignupInfoDialog";
 
 const STEPS = [
   { id: "industry", label: "Industry" },
