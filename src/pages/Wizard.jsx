@@ -41,9 +41,7 @@ export default function Wizard() {
   });
 
   useEffect(() => {
-    base44.auth.me().catch(() => {
-      base44.auth.redirectToLogin(window.location.href);
-    });
+    // no forced login on load — redirect only when saving
   }, []);
 
   const update = (key, val) => setForm(f => ({ ...f, [key]: val }));
