@@ -88,6 +88,7 @@ export default function Landing() {
       {/* How It Works */}
       <section className="max-w-5xl mx-auto px-6 py-16">
         <p className="text-center text-lg font-semibold uppercase tracking-widest text-indigo-300 mb-12">How It Works</p>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[
             { icon: FileText, step: "01", title: "Answer 6 Questions", desc: "Tell us your industry, niche, geography, and sales profile. Takes under 3 minutes." },
