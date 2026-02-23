@@ -158,26 +158,14 @@ export default function Wizard() {
               Continue <ArrowRight className="w-4 h-4" />
             </Button>
           ) : (
-            <div className="flex flex-col sm:flex-row gap-2">
-              <Button
-                onClick={handleLogin}
-                disabled={!canAdvance() || saving}
-                variant="outline"
-                style={{ borderColor: "rgba(255,255,255,0.3)", color: "#ffffff", backgroundColor: "transparent" }}
-                className="gap-2 hover:bg-slate-800"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                Login &amp; Generate Blueprint
-              </Button>
-              <Button
-                onClick={handleSignup}
-                disabled={!canAdvance() || saving}
-                className="btn-gradient gap-2"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                Create Account &amp; Generate Blueprint
-              </Button>
-            </div>
+            <Button
+              onClick={doSave}
+              disabled={!canAdvance() || saving}
+              className="btn-gradient gap-2"
+            >
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              Generate My Blueprint
+            </Button>
           )}
         </div>
       </div>
