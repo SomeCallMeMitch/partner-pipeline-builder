@@ -82,11 +82,8 @@ export default function Dashboard() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl font-bold text-white">My Builds</h1>
-            <p className="text-slate-500 text-sm mt-0.5">{builds.length} blueprint{builds.length !== 1 ? "s" : ""} saved</p>
-          </div>
-          <Button className="btn-gradient gap-2 text-sm" onClick={() => navigate(createPageUrl("Wizard"))}>
-            <Plus className="w-4 h-4" /> New Build
-          </Button>
+              <p className="text-slate-500 text-sm mt-0.5">{builds.length} blueprint{builds.length !== 1 ? "s" : ""} saved</p>
+            </div>
         </div>
 
         {/* Empty state */}
