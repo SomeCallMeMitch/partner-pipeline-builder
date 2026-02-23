@@ -74,25 +74,13 @@ export default function Wizard() {
       referral_revenue_pct: Number(form.referral_revenue_pct) || null,
       team_size: Number(form.team_size) || null,
       mode: form.mode,
-      model_selection: form.optimize_per_phase ? "Multi-Model" : form.model_selection,
-      optimize_per_phase: form.optimize_per_phase,
+      model_selection: form.model_selection,
+      optimize_per_phase: false,
       coupon_code: form.coupon_code,
       generated_output: output,
       status: "complete",
     });
     navigate(createPageUrl(`Output?id=${saved.id}`));
-  };
-
-  const handleLogin = async () => {
-    const isAuthed = await base44.auth.isAuthenticated();
-    if (isAuthed) { doSave(); return; }
-    base44.auth.redirectToLogin(window.location.href);
-  };
-
-  const handleSignup = async () => {
-    const isAuthed = await base44.auth.isAuthenticated();
-    if (isAuthed) { doSave(); return; }
-    setShowSignupDialog(true);
   };
 
   const renderStep = () => {
