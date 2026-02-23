@@ -1,27 +1,43 @@
 import React from "react";
-import { DollarSign, Clock, Percent, Users } from "lucide-react";
+import { DollarSign, Clock, Percent, Users, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const fields = [
-  { key: "avg_deal_size", label: "Average Deal Size", placeholder: "e.g. 450000", icon: DollarSign, prefix: "$", desc: "Avg transaction value" },
-  { key: "sales_cycle_months", label: "Sales Cycle Length", placeholder: "e.g. 3", icon: Clock, suffix: "months", desc: "Avg months from contact to close" },
-  { key: "referral_revenue_pct", label: "Current Referral Revenue", placeholder: "e.g. 25", icon: Percent, suffix: "%", desc: "% of revenue currently from referrals" },
-  { key: "team_size", label: "Team Size", placeholder: "e.g. 4", icon: Users, suffix: "people", desc: "Including yourself" },
+  { key: "avg_deal_size", label: "Average Deal Size", placeholder: "e.g. 450000", icon: DollarSign, prefix: "$", desc: "Avg transaction value", info: "Determines which partners are worth prioritizing and how much leverage each referral represents." },
+  { key: "sales_cycle_months", label: "Sales Cycle Length", placeholder: "e.g. 3", icon: Clock, suffix: "months", desc: "Avg months from contact to close", info: "Helps design the right follow-up cadence and referral timing strategy." },
+  { key: "referral_revenue_pct", label: "Current Referral Revenue", placeholder: "e.g. 25", icon: Percent, suffix: "%", desc: "% of revenue currently from referrals", info: "Calibrates whether you're building from scratch or optimizing an existing partner network." },
+  { key: "team_size", label: "Team Size", placeholder: "e.g. 4", icon: Users, suffix: "people", desc: "Including yourself", info: "Ensures your outreach and relationship plan matches your operational capacity." },
 ];
 
 export default function StepSalesProfile({ values, onChange }) {
   return (
-    <div className="space-y-5">
+    <TooltipProvider delayDuration={300}>
+      <div className="space-y-5">
       <div>
         <h2 className="text-2xl font-bold text-white mb-1">Your Sales Profile</h2>
         <p className="text-slate-400 text-sm">These numbers calibrate partner prioritization, reciprocity framing, and volume targets inside your prompts.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {fields.map(({ key, label, placeholder, icon: Icon, prefix, suffix, desc }) => (
+        {fields.map(({ key, label, placeholder, icon: Icon, prefix, suffix, desc, info }) => (
           <div key={key} className="card-surface rounded-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Icon className="w-4 h-4 text-indigo-400" />
               <span className="text-xs font-medium text-slate-300">{label}</span>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button type="button" className="text-slate-500 hover:text-slate-300 transition-colors ml-1 focus:outline-none">
+                    <Info className="w-3.5 h-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent 
+                  sideOffset={6} 
+                  className="max-w-[220px] text-center text-sm p-3 bg-slate-800 border-slate-700 text-slate-200 shadow-xl"
+                  style={{ backgroundColor: "#1e293b", borderColor: "rgba(255,255,255,0.1)", color: "#f1f5f9" }}
+                >
+                  {info}
+                </TooltipContent>
+              </Tooltip>
             </div>
             <p className="text-xs text-slate-500 mb-2">{desc}</p>
             <div className="relative flex items-center">
@@ -42,5 +58,6 @@ export default function StepSalesProfile({ values, onChange }) {
         ))}
       </div>
     </div>
+    </TooltipProvider>
   );
 }
