@@ -32,7 +32,7 @@ export default function HeroSection({ onStart }) {
       <div className="d100-hero-credit">
         <div className="d100-hero-credit-inner">
           <span className="d100-credit-icon">🧠</span>
-          <span className="d100-hero-credit-text">Built on a framework co-developed by a leading AI strategist and a top-producing agent who's used AI to transform his real estate business — adapted by NurturInk into a tool anyone can use in minutes.</span>
+          <span className="d100-hero-credit-text">Built on a framework co-developed by a leading AI strategist and a top-producing agent who's used AI to transform his real estate business — adapted by NurturInk into a tool anyone can use in minutes. <a href="https://www.facebook.com/groups/aipromptsforrealestateprofessionals" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold, #C8A951)', textDecoration: 'underline' }}>For more excellent AI advice for Realtors, visit their group on Facebook.</a></span>
         </div>
       </div>
     </section>

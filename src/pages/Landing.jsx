@@ -93,17 +93,12 @@ export default function Landing() {
     <div style={{ fontFamily: "'Sora', -apple-system, sans-serif", background: 'var(--cream, #FAF8F4)', minHeight: '100vh' }}>
       <Dream100Styles />
 
-      {/* Sticky Nav */}
-      <div className="d100-sticky-nav">
-        <div className="d100-nav-top">
-          <a href="https://nurturink.com" target="_blank" rel="noopener noreferrer" className="d100-logo-wrap">
-            <div className="d100-logo-mark">N</div>
-            <span className="d100-logo-text">Nurtur<span>Ink</span></span>
-          </a>
-          <a href="https://nurturink.com/realestate" target="_blank" rel="noopener noreferrer" className="d100-header-cta">See How It Works →</a>
+      {/* Step Bar (only visible during wizard) */}
+      {view === 'wizard' && (
+        <div className="d100-sticky-nav">
+          <StepBar currentStep={wizardStep} visible={true} />
         </div>
-        <StepBar currentStep={wizardStep} visible={view === 'wizard'} />
-      </div>
+      )}
 
       {/* Hero */}
       {view === 'hero' && <HeroSection onStart={startWizard} />}
@@ -131,9 +126,9 @@ export default function Landing() {
       )}
 
       {/* Footer */}
-      <footer className="d100-site-footer">
-        <p>This free tool is brought to you by <a href="https://nurturink.com" target="_blank" rel="noopener noreferrer">NurturInk</a> — the handwritten follow-up system for relationship-driven sales professionals.</p>
-        <p style={{ marginTop: 5 }}>© 2025 NurturInk &nbsp;·&nbsp; <a href="https://nurturink.com/realestate" target="_blank" rel="noopener noreferrer">Real Estate Solutions</a></p>
+      <footer className="d100-site-footer" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
+        <p>This free tool is brought to you by <a href="http://NurturInk.com/realestate" target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>NurturInk</a> — the handwritten follow-up system for relationship-driven sales professionals.</p>
+        <p style={{ marginTop: 5 }}>&copy; 2025 NurturInk &nbsp;&middot;&nbsp; <a href="http://NurturInk.com/realestate" target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>Real Estate Solutions</a></p>
       </footer>
     </div>
   );
