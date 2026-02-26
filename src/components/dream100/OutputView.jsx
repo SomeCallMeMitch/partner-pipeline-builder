@@ -78,6 +78,16 @@ export default function OutputView({ formData, prompts, onRestart }) {
         <div className="d100-btn-row-2">
           <button className="d100-btn-email" onClick={() => setEmailModalOpen(true)}>✉ Email Me This</button>
           <button className="d100-btn-email" style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }} onClick={downloadAll}>⬇ Download All</button>
+          <button
+            className="d100-btn-email"
+            style={{ borderColor: '#3B82F6', color: '#3B82F6', fontWeight: 700 }}
+            onClick={() => {
+              sessionStorage.setItem('d100_run_formData', JSON.stringify({ ...formData, niche }));
+              navigate(createPageUrl('RunBlueprint'));
+            }}
+          >
+            ⚡ Run with AI
+          </button>
           <button className="d100-btn-restart" onClick={onRestart}>↺</button>
         </div>
       </div>
