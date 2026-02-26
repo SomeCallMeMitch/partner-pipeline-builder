@@ -127,7 +127,7 @@ export default function RunBlueprint() {
           </Button>
           <div>
             <h1 className="text-white font-bold text-lg">AI Blueprint Runner</h1>
-            <p className="text-slate-500 text-xs">{build.niche} · {build.geography}</p>
+            <p className="text-slate-500 text-xs">{displayName}</p>
           </div>
         </div>
 
