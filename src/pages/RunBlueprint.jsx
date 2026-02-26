@@ -134,7 +134,7 @@ export default function RunBlueprint() {
         {/* Hero Card */}
         <div className="rounded-2xl p-6 mb-6" style={{ background: "linear-gradient(135deg, #1e3a5f, #1e3860)", border: "1px solid rgba(59,130,246,0.2)" }}>
           <div className="text-xs text-blue-300 uppercase tracking-widest mb-2 opacity-70">NurturInk · Dream 100 Blueprint</div>
-          <h2 className="text-white text-xl font-bold mb-1">{build.name}</h2>
+          <h2 className="text-white text-xl font-bold mb-1">{landingData ? displayName : build?.name}</h2>
           <p className="text-blue-200 text-sm opacity-80">
             This runner will send each of the {phases.length} phases to Claude AI one at a time and display the results below.
           </p>
