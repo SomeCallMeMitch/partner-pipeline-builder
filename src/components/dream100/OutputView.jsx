@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import PhaseCard from "./PhaseCard";
 import EmailModal from "./EmailModal";
 import NurturinkCTA from "./NurturinkCTA";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 export default function OutputView({ formData, prompts, onRestart }) {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
