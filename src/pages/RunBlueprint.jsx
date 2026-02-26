@@ -92,7 +92,7 @@ export default function RunBlueprint() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Dream100_Blueprint_${(build?.name || "output").replace(/[^a-z0-9]/gi, "_")}.md`;
+    a.download = `Dream100_Blueprint_${(displayName || "output").replace(/[^a-z0-9]/gi, "_")}.md`;
     a.click();
     URL.revokeObjectURL(url);
   }
