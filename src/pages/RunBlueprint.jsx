@@ -105,7 +105,7 @@ export default function RunBlueprint() {
     </div>
   );
 
-  if (!build) return (
+  if (!landingData && !build) return (
     <div className="min-h-screen flex items-center justify-center text-slate-400" style={{ backgroundColor: "#0A0A12" }}>
       Build not found.
     </div>
