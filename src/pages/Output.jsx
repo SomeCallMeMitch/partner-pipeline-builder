@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Copy, Download, Check, Loader2, ArrowLeft, Edit2 } from "lucide-react";
+import { Copy, Download, Check, Loader2, ArrowLeft, Edit2, Zap } from "lucide-react";
 
 export default function Output() {
   const navigate = useNavigate();
