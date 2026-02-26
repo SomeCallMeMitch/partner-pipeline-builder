@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 
 export default function OutputView({ formData, prompts, onRestart }) {
+  const navigate = useNavigate();
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [copyAllLabel, setCopyAllLabel] = useState('📋 Copy All 7 Prompts');
 
