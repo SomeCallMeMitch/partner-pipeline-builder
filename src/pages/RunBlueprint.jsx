@@ -5,11 +5,13 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, Play, RotateCcw } from "lucide-react";
 import { buildPhasePrompts } from "@/components/engine/phasePromptBuilder";
+import { buildPrompts } from "@/components/dream100/promptBuilder";
 import PhaseRunnerCard from "@/components/runner/PhaseRunnerCard";
 
 export default function RunBlueprint() {
   const navigate = useNavigate();
-  const [build, setBuild] = useState(null);
+  const [build, setBuild] = useState(null);       // for Build-entity flow
+  const [landingData, setLandingData] = useState(null); // for Landing flow
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
   const [activePhase, setActivePhase] = useState(null);
@@ -19,16 +21,35 @@ export default function RunBlueprint() {
   const resultsRef = useRef({});
 
   useEffect(() => {
+    // Check if coming from the Landing page via sessionStorage
+    const stored = sessionStorage.getItem('d100_run_formData');
+    if (stored) {
+      setLandingData(JSON.parse(stored));
+      setLoading(false);
+      return;
+    }
+    // Otherwise load from Build entity via URL id
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
-    if (!id) { navigate(createPageUrl("Dashboard")); return; }
+    if (!id) { navigate(createPageUrl("Landing")); return; }
     base44.entities.Build.filter({ id }).then(res => {
       if (res[0]) setBuild(res[0]);
       setLoading(false);
     });
   }, []);
 
-  const phases = build ? buildPhasePrompts(build) : [];
+  // Build phases from whichever source is available
+  const phases = landingData
+    ? buildPrompts(landingData).map((p, i) => ({ id: i + 1, title: p.title, prompt: p.prompt }))
+    : build
+    ? buildPhasePrompts(build)
+    : [];
+
+  const displayName = landingData
+    ? `${landingData.niche || landingData.nicheBase} · ${landingData.geo}`
+    : build
+    ? build.name
+    : "";
 
   async function runAll() {
     setRunning(true);
