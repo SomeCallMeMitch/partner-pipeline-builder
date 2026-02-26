@@ -95,7 +95,7 @@ export default function Output() {
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs" style={{ background: "rgba(99,102,241,0.12)", color: "#818cf8" }}>
               {build.mode === "advanced" ? "Advanced" : "Simple"} · {build.model_selection}
             </div>
@@ -104,6 +104,14 @@ export default function Output() {
             </Button>
             <Button size="sm" className="btn-gradient gap-1.5 text-xs h-8" onClick={handleDownload}>
               <Download className="w-3.5 h-3.5" /> Download .md
+            </Button>
+            <Button
+              size="sm"
+              className="gap-1.5 text-xs h-8"
+              style={{ background: "linear-gradient(135deg, #1e3a5f, #2d6a9f)", color: "white", border: "none" }}
+              onClick={() => navigate(createPageUrl(`RunBlueprint?id=${build.id}`))}
+            >
+              <Zap className="w-3.5 h-3.5" /> Run with AI
             </Button>
           </div>
         </div>
