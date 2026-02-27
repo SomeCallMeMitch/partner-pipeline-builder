@@ -272,6 +272,7 @@ Format both parts clearly with markdown headers and tables where appropriate.
 ${llmNote}`
     },
     {
+      id: "7b",
       title: 'Phase 7b: 12-Month Calendar + Production Math',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
