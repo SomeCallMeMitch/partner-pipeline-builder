@@ -10,8 +10,6 @@ import {
   TabStopType, TabStopPosition
 } from "npm:docx@9.5.3";
 
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-
 // ── Color palette ─────────────────────────────────────────────────────────
 const NAVY      = "1B2A4A";
 const STEEL     = "3A6B9F";
