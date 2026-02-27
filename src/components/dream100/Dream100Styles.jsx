@@ -648,10 +648,17 @@ export default function Dream100Styles() {
       }
 
       @media (min-width: 900px) {
-        .d100-hero { padding: 64px 48px 72px; }
-        .d100-hero h1 { font-size: 42px; max-width: 640px; margin-left: auto; margin-right: auto; }
-        .d100-hero p { font-size: 18px; max-width: 520px; }
-        .d100-hero-features { flex-direction: row; flex-wrap: wrap; max-width: 560px; gap: 14px 24px; }
+        .d100-hero { padding: 64px 48px 72px; text-align: left; }
+        .d100-hero-inner { flex-direction: row; align-items: flex-start; gap: 48px; text-align: left; }
+        .d100-hero-left { flex: 1 1 0; text-align: left; }
+        .d100-hero-right { flex: 0 0 340px; }
+        .d100-hero h1 { font-size: 40px; max-width: none; margin-left: 0; margin-right: 0; }
+        .d100-hero p { font-size: 17px; max-width: none; margin-left: 0; margin-right: 0; }
+        .d100-hero-badge { display: inline-flex; }
+        .d100-hero-cta-btn { display: inline-flex; }
+        .d100-hero-sub-note { text-align: left; }
+        .d100-hero-features { flex-direction: column; max-width: 340px; gap: 12px; margin: 0; }
+        .d100-hero-credit { margin-top: 16px; padding-top: 16px; margin-left: 0; margin-right: 0; }
         .d100-main { padding: 44px 32px 100px; max-width: 760px; }
         .d100-form-card { padding: 40px 36px; }
         .d100-card-title { font-size: 24px; }
