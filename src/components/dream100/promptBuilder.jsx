@@ -84,6 +84,7 @@ Use markdown formatting with clear headers.
 ${llmNote}`
     },
     {
+      id: 3,
       title: 'Phase 3: Dream 10 Tier Ranking & Shortlist',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
