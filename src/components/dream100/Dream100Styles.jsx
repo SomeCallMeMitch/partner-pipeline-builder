@@ -126,10 +126,13 @@ export default function Dream100Styles() {
 
       .d100-hero {
         background: var(--navy);
-        padding: 36px 22px 44px;
+        padding: 0 0 44px;
         text-align: center;
         position: relative;
         overflow: hidden;
+      }
+      .d100-hero-inner {
+        padding: 36px 22px 0;
       }
       .d100-hero-inner {
         max-width: 1100px;
