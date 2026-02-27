@@ -53,6 +53,7 @@ Include at least 12 distinct trigger events. Mark top 3 with ★ and explain in 
 ${llmNote}`
     },
     {
+      id: 2,
       title: 'Phase 2: Upstream & Side-stream Partner Mapping',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
