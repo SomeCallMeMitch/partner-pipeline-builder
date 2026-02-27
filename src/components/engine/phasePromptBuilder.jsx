@@ -1,10 +1,9 @@
 /**
- * Extracts the 7 individual phase prompts from a Build record.
- * The promptEngine already generates the full 7-phase advanced text.
- * Here we build clean standalone prompts for each phase to send to Claude directly.
+ * Extracts the 10 individual phase prompts from a Build record.
+ * Phases split to keep each prompt focused and avoid timeouts.
  */
 
-import { INDUSTRY_DATA, LLM_PROFILES } from "./promptEngine";
+import { INDUSTRY_DATA } from "./promptEngine";
 
 function buildProfile(data) {
   const ind = INDUSTRY_DATA[data.industry] || INDUSTRY_DATA["Real Estate"];
@@ -42,22 +41,20 @@ export function buildPhasePrompts(build) {
 
 ${ctx}
 
-PHASE 1 TASK — Lifecycle Trigger Mapping
+TASK — Lifecycle Trigger Mapping
 
 Map the complete lifecycle of my ideal client. Identify every major life event, financial trigger, and transition point that causes someone in the ${p.niche} segment to need my services in ${p.geography}.
 
-For each trigger event provide:
-1. The trigger itself (be specific)
-2. How far before a transaction this typically occurs
-3. Which professional type sees the client at this trigger point BEFORE they contact me
-4. Why that professional has high trust with the client at that exact moment
+For each trigger provide:
+1. The specific trigger event
+2. Months before a transaction this typically occurs
+3. Which professional type sees the client at this trigger BEFORE they contact me
+4. Why that professional has high trust at that exact moment
 
-DELIVERABLE:
-A Lifecycle Trigger Map formatted as a markdown table:
+DELIVERABLE: Markdown table:
 | Trigger Event | Months Before Transaction | Upstream Professional | Why They Have High Trust |
 
-Include at least 12 distinct trigger events specific to ${p.niche} in ${p.geography}.
-Mark the top 3 highest-leverage triggers with a ★ and explain why they are the priority.
+Include at least 12 distinct trigger events. Mark top 3 with ★ and explain why they are the priority.
 
 Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice.`
     },
@@ -68,28 +65,25 @@ Use markdown formatting with clear headers. Prioritize strategic depth and speci
 
 ${ctx}
 
-PHASE 2 TASK — Upstream & Side-stream Partner Mapping
-
-Using the lifecycle triggers from Phase 1, identify the specific types of referral partners I should target.
+TASK — Upstream & Side-stream Partner Mapping
 
 UPSTREAM PARTNERS (see the client 3–12 months before a transaction):
 Known upstream categories for ${p.industry}: ${p.upstreamPartners}
 For each type provide:
 — Why they see my ideal client early
-— The specific problem they're solving for that client at that moment
+— The specific problem they're solving at that moment
 — What a ${p.niche} specialist in ${p.geography} can offer them in return (value exchange)
 — Estimated monthly referral frequency
 
-SIDE-STREAM PARTNERS (see the client during the transaction itself):
+SIDE-STREAM PARTNERS (see the client during the transaction):
 Known side-stream categories: ${p.sideStreamPartners}
 Same format as above.
 
 Then identify the top 3 UNDERUTILIZED partner types for ${p.niche} in ${p.geography} that most professionals overlook, and explain why they are high-value and underserved.
 
-DELIVERABLE:
-Organized lists with clear headers. Include 8–10 upstream types and 4–6 side-stream types. Each must include the specific value exchange idea.
+DELIVERABLE: Organized lists with clear headers. Include 8–10 upstream types and 4–6 side-stream types.
 
-Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice.`
+Use markdown formatting with clear headers.`
     },
     {
       id: 3,
@@ -98,46 +92,63 @@ Use markdown formatting with clear headers. Prioritize strategic depth and speci
 
 ${ctx}
 
-PHASE 3 TASK — Dream 10 Tier Ranking & Shortlist
-
-Using the partner types from Phase 2, build my prioritized Dream 10 Strategic Partner Map.
+TASK — Dream 10 Tier Ranking & Shortlist
 
 TIER STRUCTURE:
 — Tier 1 (Direct Upstream): Partners who see clients immediately before a transaction trigger
 — Tier 2 (Lifestyle & Transition): Partners who see clients during a life phase shift
 — Tier 3 (Community & Maintenance): Partners with consistent long-term client contact
 
-BUILD THE DREAM 10 SHORTLIST:
-Select the 10 highest-priority partner types for ${p.niche} in ${p.geography} and provide a table:
+Build the Dream 10 table:
+| Rank | Partner Type | Tier | Est. Monthly Referral Potential | Why Top Priority for ${p.niche} | First Contact Strategy |
 
-| Rank | Partner Type | Tier | Est. Monthly Referral Potential | Why Top Priority | First Contact Strategy |
-
-Also answer: What 3 personal characteristics should I look for when identifying which individual at each company to target?
+Then answer: What 3 personal characteristics should I look for when identifying which individual at each company to target?
 
 DELIVERABLE: The complete Dream 10 table plus the 3 individual selection criteria.
 
-Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice.`
+Use markdown formatting with clear headers.`
     },
     {
-      id: 4,
-      title: "Phase 4: Gap Analysis & Value-First Positioning",
+      id: "4a",
+      title: "Phase 4a: Value Strategy Cards (Partners 1–3)",
       prompt: `${PERSONA}
 
 ${ctx}
 
-PHASE 4 TASK — Gap Analysis & Value-First Positioning
+TASK — Value Strategy Cards for Top 3 Partner Types
 
-For each of my top 6 partner types (from Phase 3), create a "Value Strategy Card" that includes:
+For each of the top 3 referral partner types for ${p.niche} in ${p.geography}, create a Value Strategy Card:
 
-1. THE GAP: What is currently missing from this partner's client service that a ${p.niche} specialist in ${p.geography} can fill?
-2. THE VALUE GIFT: What specific, tangible asset can I create or offer to start the relationship with no ask?
-3. THE RECURRING TOUCHPOINT: After the first gift, what ongoing value can I deliver monthly or quarterly?
+**1. THE GAP:** What is currently missing from this partner's client service that a ${p.niche} specialist in ${p.geography} can fill?
 
-Then write a 3-paragraph "Value Manifesto" — a positioning statement I could use when meeting new referral partners in person. Focus entirely on how I serve the partner's clients, not on promoting my own production.
+**2. THE VALUE GIFT:** What specific, tangible asset can I create or offer to start the relationship — with no ask? Be specific.
 
-DELIVERABLE: 6 Value Strategy Cards + the Value Manifesto paragraph.
+**3. THE RECURRING TOUCHPOINT:** What ongoing value can I deliver monthly or quarterly to keep the relationship warm?
 
-Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice.`
+Format each card clearly with the partner name as a header. Use markdown.`
+    },
+    {
+      id: "4b",
+      title: "Phase 4b: Value Strategy Cards (Partners 4–6) + Value Manifesto",
+      prompt: `${PERSONA}
+
+${ctx}
+
+TASK — Value Strategy Cards for Partners 4–6 + Value Manifesto
+
+For each of the next 3 referral partner types (partners ranked 4–6 from the Dream 10 for ${p.niche} in ${p.geography}), create a Value Strategy Card:
+
+**1. THE GAP:** What is currently missing from this partner's client service that a ${p.niche} specialist in ${p.geography} can fill?
+
+**2. THE VALUE GIFT:** What specific, tangible asset can I create or offer to start the relationship — with no ask?
+
+**3. THE RECURRING TOUCHPOINT:** What ongoing value can I deliver monthly or quarterly?
+
+---
+
+Then write a **Value Manifesto** — a 3-paragraph positioning statement I would use when meeting new referral partners in person. It should focus entirely on how I serve the partner's clients, not on promoting my own production. Warm, peer-to-peer tone. No buzzwords.
+
+Use markdown formatting.`
     },
     {
       id: 5,
@@ -146,12 +157,12 @@ Use markdown formatting with clear headers. Prioritize strategic depth and speci
 
 ${ctx}
 
-PHASE 5 TASK — Objection Anticipation & Response Prep
+TASK — Objection Anticipation & Response Prep
 
 Known objection categories for ${p.industry}: ${p.objectionContext}
 
 For each objection provide:
-— WHY this objection comes up (the real fear or logic underneath it)
+— WHY this objection comes up (the real fear underneath it)
 — A non-defensive, conversational response that reframes without being pushy
 — A follow-up question that keeps the door open
 
@@ -162,13 +173,12 @@ OBJECTIONS TO ADDRESS:
 4. "I don't encounter that many clients who need your services."
 5. "I'm too busy to meet — can you just send me your card?"
 6. "Can I think about it and get back to you?"
-7. Two objections SPECIFIC to ${p.niche} referral partnerships that most professionals don't anticipate
+7. One objection specific to ${p.niche} referral partnerships
+8. One more objection specific to ${p.niche} partnerships that most professionals don't anticipate
 
 BONUS: Provide a "trust reset" script for: (a) a relationship that went cold after initial contact, and (b) a past referral relationship that ended badly.
 
-TONE: Confident, low-pressure, peer-to-peer. Not salesy.
-
-Use markdown formatting with clear headers.`
+TONE: Confident, low-pressure, peer-to-peer. Not salesy. Use markdown headers.`
     },
     {
       id: 6,
@@ -177,7 +187,7 @@ Use markdown formatting with clear headers.`
 
 ${ctx}
 
-PHASE 6 TASK — Complete Outreach Script Suite
+TASK — Complete Outreach Script Suite
 
 SCRIPT 1 — Cold Intro Email
 Write 3 subject line options.
@@ -190,7 +200,7 @@ SCRIPT 3 — Coffee/Zoom Invitation
 4–6 sentences (text or email). Frame it around their business growth. Include a specific curiosity hook relevant to ${p.niche} in ${p.geography}.
 
 SCRIPT 4 — The Handwritten Note Introduction
-3–4 sentence handwritten note script I send BEFORE any other outreach. Must feel completely personal. Zero sales language. First impression that opens every door.
+3–4 sentence handwritten note script sent BEFORE any other outreach. Must feel completely personal. Zero sales language. First impression that opens every door.
 
 SCRIPT 5 — Value-First Follow-Up
 Brief message after delivering the value gift. Conversational. Plant the seed without making an ask.
@@ -198,38 +208,54 @@ Brief message after delivering the value gift. Conversational. Plant the seed wi
 SCRIPT 6 — Referral Thank-You Note
 Warm, personal, non-templated note to send immediately after receiving a referral.
 
-All scripts must sound warm, credible, peer-to-peer. No buzzwords or corporate-speak.
-
-Use markdown formatting with clear headers.`
+All scripts must sound warm, credible, peer-to-peer. No buzzwords or corporate-speak. Use markdown formatting with clear headers.`
     },
     {
-      id: 7,
-      title: "Phase 7: 90-Day Plan & Quarterly System",
+      id: "7a",
+      title: "Phase 7a: 90-Day Week-by-Week Plan + Relationship Tracker",
       prompt: `${PERSONA}
 
 ${ctx}
 
-PHASE 7 TASK — 90-Day Launch Plan & Quarterly Reinforcement System
+TASK — 90-Day Launch Plan + Relationship Tracker
 
-PART A — Week-by-Week 90-Day Sequence
-For a new Tier 1 referral partner, give a week-by-week action plan for the first 90 days:
+**PART A — Week-by-Week 90-Day Sequence**
+For a new Tier 1 referral partner, provide a week-by-week action plan for the first 90 days (13 weeks). For each week:
 — Specific action
-— Channel (handwritten note, email, phone, in-person, social media engagement)
+— Channel (handwritten note, email, phone, in-person, social media)
 — Goal of the touchpoint
 — Time investment estimate
 
-PART B — Relationship Tracker Template
-Design a simple tracker structure for managing all 10 Dream partners. Include: partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, and referral count.
+**PART B — Relationship Tracker Template**
+Design a simple tracker structure for managing all 10 Dream Partners. Include columns for:
+partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, referral count.
 
-PART C — 12-Month Quarterly Calendar
-After a partner becomes active, what do I do each quarter to maintain and deepen the relationship? Create a 4-quarter calendar of touchpoints, value gifts, and personal gestures. Include specific moments where a handwritten note is the highest-leverage move.
+Format both parts clearly with markdown headers and tables where appropriate.`
+    },
+    {
+      id: "7b",
+      title: "Phase 7b: 12-Month Calendar + Production Math",
+      prompt: `${PERSONA}
 
-PART D — 12-Month Production Math
-Help me set a realistic target: How many Dream 10 partnerships, at what referral frequency, would generate what level of closed volume for ${p.niche} in ${p.geography}? Walk through the math simply and conservatively.
+${ctx}
 
-DELIVERABLE: All four parts, specific and actionable.
+TASK — 12-Month Quarterly Calendar + Production Math
 
-Use markdown formatting with clear headers.`
+**PART C — 12-Month Quarterly Calendar**
+After a partner becomes active, what do I do each quarter to maintain and deepen the relationship? Create a 4-quarter calendar with:
+— Specific touchpoints per quarter
+— Value gifts
+— Personal gestures
+— Exact moments where a handwritten note is the highest-leverage move (quarterly check-in, referral thank-you, partner's business milestone, holiday)
+
+**PART D — 12-Month Production Math**
+Walk through the math simply and conservatively:
+— How many Dream 10 partnerships at what referral frequency = what level of closed volume?
+— Assume average deal size for ${p.niche} in ${p.geography}
+— Show 3 scenarios: conservative, moderate, strong
+— What do I need to believe is true for this system to work?
+
+Format with markdown headers and tables.`
     }
   ];
 }

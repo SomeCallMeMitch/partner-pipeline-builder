@@ -15,6 +15,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Claude API key not configured' }, { status: 500 });
     }
 
+    const model = body.model || "claude-sonnet-4-6";
+
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -23,8 +25,8 @@ Deno.serve(async (req) => {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-5",
-        max_tokens: 4096,
+        model,
+        max_tokens: 2000,
         messages: [{ role: "user", content: prompt }]
       })
     });
