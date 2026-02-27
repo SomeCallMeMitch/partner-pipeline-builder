@@ -37,6 +37,7 @@ export default function Wizard() {
     optimize_per_phase: false,
   });
 
+
   useEffect(() => {
     base44.auth.isAuthenticated().then(authed => {
       if (!authed) base44.auth.redirectToLogin(createPageUrl("Landing"));
