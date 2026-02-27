@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { CHALLENGES } from "./nicheData";
+import IdealClientModal from "./IdealClientModal";
 
 export default function WizardStep2({ formData, onChange, onNext, onBack }) {
   const [errors, setErrors] = useState({});
