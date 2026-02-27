@@ -207,7 +207,7 @@ export default function Dream100Styles() {
 
       .d100-main {
         padding: 28px 18px 80px;
-        max-width: 600px;
+        max-width: 680px;
         margin: 0 auto;
       }
 
