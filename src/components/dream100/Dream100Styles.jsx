@@ -175,7 +175,7 @@ export default function Dream100Styles() {
       }
       .d100-hero-feature {
         display: flex; align-items: flex-start; gap: 10px;
-        color: rgba(255,255,255,0.85); font-size: 15px; font-weight: 500; line-height: 1.4;
+        color: rgba(255,255,255,0.85); font-size: 22.5px; font-weight: 500; line-height: 1.4;
       }
       .d100-hero-feature-icon {
         width: 22px; height: 22px;
