@@ -44,20 +44,6 @@ export default function WizardStep3({ formData, onChange, onNext, onBack }) {
         <p className="d100-field-hint">Used to calibrate the tone and positioning of your outreach scripts — a newer agent sounds different than a 15-year veteran.</p>
       </div>
 
-      <div className="d100-field-group">
-        <div className="d100-field-label">Which AI tool will you paste these prompts into?</div>
-        <select
-          className="d100-select"
-          value={formData.llm || 'ChatGPT'}
-          onChange={(e) => onChange({ llm: e.target.value })}
-        >
-          {LLM_OPTIONS.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
-          ))}
-        </select>
-        <p className="d100-field-hint">Choose the one you use most — each prompt will be formatted to get the best results from that tool.</p>
-      </div>
-
       <div className="d100-form-nav">
         <button className="d100-btn-back" onClick={onBack}>← Back</button>
         <button className="d100-btn-next" onClick={handleNext}>Continue →</button>
