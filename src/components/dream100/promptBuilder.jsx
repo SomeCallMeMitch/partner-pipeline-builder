@@ -22,6 +22,7 @@ export function buildPrompts(formData) {
 
   return [
     {
+      id: 1,
       title: 'Phase 1: Lifecycle Trigger Mapping',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
