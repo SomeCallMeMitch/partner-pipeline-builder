@@ -670,8 +670,11 @@ export default function Dream100Styles() {
         .d100-main { max-width: 820px; }
         .d100-nav-top { padding: 14px 36px; }
         .d100-hero { padding: 80px 64px 88px; }
-        .d100-hero h1 { font-size: 48px; max-width: 740px; }
-        .d100-hero p { font-size: 19px; max-width: 580px; }
+        .d100-hero-inner { max-width: 1200px; gap: 64px; }
+        .d100-hero-left { max-width: 600px; }
+        .d100-hero-right { flex: 0 0 380px; }
+        .d100-hero h1 { font-size: 48px; }
+        .d100-hero p { font-size: 19px; }
         .d100-form-card { padding: 44px 40px; }
         .d100-card-title { font-size: 26px; }
       }
