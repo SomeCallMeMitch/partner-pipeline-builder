@@ -630,6 +630,27 @@ export default function Dream100Styles() {
         .d100-modal-overlay { align-items: center; padding: 24px; }
         .d100-modal-box { border-radius: 20px; max-width: 440px; }
       }
+
+      @media (min-width: 900px) {
+        .d100-hero { padding: 64px 48px 72px; }
+        .d100-hero h1 { font-size: 42px; max-width: 640px; margin-left: auto; margin-right: auto; }
+        .d100-hero p { font-size: 18px; max-width: 520px; }
+        .d100-hero-features { flex-direction: row; flex-wrap: wrap; max-width: 560px; gap: 14px 24px; }
+        .d100-main { padding: 44px 32px 100px; max-width: 760px; }
+        .d100-form-card { padding: 40px 36px; }
+        .d100-card-title { font-size: 24px; }
+        .d100-niche-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+      }
+
+      @media (min-width: 1200px) {
+        .d100-main { max-width: 820px; }
+        .d100-nav-top { padding: 14px 36px; }
+        .d100-hero { padding: 80px 64px 88px; }
+        .d100-hero h1 { font-size: 48px; max-width: 740px; }
+        .d100-hero p { font-size: 19px; max-width: 580px; }
+        .d100-form-card { padding: 44px 40px; }
+        .d100-card-title { font-size: 26px; }
+      }
     `}</style>
   );
 }
