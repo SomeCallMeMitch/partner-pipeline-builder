@@ -634,7 +634,8 @@ export default function Dream100Styles() {
       .d100-site-footer a { color: rgba(201,151,58,0.8); text-decoration: none; }
 
       @media (min-width: 600px) {
-        .d100-hero { padding: 48px 32px 56px; }
+        .d100-hero { padding: 0 0 56px; }
+        .d100-hero-inner { padding: 48px 32px 0; }
         .d100-hero h1 { font-size: 34px; }
         .d100-hero p { font-size: 17px; }
         .d100-hero-features { flex-direction: row; flex-wrap: wrap; max-width: 480px; gap: 12px 20px; }
