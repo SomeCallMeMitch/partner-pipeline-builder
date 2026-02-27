@@ -131,6 +131,16 @@ export default function Dream100Styles() {
         position: relative;
         overflow: hidden;
       }
+      .d100-hero-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+      .d100-hero-left { width: 100%; }
+      .d100-hero-right { width: 100%; }
       .d100-hero::before {
         content: '';
         position: absolute; inset: 0;
