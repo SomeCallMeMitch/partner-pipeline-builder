@@ -646,6 +646,7 @@ export default function Dream100Styles() {
         .d100-form-card { padding: 40px 36px; }
         .d100-card-title { font-size: 24px; }
         .d100-niche-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .d100-phase-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
       }
 
       @media (min-width: 1200px) {
