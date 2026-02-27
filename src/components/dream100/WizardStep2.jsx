@@ -87,6 +87,8 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
         <button className="d100-btn-back" onClick={onBack}>← Back</button>
         <button className="d100-btn-next" onClick={handleNext}>Continue →</button>
       </div>
+
+      <IdealClientModal isOpen={showClientModal} onClose={() => setShowClientModal(false)} />
     </div>
   );
 }
