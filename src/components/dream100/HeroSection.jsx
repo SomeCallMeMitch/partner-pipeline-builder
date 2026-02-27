@@ -1,6 +1,8 @@
 import React from "react";
+import { useTheme } from "@/components/ThemeContext";
 
 export default function HeroSection({ onStart }) {
+  const { theme } = useTheme();
   return (
     <section className="d100-hero">
       {/* Desktop two-column wrapper */}
