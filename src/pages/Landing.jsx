@@ -9,6 +9,7 @@ import WizardStep4 from "@/components/dream100/WizardStep4";
 import GeneratingCard from "@/components/dream100/GeneratingCard";
 import OutputView from "@/components/dream100/OutputView";
 import { buildPrompts } from "@/components/dream100/promptBuilder";
+import { useTheme } from "@/components/ThemeContext";
 
 export default function Landing() {
   const [view, setView] = useState('hero'); // hero | wizard | generating | output
