@@ -653,7 +653,7 @@ export default function Dream100Styles() {
         .d100-hero { padding: 0 0 72px; text-align: left; }
         .d100-hero-inner { flex-direction: row; align-items: flex-start; gap: 48px; text-align: left; padding: 64px 48px 0; }
         .d100-hero-left { flex: 1 1 0; text-align: left; }
-        .d100-hero-right { flex: 0 0 340px; }
+        .d100-hero-right { flex: 0 0 420px; }
         .d100-hero h1 { font-size: 40px; max-width: none; margin-left: 0; margin-right: 0; }
         .d100-hero p { font-size: 17px; max-width: none; margin-left: 0; margin-right: 0; }
         .d100-hero-badge { display: inline-flex; }
