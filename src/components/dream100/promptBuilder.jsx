@@ -243,6 +243,7 @@ All scripts sound like ${n} — warm, credible, peer-to-peer. No buzzwords. Use 
 ${llmNote}`
     },
     {
+      id: "7a",
       title: 'Phase 7a: 90-Day Week-by-Week Plan + Relationship Tracker',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
