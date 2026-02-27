@@ -73,28 +73,28 @@ export default function OutputView({ formData, prompts, onRestart }) {
         <p>{formData.name} · {niche} · {formData.geo}</p>
       </div>
 
-      <div className="d100-output-actions">
-        <button className="d100-btn-copy-all" onClick={copyAll}>{copyAllLabel}</button>
-        <div className="d100-btn-row-2">
-          <button className="d100-btn-email" onClick={() => setEmailModalOpen(true)}>✉ Email Me This</button>
-          <button className="d100-btn-email" style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }} onClick={downloadAll}>⬇ Download All</button>
-          <button
-            className="d100-btn-email"
-            style={{ borderColor: '#3B82F6', color: '#3B82F6', fontWeight: 700 }}
-            onClick={() => {
-              sessionStorage.setItem('d100_run_formData', JSON.stringify({ ...formData, niche }));
-              navigate(createPageUrl('RunBlueprint'));
-            }}
-          >
-            ⚡ Run with AI
-          </button>
-          <button className="d100-btn-restart" onClick={onRestart}>↺</button>
-        </div>
+      {/* Action bar — desktop-friendly horizontal layout */}
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 28, alignItems: 'center' }}>
+        <button className="d100-btn-copy-all" style={{ flex: '1 1 auto', minWidth: 160 }} onClick={copyAll}>{copyAllLabel}</button>
+        <button className="d100-btn-email" onClick={() => setEmailModalOpen(true)}>✉ Email Me</button>
+        <button className="d100-btn-email" style={{ borderColor: 'var(--gold)', color: 'var(--gold)' }} onClick={downloadAll}>⬇ Download</button>
+        <button
+          className="d100-btn-email"
+          style={{ borderColor: '#3B82F6', color: '#3B82F6', fontWeight: 700 }}
+          onClick={() => {
+            sessionStorage.setItem('d100_run_formData', JSON.stringify({ ...formData, niche }));
+            navigate(createPageUrl('RunBlueprint'));
+          }}
+        >⚡ Run with AI</button>
+        <button className="d100-btn-restart" onClick={onRestart}>↺ Start Over</button>
       </div>
 
-      {prompts.map((phase, i) => (
-        <PhaseCard key={i} phase={phase} index={i} formData={formData} niche={niche} />
-      ))}
+      {/* Phase grid — 2 columns on desktop */}
+      <div className="d100-phase-grid">
+        {prompts.map((phase, i) => (
+          <PhaseCard key={i} phase={phase} index={i} formData={formData} niche={niche} />
+        ))}
+      </div>
 
       <NurturinkCTA />
 
