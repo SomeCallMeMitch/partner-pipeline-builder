@@ -5,6 +5,18 @@ export default function HeroSection({ onStart }) {
   const { theme } = useTheme();
   return (
     <section className="d100-hero">
+      {/* Hero nav bar */}
+      <div className="d100-sticky-nav" style={{ position: "static", boxShadow: "none", background: "rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(255,255,255,0.1)", marginBottom: 0 }}>
+        <div className="d100-nav-top">
+          <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="d100-logo-wrap">
+            <div className="d100-logo-mark">{theme.logoMark}</div>
+            <span className="d100-logo-text">{theme.brandName}</span>
+          </a>
+          <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="d100-header-cta">
+            Visit {theme.brandName} →
+          </a>
+        </div>
+      </div>
       {/* Desktop two-column wrapper */}
       <div className="d100-hero-inner">
 
