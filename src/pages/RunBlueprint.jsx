@@ -40,7 +40,7 @@ export default function RunBlueprint() {
 
   // Build phases from whichever source is available
   const phases = landingData
-    ? buildPrompts(landingData).map((p, i) => ({ id: i + 1, title: p.title, prompt: p.prompt }))
+    ? buildPrompts(landingData).map((p, i) => ({ id: p.id !== undefined ? p.id : i + 1, title: p.title, prompt: p.prompt }))
     : build
     ? buildPhasePrompts(build)
     : [];
