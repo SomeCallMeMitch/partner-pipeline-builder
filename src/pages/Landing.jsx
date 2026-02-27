@@ -95,10 +95,19 @@ export default function Landing() {
     <div style={{ fontFamily: "'Sora', -apple-system, sans-serif", background: 'var(--cream, #FAF8F4)', minHeight: '100vh' }}>
       <Dream100Styles />
 
-      {/* Step Bar (only visible during wizard) */}
-      {view === 'wizard' && (
+      {/* Nav bar — shown during wizard and output, hidden on hero */}
+      {view !== 'hero' && (
         <div className="d100-sticky-nav">
-          <StepBar currentStep={wizardStep} visible={true} />
+          <div className="d100-nav-top">
+            <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="d100-logo-wrap">
+              <div className="d100-logo-mark">{theme.logoMark}</div>
+              <span className="d100-logo-text">{theme.brandName}</span>
+            </a>
+            <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="d100-header-cta">
+              Visit {theme.brandName} →
+            </a>
+          </div>
+          {view === 'wizard' && <StepBar currentStep={wizardStep} visible={true} />}
         </div>
       )}
 
