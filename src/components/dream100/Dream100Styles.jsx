@@ -427,12 +427,18 @@ export default function Dream100Styles() {
         cursor: pointer; transition: all 0.2s;
       }
 
+      .d100-phase-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
       .d100-phase-card {
         background: var(--d100-white);
         border-radius: var(--d100-radius);
         border: 1px solid var(--d100-border);
         border-left: 4px solid var(--gold);
-        margin-bottom: 14px;
+        margin-bottom: 0;
         box-shadow: var(--d100-shadow);
         overflow: hidden;
       }
