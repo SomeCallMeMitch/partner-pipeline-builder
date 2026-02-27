@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download, Play, RotateCcw } from "lucide-react";
+import { ArrowLeft, Download, Play, RotateCcw, FileText } from "lucide-react";
 import { buildPhasePrompts } from "@/components/engine/phasePromptBuilder";
 import { buildPrompts } from "@/components/dream100/promptBuilder";
 import PhaseRunnerCard from "@/components/runner/PhaseRunnerCard";
