@@ -168,6 +168,7 @@ Use markdown formatting.
 ${llmNote}`
     },
     {
+      id: 5,
       title: 'Phase 5: Objection Anticipation & Response Prep',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
