@@ -5,21 +5,28 @@ export default function Dream100Styles() {
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
 
+      /* Theme colors come from index.css via --ni-* variables.      */
+      /* Non-color design tokens stay here:                          */
       :root {
-        --navy: #1B2A4A;
-        --navy-light: #243659;
-        --gold: #C9973A;
-        --gold-light: #E8B55A;
-        --cream: #FAF8F4;
-        --cream-dark: #F0EBE1;
-        --d100-text: #1A1A2E;
-        --text-muted: #5A6278;
-        --d100-white: #FFFFFF;
-        --d100-border: #DDD5C5;
-        --success: #2D6A4F;
         --d100-radius: 14px;
         --d100-shadow: 0 2px 16px rgba(27,42,74,0.09);
-        --shadow-lg: 0 8px 40px rgba(27,42,74,0.16);
+        --shadow-lg:   0 8px 40px rgba(27,42,74,0.16);
+      }
+
+      /* Map old Dream100 var names to the new theme vars            */
+      /* so all existing CSS rules below continue to work as-is:    */
+      :root, .theme-nurturink, .theme-coastal, .theme-charcoal {
+        --navy:        var(--ni-navy);
+        --navy-light:  var(--ni-navy-light);
+        --gold:        var(--ni-gold);
+        --gold-light:  var(--ni-gold-light);
+        --cream:       var(--ni-cream);
+        --cream-dark:  var(--ni-cream-dark);
+        --d100-text:   var(--ni-text);
+        --text-muted:  var(--ni-muted);
+        --d100-white:  var(--ni-white);
+        --d100-border: var(--ni-border);
+        --success:     var(--ni-success);
       }
 
       body {
