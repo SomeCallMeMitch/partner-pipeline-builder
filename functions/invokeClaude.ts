@@ -54,7 +54,14 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No response from Claude' }, { status: 500 });
     }
 
-    return Response.json({ result: data.content[0].text });
+    // When web search is used, Claude returns multiple content blocks (tool_use + text).
+    // Extract the last text block as the final answer.
+    const textBlocks = data.content.filter(b => b.type === "text");
+    const resultText = textBlocks.length > 0
+      ? textBlocks[textBlocks.length - 1].text
+      : data.content[0].text;
+
+    return Response.json({ result: resultText });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }
