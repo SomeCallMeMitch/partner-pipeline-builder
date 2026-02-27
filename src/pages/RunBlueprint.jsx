@@ -89,13 +89,23 @@ export default function RunBlueprint() {
       : build
       ? { agentName: build.name, niche: build.niche, subniche: "", market: build.geography, idealClient: "" }
       : {};
-    const response = await base44.functions.invoke("exportToWord", { config, phaseResults: resultsRef.current });
-    const blob = new Blob([response.data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+    const res = await fetch("/functions/exportToWord", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ config, phaseResults: resultsRef.current }),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || "Export failed");
+    }
+    const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = `Dream100_Blueprint_${(config.agentName || "Blueprint").replace(/\s+/g, "_")}.docx`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
     setExportingWord(false);
   }

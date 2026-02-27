@@ -9,16 +9,13 @@ import StepNiche from "@/components/wizard/StepNiche";
 import StepGeography from "@/components/wizard/StepGeography";
 import StepSalesProfile from "@/components/wizard/StepSalesProfile";
 import StepMode from "@/components/wizard/StepMode";
-import StepModel from "@/components/wizard/StepModel";
 import { generatePrompt } from "@/components/engine/promptEngine";
-// SignupInfoDialog no longer needed in Wizard — auth happens on Landing
 
 const STEPS = [
   { id: "niche", label: "Niche" },
   { id: "geography", label: "Geography" },
   { id: "profile", label: "Sales Profile" },
   { id: "mode", label: "Mode" },
-  { id: "model", label: "AI Model" },
 ];
 
 export default function Wizard() {
