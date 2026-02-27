@@ -204,6 +204,7 @@ TONE: Confident, low-pressure, peer-to-peer. Not salesy. Use markdown headers.
 ${llmNote}`
     },
     {
+      id: 6,
       title: 'Phase 6: Complete Outreach Script Suite',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
