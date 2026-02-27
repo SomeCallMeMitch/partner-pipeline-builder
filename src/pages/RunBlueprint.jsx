@@ -62,7 +62,10 @@ export default function RunBlueprint() {
       setActivePhase(phase.id);
       setStatus(s => ({ ...s, [phase.id]: "running" }));
       try {
-        const response = await base44.functions.invoke("invokeClaude", { prompt: phase.prompt, model: "claude-sonnet-4-6" });
+        const invokeParams = phase.isSearch
+          ? { prompt: phase.prompt, model: "claude-sonnet-4-6", add_context_from_internet: true }
+          : { prompt: phase.prompt, model: "claude-sonnet-4-6" };
+        const response = await base44.functions.invoke("invokeClaude", invokeParams);
         const result = response.data?.result;
         resultsRef.current[phase.id] = result;
         setResults(r => ({ ...r, [phase.id]: result }));

@@ -50,8 +50,8 @@
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
 import Output from './pages/Output';
-import Wizard from './pages/Wizard';
 import RunBlueprint from './pages/RunBlueprint';
+import Wizard from './pages/Wizard';
 import __Layout from './Layout.jsx';
 
 
@@ -59,8 +59,8 @@ export const PAGES = {
     "Dashboard": Dashboard,
     "Landing": Landing,
     "Output": Output,
-    "Wizard": Wizard,
     "RunBlueprint": RunBlueprint,
+    "Wizard": Wizard,
 }
 
 export const pagesConfig = {

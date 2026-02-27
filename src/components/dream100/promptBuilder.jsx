@@ -84,6 +84,33 @@ Use markdown formatting with clear headers.
 ${llmNote}`
     },
     {
+      id: "3.5",
+      title: 'Phase 3.5: Local Partner Research',
+      model: llm,
+      modelNote: `Optimized for ${llm}. ${llmNote}`,
+      isSearch: true,
+      prompt: `You are a local market research specialist. Search the web for real, currently active businesses and professionals in ${geo} who serve clients in the ${niche} market.
+
+For each of the following partner categories, find 2–3 specific, currently active businesses or individual professionals in ${geo}:
+
+1. Hard money / private money lenders (${niche}-focused)
+2. CPAs or tax strategists specializing in real estate clients
+3. Attorneys relevant to ${niche} transactions
+4. Title and escrow officers with high ${niche} transaction volume
+5. General contractors active in ${niche} projects
+6. Property managers serving ${niche} clients
+7. Financial advisors or wealth managers
+8. Insurance brokers specializing in ${niche}
+
+For each result provide:
+- Business or professional name
+- Website or LinkedIn URL (if findable)
+- Brief description of their specialty
+- Confidence level: High (verified active), Medium (appears active), or Low (verify before outreach)
+
+Prioritize results that show recent activity (last 12 months). Format with clear category headers in markdown.`
+    },
+    {
       id: 3,
       title: 'Phase 3: Dream 10 Tier Ranking & Shortlist',
       model: llm,
