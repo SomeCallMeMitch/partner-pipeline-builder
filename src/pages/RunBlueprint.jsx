@@ -182,14 +182,28 @@ export default function RunBlueprint() {
           </Button>
 
           {allDone && (
-            <Button
-              onClick={downloadAll}
-              variant="outline"
-              className="gap-2 text-sm"
-              style={{ borderColor: "rgba(255,255,255,0.25)", color: "#cbd5e1", backgroundColor: "transparent" }}
-            >
-              <Download className="w-4 h-4" /> Download Full Blueprint
-            </Button>
+            <>
+              <Button
+                onClick={downloadAll}
+                variant="outline"
+                className="gap-2 text-sm"
+                style={{ borderColor: "rgba(255,255,255,0.25)", color: "#cbd5e1", backgroundColor: "transparent" }}
+              >
+                <Download className="w-4 h-4" /> Download Markdown
+              </Button>
+              <Button
+                onClick={downloadWord}
+                disabled={exportingWord}
+                variant="outline"
+                className="gap-2 text-sm"
+                style={{ borderColor: "rgba(99,179,237,0.4)", color: "#93c5fd", backgroundColor: "transparent" }}
+              >
+                {exportingWord
+                  ? <><div className="w-4 h-4 border-2 border-blue-300 border-t-transparent rounded-full animate-spin" /> Building Word Doc...</>
+                  : <><FileText className="w-4 h-4" /> Download Word (.docx)</>
+                }
+              </Button>
+            </>
           )}
 
           {running && (
