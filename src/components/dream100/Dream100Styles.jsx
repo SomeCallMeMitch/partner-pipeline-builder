@@ -674,7 +674,7 @@ export default function Dream100Styles() {
         .d100-hero { padding: 0 0 88px; }
         .d100-hero-inner { max-width: 1200px; gap: 64px; padding: 80px 64px 0; }
         .d100-hero-left { max-width: 600px; }
-        .d100-hero-right { flex: 0 0 380px; }
+        .d100-hero-right { flex: 0 0 460px; }
         .d100-hero h1 { font-size: 48px; }
         .d100-hero p { font-size: 19px; }
         .d100-form-card { padding: 44px 40px; }
