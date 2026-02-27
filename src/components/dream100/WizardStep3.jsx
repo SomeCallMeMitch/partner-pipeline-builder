@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { YEARS_OPTIONS, LLM_OPTIONS } from "./nicheData";
+import { YEARS_OPTIONS } from "./nicheData";
 
 export default function WizardStep3({ formData, onChange, onNext, onBack }) {
   const [nameError, setNameError] = useState(false);

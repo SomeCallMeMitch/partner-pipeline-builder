@@ -32,13 +32,6 @@ export default function WizardStep4({ formData, onBack, onGenerate }) {
             <div className="d100-confirm-value">{formData.name || '—'}</div>
           </div>
         </div>
-        <div className="d100-confirm-row">
-          <span className="d100-confirm-icon">🤖</span>
-          <div>
-            <div className="d100-confirm-label">AI Tool</div>
-            <div className="d100-confirm-value">{formData.llm || 'ChatGPT'}</div>
-          </div>
-        </div>
       </div>
 
       <div className="d100-confirm-what">
