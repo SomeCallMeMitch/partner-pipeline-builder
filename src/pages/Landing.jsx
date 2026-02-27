@@ -12,6 +12,7 @@ import { buildPrompts } from "@/components/dream100/promptBuilder";
 import { useTheme } from "@/components/ThemeContext";
 
 export default function Landing() {
+  const { theme } = useTheme();
   const [view, setView] = useState('hero'); // hero | wizard | generating | output
   const [wizardStep, setWizardStep] = useState(1);
   const [formData, setFormData] = useState({
