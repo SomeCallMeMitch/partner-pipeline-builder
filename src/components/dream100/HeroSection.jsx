@@ -23,7 +23,7 @@ export default function HeroSection({ onStart }) {
         {/* Left: text column */}
         <div className="d100-hero-left">
           <div className="d100-hero-badge">✦ Free Tool for Real Estate Agents</div>
-          <h1>Find the <em>10 People</em> Who Already Know Your Next Clients</h1>
+          <h1>Find the <em>10 People</em> Who Already Know Your Next <em>50 Clients</em></h1>
           <p>Get a complete 7-prompt AI blueprint to build your Dream 100 referral partner system — built for your niche and your market in minutes.</p>
 
           <button className="d100-hero-cta-btn" onClick={onStart}>Build My Free Blueprint ⚡</button>
