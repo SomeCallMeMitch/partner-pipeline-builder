@@ -671,8 +671,8 @@ export default function Dream100Styles() {
       @media (min-width: 1200px) {
         .d100-main { max-width: 820px; }
         .d100-nav-top { padding: 14px 36px; }
-        .d100-hero { padding: 80px 64px 88px; }
-        .d100-hero-inner { max-width: 1200px; gap: 64px; }
+        .d100-hero { padding: 0 0 88px; }
+        .d100-hero-inner { max-width: 1200px; gap: 64px; padding: 80px 64px 0; }
         .d100-hero-left { max-width: 600px; }
         .d100-hero-right { flex: 0 0 380px; }
         .d100-hero h1 { font-size: 48px; }
