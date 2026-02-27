@@ -4,6 +4,7 @@ import IdealClientModal from "./IdealClientModal";
 
 export default function WizardStep2({ formData, onChange, onNext, onBack }) {
   const [errors, setErrors] = useState({});
+  const [showClientModal, setShowClientModal] = useState(false);
 
   const handleNext = () => {
     const newErrors = {};
