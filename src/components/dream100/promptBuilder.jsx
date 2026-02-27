@@ -138,6 +138,7 @@ Format each card clearly with the partner name as a header. Use markdown.
 ${llmNote}`
     },
     {
+      id: "4b",
       title: 'Phase 4b: Value Strategy Cards (Partners 4–6) + Value Manifesto',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
