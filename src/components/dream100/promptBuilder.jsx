@@ -112,6 +112,7 @@ Use markdown formatting with clear headers.
 ${llmNote}`
     },
     {
+      id: "4a",
       title: 'Phase 4a: Value Strategy Cards (Partners 1–3)',
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
