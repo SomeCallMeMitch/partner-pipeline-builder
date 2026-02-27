@@ -138,8 +138,8 @@ export default function Landing() {
 
       {/* Footer */}
       <footer className="d100-site-footer" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
-        <p>This free tool is brought to you by <a href="http://NurturInk.com/realestate" target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>NurturInk</a> — the handwritten follow-up system for relationship-driven sales professionals.</p>
-        <p style={{ marginTop: 5 }}>&copy; 2025 NurturInk &nbsp;&middot;&nbsp; <a href="http://NurturInk.com/realestate" target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>Real Estate Solutions</a></p>
+        <p>This free tool is brought to you by <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>{theme.brandName}</a> — {theme.footerText}.</p>
+        <p style={{ marginTop: 5 }}>&copy; 2025 {theme.brandName} &nbsp;&middot;&nbsp; <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>Learn More</a></p>
       </footer>
     </div>
   );
