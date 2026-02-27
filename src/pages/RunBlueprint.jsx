@@ -82,6 +82,24 @@ export default function RunBlueprint() {
     setAllDone(true);
   }
 
+  async function downloadWord() {
+    setExportingWord(true);
+    const config = landingData
+      ? { agentName: landingData.name || "Agent", niche: landingData.niche || landingData.nicheBase || "Real Estate", subniche: "", market: landingData.geo || "My Market", idealClient: landingData.client || "" }
+      : build
+      ? { agentName: build.name, niche: build.niche, subniche: "", market: build.geography, idealClient: "" }
+      : {};
+    const response = await base44.functions.invoke("exportToWord", { config, phaseResults: resultsRef.current });
+    const blob = new Blob([response.data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Dream100_Blueprint_${(config.agentName || "Blueprint").replace(/\s+/g, "_")}.docx`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setExportingWord(false);
+  }
+
   function downloadAll() {
     let full = `# DREAM 100 PARTNER BLUEPRINT\n`;
     if (build) full += `${build.niche} — ${build.geography}\n`;
