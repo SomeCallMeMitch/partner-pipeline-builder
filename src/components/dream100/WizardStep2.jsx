@@ -37,7 +37,27 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
       </div>
 
       <div className="d100-field-group">
-        <div className="d100-field-label">Describe your ideal client <span className="opt">(optional — adds a lot of value)</span></div>
+        <div className="d100-field-label">
+          Describe your ideal client{' '}
+          <span className="opt">(optional — adds a lot of value)</span>
+          <button
+            type="button"
+            onClick={() => setShowClientModal(true)}
+            style={{
+              marginLeft: 8,
+              fontSize: 12,
+              color: 'var(--ni-gold)',
+              fontWeight: 600,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              fontFamily: "'Sora', sans-serif"
+            }}
+          >
+            See examples
+          </button>
+        </div>
         <textarea
           className="d100-textarea"
           value={formData.client || ''}
