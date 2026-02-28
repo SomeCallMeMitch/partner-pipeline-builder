@@ -639,7 +639,7 @@ export default function Dream100Styles() {
         .d100-hero h1 { font-size: 34px; }
         .d100-hero p { font-size: 17px; }
         .d100-hero-features { flex-direction: row; flex-wrap: wrap; max-width: 480px; gap: 12px 20px; }
-        .d100-main { padding: 36px 24px 80px; }
+        .d100-main { padding: 18px 24px 80px; }
         .d100-form-card { padding: 32px 28px; }
         .d100-niche-grid { grid-template-columns: repeat(4, 1fr); }
         .d100-output-actions { flex-direction: row; }
