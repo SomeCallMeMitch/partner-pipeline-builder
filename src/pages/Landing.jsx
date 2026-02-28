@@ -101,12 +101,29 @@ export default function Landing() {
           <div className="d100-nav-top">
             <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="d100-logo-wrap">
               <div className="d100-logo-mark">{theme.logoMark}</div>
-              <span className="d100-logo-text">{theme.brandName}</span>
+              <div>
+                <div className="d100-logo-text">{theme.brandName}</div>
+                {view === 'output' && <div style={{ color: '#fff', fontSize: 11, opacity: 0.5 }}>Dream 100 Blueprint</div>}
+              </div>
             </a>
             {view === 'wizard' && <StepBar currentStep={wizardStep} visible={true} />}
-            <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="d100-header-cta">
-              Visit {theme.brandName} →
-            </a>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {view === 'output' && (
+                <button className="d100-header-cta" onClick={handleRestart} style={{ cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, padding: '7px 13px', color: '#fff', fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 13 }}>
+                  ↺ Start Over
+                </button>
+              )}
+              {view === 'output' && (
+                <button className="d100-header-cta" onClick={() => document.dispatchEvent(new CustomEvent('openEmailModal'))} style={{ cursor: 'pointer', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, padding: '7px 13px', color: '#fff', fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 13 }}>
+                  ✉ Email Me This
+                </button>
+              )}
+              {view !== 'output' && (
+                <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="d100-header-cta">
+                  Visit {theme.brandName} →
+                </a>
+              )}
+            </div>
           </div>
         </div>
       )}
