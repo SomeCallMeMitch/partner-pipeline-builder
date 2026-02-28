@@ -86,41 +86,6 @@ DELIVERABLE: Organized lists with clear headers. Include 8–10 upstream types a
 Use markdown formatting with clear headers.`
     },
     {
-      id: "3.5",
-      title: "Phase 3.5: Local Partner Research",
-      isSearch: true,
-      searchCategories: [
-        `Hard money / private money lenders (${p.niche}-focused)`,
-        `CPAs or tax strategists specializing in ${p.industry.toLowerCase()} clients`,
-        `Attorneys relevant to ${p.niche} transactions`,
-        `Title and escrow officers with high ${p.niche} transaction volume`,
-        `General contractors active in ${p.niche} projects`,
-        `Property managers serving ${p.niche} clients`,
-        `Financial advisors or wealth managers serving ${p.niche} clients`,
-        `Insurance brokers specializing in ${p.niche}`,
-      ],
-      prompt: `You are a local market research specialist. Search the web for real, currently active businesses and professionals in ${p.geography} who serve clients in the ${p.niche} market.
-
-For each of the following partner categories, find 2–3 specific, currently active businesses or individual professionals in ${p.geography}:
-
-1. Hard money / private money lenders (${p.niche}-focused)
-2. CPAs or tax strategists specializing in ${p.industry.toLowerCase()} clients
-3. Attorneys relevant to ${p.niche} transactions
-4. Title and escrow officers with high ${p.niche} transaction volume
-5. General contractors active in ${p.niche} projects
-6. Property managers serving ${p.niche} clients
-7. Financial advisors or wealth managers serving ${p.niche} clients
-8. Insurance brokers specializing in ${p.niche}
-
-For each result provide:
-- Business or professional name
-- Website or LinkedIn URL (if findable)
-- Brief description of their specialty
-- Confidence level: High (verified active), Medium (appears active), or Low (verify before outreach)
-
-Prioritize results that show recent activity (last 12 months). Flag any results you are uncertain about. Format with clear category headers in markdown.`
-    },
-    {
       id: 3,
       title: "Phase 3: Dream 10 Tier Ranking & Shortlist",
       prompt: `${PERSONA}
