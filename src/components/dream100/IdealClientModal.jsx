@@ -126,6 +126,8 @@ export default function IdealClientModal({ isOpen, onClose, onSelect }) {
                 padding: "13px 15px", background: "#F4F1EC",
                 transition: "all 0.15s",
               }}
+              onClick={() => onSelect && onSelect(ex.text)}
+              style={{ ...undefined, cursor: onSelect ? "pointer" : "default" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = "#1B2A4A"; e.currentTarget.style.background = "#fff"; e.currentTarget.style.boxShadow = "0 4px 14px rgba(27,42,74,0.1)"; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "#DDD5C5"; e.currentTarget.style.background = "#F4F1EC"; e.currentTarget.style.boxShadow = "none"; }}
             >
