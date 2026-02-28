@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 
-export default function PhaseRunnerCard({ phase, status, result, isActive, defaultExpanded }) {
+export default function PhaseRunnerCard({ phase, status, result, isActive, defaultExpanded, errorMessage }) {
   const [expanded, setExpanded] = useState(defaultExpanded || false);
 
   useEffect(() => {

@@ -17,6 +17,7 @@ export default function RunBlueprint() {
   const [activePhase, setActivePhase] = useState(null);
   const [status, setStatus] = useState({});
   const [results, setResults] = useState({});
+  const [errors, setErrors] = useState({});
   const [allDone, setAllDone] = useState(false);
   const [exportingWord, setExportingWord] = useState(false);
   const resultsRef = useRef({});

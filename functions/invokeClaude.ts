@@ -2,7 +2,6 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {
   try {
-    // Allow unauthenticated access — no login required
     const body = await req.json();
     const { prompt } = body;
 
@@ -20,11 +19,10 @@ Deno.serve(async (req) => {
 
     const requestBody = {
       model,
-      max_tokens: 4000,
+      max_tokens: 10000,
       messages: [{ role: "user", content: prompt }]
     };
 
-    // Enable web search tool for phases that need live internet data (e.g. Phase 3.5)
     if (useWebSearch) {
       requestBody.tools = [{
         type: "web_search_20250305",
@@ -32,6 +30,8 @@ Deno.serve(async (req) => {
         max_uses: 5
       }];
     }
+
+    console.log(`[invokeClaude] model=${model} useWebSearch=${useWebSearch} promptLength=${prompt.length}`);
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -47,22 +47,26 @@ Deno.serve(async (req) => {
     const data = await response.json();
 
     if (!response.ok) {
-      return Response.json({ error: data.error?.message || 'Claude API error' }, { status: response.status });
+      const errMsg = data.error?.message || JSON.stringify(data);
+      console.error(`[invokeClaude] Claude API ${response.status}: ${errMsg}`);
+      return Response.json({ error: `Claude API ${response.status}: ${errMsg}` }, { status: response.status });
     }
 
     if (!data.content || !data.content[0]) {
+      console.error('[invokeClaude] No content in Claude response:', JSON.stringify(data));
       return Response.json({ error: 'No response from Claude' }, { status: 500 });
     }
 
-    // When web search is used, Claude returns multiple content blocks (tool_use + text).
-    // Extract the last text block as the final answer.
     const textBlocks = data.content.filter(b => b.type === "text");
     const resultText = textBlocks.length > 0
       ? textBlocks[textBlocks.length - 1].text
       : data.content[0].text;
 
+    console.log(`[invokeClaude] success stop_reason=${data.stop_reason} resultLength=${resultText?.length}`);
+
     return Response.json({ result: resultText });
   } catch (error) {
+    console.error('[invokeClaude] exception:', error.message, error.stack);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
