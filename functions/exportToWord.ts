@@ -225,7 +225,7 @@ function starItem(label, text) {
           width: { size: 8760, type: WidthType.DXA },
           children: [
             new Paragraph({ children: [new TextRun({ text: label, font: "Arial", size: 21, bold: true, color: DARK_GOLD })] }),
-            new Paragraph({ children: [new TextRun({ text, font: "Arial", size: 20, color: BODY_TEXT })] })
+            new Paragraph({ children: [new TextRun({ text, font: "Arial", size: 21, color: BODY_TEXT })] })
           ]
         })
       ]
@@ -486,13 +486,13 @@ function howToUsePage() {
 }
 
 function researchPromptPage(config) {
-  const { market, niche } = config;
+  const { market, niche, idealClient } = config;
   return [
     ...sectionHeader("Go Deeper", "Your Local Research Prompt"),
     spacer(8),
     body(`The partner types in this report are proven. The next step is finding the specific people in ${market} who fill those roles right now.`),
     spacer(10),
-    calloutBox("Why do this research yourself?", "AI-generated reports identify the categories and strategies. But the actual names — the lender who just funded a flip in your target neighborhood, the CPA who spoke at last month's investor meeting — those require live web research."),
+    calloutBox("Why do this research yourself?", "AI-generated reports identify the categories and strategies. But the actual names — the advisor who served a client last month, the attorney who spoke at a local event — those require live web research."),
     spacer(12),
     subhead("Copy and run this prompt in Perplexity, Claude, or ChatGPT:"),
     spacer(6),
@@ -506,21 +506,33 @@ function researchPromptPage(config) {
           margins: { top: 200, bottom: 200, left: 240, right: 240 },
           width: { size: 9360, type: WidthType.DXA },
           children: [
-            body(`I am a ${niche} specialist in ${market}. I am building a Dream 100 referral partner network and need help finding currently active, real local businesses and professionals in each of the following categories.`),
-            ...["Currently active (verified via website, LinkedIn, or recent online activity)", "Known to work with real estate investors or high-net-worth clients", "Reachable through professional outreach (website, LinkedIn, or business listing)"].map(t => bullet(t)),
+            body(`I am a ${niche} specialist in ${market}. My ideal client is: ${idealClient}. I am building a Dream 100 referral partner network and need help finding currently active, real local businesses and professionals in each of the following categories.`),
+            ...["Currently active (verified via website, LinkedIn, or recent online activity)", `Relevant to the ${niche} niche and the ${idealClient} client profile`, "Reachable through professional outreach (website, LinkedIn, or business listing)"].map(t => bullet(t)),
             spacer(8),
             new Paragraph({ children: [new TextRun({ text: "Categories to research:", font: "Arial", size: 20, bold: true, color: NAVY })] }),
-            ...["Hard money / private money lenders", "CPAs or tax strategists specializing in real estate investors", "Real estate attorneys", "Title and escrow officers with high investor transaction volume", "General contractors active on fix-and-flip projects", "Probate and estate attorneys", "Wholesale real estate operators", "Property managers serving investor portfolios", "Commercial or business bankers", "Insurance brokers writing builder's risk policies"]
-              .map(t => new Paragraph({ numbering: { reference: "numbers", level: 0 }, children: [new TextRun({ text: t, font: "Arial", size: 20, color: BODY_TEXT })] })),
+            ...[
+              "Estate planning attorneys or trust attorneys",
+              "Fee-only financial planners or wealth advisors",
+              `CPAs or tax strategists serving ${niche} clients`,
+              `Attorneys relevant to ${niche} transactions`,
+              `Title and escrow officers experienced with ${niche} transactions`,
+              `Upstream professionals who regularly see ${niche} clients before a transaction (e.g. senior care advisors, divorce attorneys, relocation specialists, concierge physicians — pick what fits this niche)`,
+              "Financial advisors or wealth managers serving this demographic",
+              `Insurance professionals relevant to ${niche} clients`
+            ].map(t => new Paragraph({ numbering: { reference: "numbers", level: 0 }, children: [new TextRun({ text: t, font: "Arial", size: 20, color: BODY_TEXT })] })),
             spacer(8),
-            body("For each result: business name, website or LinkedIn URL, area served, and one sentence on why they are relevant."),
+            body("For each result: business name, website or LinkedIn URL, area served, and one sentence on why they are relevant to this niche."),
           ]
         })]
       })]
     }),
     spacer(16),
     subhead2("Tips for best results:"),
-    ...["Use Perplexity — it searches the live web and cites sources.", "Cross-reference on BiggerPockets for stronger local signals.", "LinkedIn is your best verification tool."].map(t => bullet(t)),
+    ...[
+      "Use Perplexity — it searches the live web and cites sources.",
+      "LinkedIn is your best verification tool for confirming active professionals.",
+      "Cross-reference with local bar associations, financial planning directories, or chamber of commerce listings.",
+    ].map(t => bullet(t)),
     new Paragraph({ children: [new PageBreak()] })
   ];
 }
