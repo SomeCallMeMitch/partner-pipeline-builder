@@ -36,6 +36,12 @@ export default function OutputView({ formData, prompts, onRestart }) {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [dlLabel, setDlLabel] = useState('↓ Download Your Blueprint (.docx)');
 
+  React.useEffect(() => {
+    const handler = () => setEmailModalOpen(true);
+    document.addEventListener('openEmailModal', handler);
+    return () => document.removeEventListener('openEmailModal', handler);
+  }, []);
+
   const niche = formData.customNiche
     ? `${formData.nicheBase} — ${formData.customNiche}`
     : formData.nicheBase || '';
