@@ -89,26 +89,28 @@ ${llmNote}`
       model: llm,
       modelNote: `Optimized for ${llm}. ${llmNote}`,
       isSearch: true,
-      prompt: `You are a local market research specialist. Search the web for real, currently active businesses and professionals in ${geo} who serve clients in the ${niche} market.
+      prompt: `You are a local market research specialist. Search the web for real, currently active businesses and professionals in ${geo} who serve clients in the ${niche} real estate market.
 
-For each of the following partner categories, find 2–3 specific, currently active businesses or individual professionals in ${geo}:
+The ideal client for this agent is: ${client}
 
-1. Hard money / private money lenders (${niche}-focused)
-2. CPAs or tax strategists specializing in real estate clients
-3. Attorneys relevant to ${niche} transactions
-4. Title and escrow officers with high ${niche} transaction volume
-5. General contractors active in ${niche} projects
-6. Property managers serving ${niche} clients
-7. Financial advisors or wealth managers
-8. Insurance brokers specializing in ${niche}
+Based on who typically interacts with this type of client BEFORE and DURING a real estate transaction, find 2-3 specific, currently active businesses or individual professionals in ${geo} for each of these partner categories:
+
+1. Estate planning attorneys or trust attorneys
+2. Fee-only financial planners or wealth advisors
+3. CPAs or tax strategists serving this client profile
+4. Attorneys relevant to ${niche} transactions
+5. Title and escrow officers experienced with ${niche} transactions
+6. Upstream professionals who see ${niche} clients before a transaction (pick what fits: senior care advisors, divorce attorneys, relocation specialists, concierge physicians, or similar)
+7. Financial advisors or wealth managers serving this demographic
+8. Insurance professionals relevant to ${niche} clients
 
 For each result provide:
 - Business or professional name
 - Website or LinkedIn URL (if findable)
-- Brief description of their specialty
+- Brief description of their specialty and why they serve this client type
 - Confidence level: High (verified active), Medium (appears active), or Low (verify before outreach)
 
-Prioritize results that show recent activity (last 12 months). Format with clear category headers in markdown.`
+Only include professionals genuinely serving the ${niche} market in ${geo} or the immediately surrounding area. Do not include national chains unless they have a verified local presence. Prioritize results with recent activity (last 12 months). Flag anything uncertain. Format with clear category headers in markdown.`
     },
     {
       id: 3,
