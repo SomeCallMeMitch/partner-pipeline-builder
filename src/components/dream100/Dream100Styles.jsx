@@ -226,7 +226,7 @@ export default function Dream100Styles() {
         background: var(--d100-white);
         border-radius: var(--d100-radius);
         border: 1px solid var(--d100-border);
-        padding: 26px 20px;
+        padding: 20px 20px 26px;
         box-shadow: var(--d100-shadow);
         animation: d100fadeUp 0.25s ease both;
       }
