@@ -5,7 +5,8 @@ import { base44 } from "@/api/base44Client";
 import { buildPhasePrompts } from "@/components/engine/phasePromptBuilder";
 import { buildPrompts } from "@/components/dream100/promptBuilder";
 import PhaseRunnerCard from "@/components/runner/PhaseRunnerCard";
-import Dream100Styles from "@/components/dream100/Dream100Styles";
+import RunnerProgressCard from "@/components/runner/RunnerProgressCard";
+import RunnerNurturInkCTA from "@/components/runner/RunnerNurturInkCTA";
 
 export default function RunBlueprint() {
   const navigate = useNavigate();
@@ -126,81 +127,91 @@ export default function RunBlueprint() {
   }
 
   const completedCount = Object.values(status).filter(s => s === "done").length;
+  const firstDonePhase = phases.find(p => status[p.id] === "done");
 
   if (loading) return (
-    <>
-      <Dream100Styles />
-      <div style={{ minHeight: "100vh", background: "var(--cream)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div className="d100-spinner" />
-      </div>
-    </>
+    <div style={{ minHeight: "100vh", background: "#F4F1EC", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ width: 36, height: 36, border: "3px solid #EDE8E0", borderTopColor: "#C9973A", borderRadius: "50%", animation: "runnerSpin 0.8s linear infinite" }} />
+    </div>
   );
 
   if (!landingData && !build) return (
-    <>
-      <Dream100Styles />
-      <div style={{ minHeight: "100vh", background: "var(--cream)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" }}>
-        Build not found.
-      </div>
-    </>
+    <div style={{ minHeight: "100vh", background: "#F4F1EC", display: "flex", alignItems: "center", justifyContent: "center", color: "#5A6278", fontFamily: "'Sora', sans-serif" }}>
+      Build not found.
+    </div>
   );
 
   return (
-    <>
-      <Dream100Styles />
+    <div style={{ background: "#F4F1EC", minHeight: "100vh", fontFamily: "'Sora', -apple-system, sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
+        @keyframes runnerSpin { to { transform: rotate(360deg); } }
+        @keyframes runnerBlink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        .runner-phase-list > * + * { margin-top: 10px; }
+        @media (max-width: 860px) {
+          .runner-two-col { grid-template-columns: 1fr !important; }
+          .runner-right-col { position: static !important; }
+        }
+        @media (max-width: 600px) {
+          .runner-body { padding: 20px 16px 60px !important; }
+          .runner-nav-inner { padding: 0 16px !important; }
+        }
+      `}</style>
 
       {/* Sticky Nav */}
-      <div className="d100-sticky-nav">
-        <div className="d100-nav-top">
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ background: "#1B2A4A", boxShadow: "0 2px 20px rgba(0,0,0,0.25)", position: "sticky", top: 0, zIndex: 100 }}>
+        <div className="runner-nav-inner" style={{ maxWidth: 1160, margin: "0 auto", padding: "0 40px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          {/* Left */}
+          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <button
               onClick={() => navigate(-1)}
-              style={{ background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", color: "white", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}
+              style={{ background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", color: "#fff", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center" }}
             >←</button>
             <div>
-              <div style={{ color: "white", fontWeight: 700, fontSize: 15, fontFamily: "'Sora', sans-serif" }}>AI Blueprint Runner</div>
-              <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 12 }}>{displayName}</div>
+              <div style={{ color: "#fff", fontWeight: 700, fontSize: 15, lineHeight: 1.2 }}>AI Blueprint Runner</div>
+              <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, lineHeight: 1.4 }}>{displayName}</div>
             </div>
           </div>
 
-          {/* Controls in nav */}
+          {/* Right */}
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button
-              onClick={allDone ? () => { setAllDone(false); runAll(); } : runAll}
-              disabled={running}
-              style={{
-                background: running ? "rgba(255,255,255,0.1)" : "var(--gold)",
-                color: running ? "rgba(255,255,255,0.5)" : "var(--navy)",
-                border: "none", borderRadius: 8, padding: "8px 18px",
-                fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: 14,
-                cursor: running ? "not-allowed" : "pointer",
-                display: "flex", alignItems: "center", gap: 6
-              }}
-            >
-              {running ? (
-                <>
-                  <div style={{ width: 12, height: 12, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "rgba(255,255,255,0.8)", borderRadius: "50%", animation: "d100spin 0.8s linear infinite" }} />
-                  Phase {activePhase}/{phases.length}
-                </>
-              ) : allDone ? "↺ Run Again" : `▶ Run All ${phases.length} Phases`}
-            </button>
+            {(running || allDone || completedCount > 0) && (
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginRight: 4 }}>{completedCount} of {phases.length} complete</span>
+            )}
 
             {allDone && (
               <>
                 <button
                   onClick={downloadAll}
-                  style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.85)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 8, padding: "8px 14px", fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
+                  style={{ background: "transparent", color: "rgba(255,255,255,0.75)", border: "1px solid rgba(255,255,255,0.18)", borderRadius: 8, padding: "8px 14px", fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
                 >↓ Markdown</button>
                 <button
                   onClick={downloadWord}
                   disabled={exportingWord}
-                  style={{ background: "rgba(201,151,58,0.15)", color: "var(--gold-light)", border: "1px solid rgba(201,151,58,0.35)", borderRadius: 8, padding: "8px 14px", fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 13, cursor: exportingWord ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 6 }}
+                  style={{ background: "rgba(201,151,58,0.15)", color: "#E8B55A", border: "1px solid rgba(201,151,58,0.35)", borderRadius: 8, padding: "8px 14px", fontFamily: "'Sora', sans-serif", fontWeight: 600, fontSize: 13, cursor: exportingWord ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 6 }}
                 >
                   {exportingWord ? (
-                    <><div style={{ width: 12, height: 12, border: "2px solid rgba(201,151,58,0.3)", borderTopColor: "var(--gold)", borderRadius: "50%", animation: "d100spin 0.8s linear infinite" }} /> Building...</>
-                  ) : "📄 Download Word"}
+                    <><div style={{ width: 12, height: 12, border: "2px solid rgba(201,151,58,0.3)", borderTopColor: "#C9973A", borderRadius: "50%", animation: "runnerSpin 0.8s linear infinite" }} /> Building...</>
+                  ) : "📄 Word Doc"}
                 </button>
               </>
+            )}
+
+            {running ? (
+              <button
+                disabled
+                style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", border: "none", borderRadius: 8, padding: "8px 16px", fontFamily: "'Sora', sans-serif", fontWeight: 800, fontSize: 13, cursor: "not-allowed", display: "flex", alignItems: "center", gap: 6 }}
+              >
+                <div style={{ width: 12, height: 12, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "rgba(255,255,255,0.8)", borderRadius: "50%", animation: "runnerSpin 0.8s linear infinite" }} />
+                Phase {activePhase}/{phases.length} Running...
+              </button>
+            ) : (
+              <button
+                onClick={allDone ? () => { setAllDone(false); runAll(); } : runAll}
+                style={{ background: "#C9973A", color: "#1B2A4A", border: "none", borderRadius: 8, padding: "8px 16px", fontFamily: "'Sora', sans-serif", fontWeight: 800, fontSize: 13, cursor: "pointer" }}
+              >
+                {allDone ? "↺ Run Again" : `▶ Run All ${phases.length} Phases`}
+              </button>
             )}
           </div>
         </div>
@@ -208,56 +219,93 @@ export default function RunBlueprint() {
         {/* Progress bar */}
         {(running || allDone) && (
           <div style={{ height: 3, background: "rgba(255,255,255,0.08)" }}>
-            <div style={{ height: "100%", width: `${(completedCount / phases.length) * 100}%`, background: "var(--gold)", transition: "width 0.5s ease" }} />
+            <div style={{ height: "100%", width: `${(completedCount / phases.length) * 100}%`, background: "linear-gradient(90deg, #C9973A, #E8B55A)", transition: "width 0.6s ease" }} />
           </div>
         )}
       </div>
 
-      {/* Main content */}
-      <div className="d100-main" style={{ maxWidth: 720 }}>
+      {/* Body */}
+      <div className="runner-body" style={{ maxWidth: 1160, margin: "0 auto", padding: "32px 40px 80px" }}>
 
-        {/* Hero info card */}
-        <div className="d100-form-card" style={{ marginBottom: 20, background: "var(--navy)", borderColor: "rgba(255,255,255,0.1)" }}>
-          <div style={{ fontSize: 11, color: "var(--gold-light)", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700, marginBottom: 6 }}>NurturInk · Dream 100 Blueprint</div>
-          <div style={{ color: "white", fontWeight: 800, fontSize: 18, marginBottom: 4, fontFamily: "'Sora', sans-serif" }}>{landingData ? displayName : build?.name}</div>
-          <div style={{ color: "rgba(255,255,255,0.65)", fontSize: 14, lineHeight: 1.5 }}>
-            This runner will send each of the {phases.length} phases to Claude AI one at a time and display the results below.
+        {/* Context card */}
+        <div style={{
+          background: "#1B2A4A", borderRadius: 14, padding: "22px 26px",
+          marginBottom: 24, position: "relative", overflow: "hidden",
+        }}>
+          <div style={{ position: "absolute", top: -30, right: -30, width: 160, height: 160, background: "radial-gradient(circle, rgba(201,151,58,0.13), transparent 65%)", pointerEvents: "none" }} />
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#E8B55A", marginBottom: 6 }}>NurturInk · Dream 100 Blueprint</div>
+          <div style={{ color: "#fff", fontWeight: 800, fontSize: 17, marginBottom: 8, lineHeight: 1.3, fontFamily: "'Sora', sans-serif" }}>{displayName}</div>
+          <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 13.5, lineHeight: 1.6 }}>
+            Sending each of the {phases.length} phases to Claude AI one at a time.{" "}
+            <strong style={{ color: "rgba(255,255,255,0.85)" }}>Each phase takes 1–6 minutes.</strong>
           </div>
-          {running && (
-            <div style={{ marginTop: 12, fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
-              {completedCount} of {phases.length} phases complete
+        </div>
+
+        {/* Two-column layout */}
+        <div className="runner-two-col" style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: 32, alignItems: "start" }}>
+
+          {/* LEFT */}
+          <div>
+            {/* Warning */}
+            <div style={{
+              background: "#FEF3C7", border: "1px solid #F59E0B",
+              borderLeft: "4px solid #F59E0B", borderRadius: 12,
+              padding: "14px 18px", marginBottom: 20,
+              display: "flex", gap: 12, alignItems: "flex-start",
+            }}>
+              <span style={{ fontSize: 19, flexShrink: 0, marginTop: 1 }}>⏳</span>
+              <p style={{ fontSize: 14, color: "#92400E", lineHeight: 1.6, margin: 0 }}>
+                <strong>Don't stop this process or navigate away while it's running.</strong>{" "}
+                Each phase builds on the last. If interrupted, use Run Again to restart from the beginning.
+              </p>
             </div>
-          )}
-        </div>
 
-        {/* Phase Cards */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {phases.map(phase => (
-            <PhaseRunnerCard
-              key={phase.id}
-              phase={phase}
-              status={status[phase.id]}
-              result={results[phase.id]}
-              isActive={activePhase === phase.id}
-            />
-          ))}
-        </div>
+            {/* Phase cards */}
+            <div className="runner-phase-list">
+              {phases.map((phase, idx) => (
+                <PhaseRunnerCard
+                  key={phase.id}
+                  phase={phase}
+                  status={status[phase.id]}
+                  result={results[phase.id]}
+                  isActive={activePhase === phase.id}
+                  defaultExpanded={firstDonePhase?.id === phase.id}
+                />
+              ))}
+            </div>
 
-        {/* All Done Banner */}
-        {allDone && (
-          <div className="d100-form-card" style={{ marginTop: 20, textAlign: "center", background: "rgba(45,106,79,0.06)", borderColor: "rgba(45,106,79,0.2)" }}>
-            <div style={{ fontSize: 13, color: "var(--success)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>✓ Complete</div>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "var(--navy)", marginBottom: 6, fontFamily: "'Sora', sans-serif" }}>All {phases.length} Phases Complete</div>
-            <div style={{ fontSize: 14, color: "var(--text-muted)" }}>Download your full blueprint above or review each phase below.</div>
+            {/* All done banner */}
+            {allDone && (
+              <div style={{
+                marginTop: 20, padding: "22px 24px", borderRadius: 14,
+                background: "rgba(45,106,79,0.06)", border: "1px solid rgba(45,106,79,0.2)",
+                textAlign: "center",
+              }}>
+                <div style={{ fontSize: 12, color: "#2D6A4F", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 4 }}>✓ Complete</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: "#1B2A4A", marginBottom: 6, fontFamily: "'Sora', sans-serif" }}>All {phases.length} Phases Complete</div>
+                <div style={{ fontSize: 14, color: "#5A6278" }}>Download your full blueprint using the buttons in the nav above.</div>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* RIGHT */}
+          <div className="runner-right-col" style={{ position: "sticky", top: 76, display: "flex", flexDirection: "column", gap: 16 }}>
+            <RunnerProgressCard
+              phases={phases}
+              status={status}
+              activePhase={activePhase}
+              completedCount={completedCount}
+            />
+            <RunnerNurturInkCTA />
+          </div>
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="d100-site-footer">
-        <a href="https://nurturink.com/realestate" target="_blank" rel="noreferrer">NurturInk.com</a>
+      <footer style={{ background: "#1B2A4A", color: "rgba(255,255,255,0.4)", textAlign: "center", padding: "18px 24px", fontSize: 12, lineHeight: 1.6 }}>
+        <a href="https://nurturink.com/realestate" target="_blank" rel="noreferrer" style={{ color: "#C9973A", textDecoration: "none" }}>NurturInk.com</a>
         {" · "}the handwritten follow-up system for relationship-driven sales professionals
-      </div>
-    </>
+      </footer>
+    </div>
   );
 }
