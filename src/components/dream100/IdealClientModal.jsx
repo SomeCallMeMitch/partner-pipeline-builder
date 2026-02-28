@@ -33,7 +33,7 @@ const examples = [
   },
 ];
 
-export default function IdealClientModal({ isOpen, onClose }) {
+export default function IdealClientModal({ isOpen, onClose, onSelect }) {
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e) => { if (e.key === "Escape") onClose(); };
