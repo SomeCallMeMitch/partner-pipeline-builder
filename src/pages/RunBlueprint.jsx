@@ -53,6 +53,7 @@ export default function RunBlueprint() {
   async function runAll() {
     setRunning(true);
     setResults({});
+    setErrors({});
     setStatus({});
     setAllDone(false);
     resultsRef.current = {};
@@ -70,8 +71,10 @@ export default function RunBlueprint() {
         setResults(r => ({ ...r, [phase.id]: result }));
         setStatus(s => ({ ...s, [phase.id]: "done" }));
       } catch (e) {
+        const msg = e?.response?.data?.error || e?.message || "Unknown error";
         setStatus(s => ({ ...s, [phase.id]: "error" }));
-        console.error(`Phase ${phase.id} error:`, e);
+        setErrors(er => ({ ...er, [phase.id]: msg }));
+        console.error(`Phase ${phase.id} error:`, msg);
       }
     }
 
@@ -271,6 +274,7 @@ export default function RunBlueprint() {
                   result={results[phase.id]}
                   isActive={activePhase === phase.id}
                   defaultExpanded={firstDonePhase?.id === phase.id}
+                  errorMessage={errors[phase.id]}
                 />
               ))}
             </div>
