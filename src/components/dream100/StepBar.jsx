@@ -6,7 +6,7 @@ export default function StepBar({ currentStep, visible }) {
   if (!visible) return null;
 
   return (
-    <div className="d100-step-bar">
+    <div style={{ display: 'flex', alignItems: 'center', gap: 0, flex: 1, justifyContent: 'center', padding: '0 24px' }}>
       {[1, 2, 3, 4].map((i) => (
         <React.Fragment key={i}>
           <div className={`d100-step-pip ${i < currentStep ? 'done' : ''} ${i === currentStep ? 'active' : ''}`}>
