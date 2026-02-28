@@ -103,6 +103,20 @@ export default function PhaseRunnerCard({ phase, status, result, isActive, defau
         </div>
       </div>
 
+      {/* Error detail */}
+      {isError && errorMessage && (
+        <div style={{
+          borderTop: "1px solid #FCA5A5",
+          padding: "10px 18px",
+          background: "#FEF2F2",
+          fontSize: 12.5, color: "#B91C1C",
+          fontFamily: "monospace",
+          lineHeight: 1.5,
+        }}>
+          {errorMessage}
+        </div>
+      )}
+
       {/* Peek bar for collapsed done */}
       {isDone && result && !expanded && (
         <div
