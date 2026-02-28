@@ -236,11 +236,11 @@ export default function Dream100Styles() {
       }
       .d100-card-title {
         font-size: 20px; font-weight: 800; color: var(--navy);
-        margin-bottom: 6px; line-height: 1.25; letter-spacing: -0.01em;
+        margin-bottom: 3px; line-height: 1.25; letter-spacing: -0.01em;
       }
       .d100-card-sub {
         font-size: 15px; color: var(--text-muted);
-        margin-bottom: 24px; line-height: 1.5; font-weight: 400;
+        margin-bottom: 12px; line-height: 1.5; font-weight: 400;
       }
       .d100-card-sub strong { color: var(--d100-text); font-weight: 600; }
 
