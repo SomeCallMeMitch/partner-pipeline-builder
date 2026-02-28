@@ -103,11 +103,11 @@ export default function Landing() {
               <div className="d100-logo-mark">{theme.logoMark}</div>
               <span className="d100-logo-text">{theme.brandName}</span>
             </a>
+            {view === 'wizard' && <StepBar currentStep={wizardStep} visible={true} />}
             <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="d100-header-cta">
               Visit {theme.brandName} →
             </a>
           </div>
-          {view === 'wizard' && <StepBar currentStep={wizardStep} visible={true} />}
         </div>
       )}
 
