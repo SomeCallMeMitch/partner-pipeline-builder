@@ -132,7 +132,7 @@ export default function Landing() {
       {view === 'hero' && <HeroSection onStart={startWizard} />}
 
       {/* Main Content */}
-      {view !== 'hero' && (
+      {view !== 'hero' && view !== 'output' && (
         <main className="d100-main" ref={mainRef}>
           {view === 'wizard' && wizardStep === 1 && (
             <WizardStep1 formData={formData} onChange={updateForm} onNext={() => goToStep(2)} />
@@ -147,14 +147,16 @@ export default function Landing() {
             <WizardStep4 formData={formData} onBack={() => goToStep(3)} onGenerate={handleGenerate} />
           )}
           {view === 'generating' && <GeneratingCard />}
-          {view === 'output' && (
-            <OutputView formData={formData} prompts={prompts} onRestart={handleRestart} />
-          )}
         </main>
       )}
 
-      {/* Footer — only shown outside hero (hero has its own footer) */}
-      {view !== 'hero' && (
+      {/* Output view — full-width, no d100-main wrapper */}
+      {view === 'output' && (
+        <OutputView formData={formData} prompts={prompts} onRestart={handleRestart} />
+      )}
+
+      {/* Footer — only shown outside hero/output */}
+      {view !== 'hero' && view !== 'output' && (
         <footer className="d100-site-footer" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
           <p>This free tool is brought to you by <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>{theme.brandName}</a> — {theme.footerText}.</p>
           <p style={{ marginTop: 5 }}>&copy; 2025 {theme.brandName} &nbsp;&middot;&nbsp; <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>Learn More</a></p>
