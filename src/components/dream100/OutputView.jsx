@@ -290,6 +290,19 @@ export default function OutputView({ formData, prompts, onRestart }) {
         />
       )}
 
+      {/* Footer */}
+      <footer style={{
+        background: S.navy, color: '#fff', textAlign: 'center',
+        padding: '18px 24px', fontSize: 13, lineHeight: 1.6, opacity: 0.6,
+      }}>
+        This free tool is brought to you by{' '}
+        <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer"
+          style={{ color: S.gold, textDecoration: 'none', fontWeight: 600, opacity: 1 }}>
+          {theme.brandName}
+        </a>
+        {' '}— {theme.footerText}.
+      </footer>
+
       <style>{`
         @media (max-width: 860px) {
           .out-cols { grid-template-columns: 1fr !important; }
