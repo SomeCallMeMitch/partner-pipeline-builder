@@ -136,11 +136,13 @@ export default function Landing() {
         </main>
       )}
 
-      {/* Footer */}
-      <footer className="d100-site-footer" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
-        <p>This free tool is brought to you by <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>{theme.brandName}</a> — {theme.footerText}.</p>
-        <p style={{ marginTop: 5 }}>&copy; 2025 {theme.brandName} &nbsp;&middot;&nbsp; <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>Learn More</a></p>
-      </footer>
+      {/* Footer — only shown outside hero (hero has its own footer) */}
+      {view !== 'hero' && (
+        <footer className="d100-site-footer" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
+          <p>This free tool is brought to you by <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>{theme.brandName}</a> — {theme.footerText}.</p>
+          <p style={{ marginTop: 5 }}>&copy; 2025 {theme.brandName} &nbsp;&middot;&nbsp; <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>Learn More</a></p>
+        </footer>
+      )}
     </div>
   );
 }
