@@ -1,36 +1,36 @@
 import React from "react";
 import { useTheme } from "@/components/ThemeContext";
 
-const FEATURES = [
+const OUTCOMES = [
   {
-    icon: "🏆",
+    icon: "🎯",
     title: "A ranked list of your Dream 10 referral partners",
-    desc: "Specific professionals in your market, tiered by referral potential for your niche — not generic types, real categories of people in your city."
+    detail: "Specific professionals in your market, tiered by referral potential for your niche — not generic types, real categories of people in your city"
   },
   {
     icon: "🤝",
     title: "A value strategy for each partner type",
-    desc: "What you bring to them — not just what you want from them. This is the foundation every relationship gets built on."
+    detail: "What you bring to them — not just what you want from them. This is the foundation every relationship gets built on"
   },
   {
-    icon: "📋",
+    icon: "📜",
     title: "Complete outreach scripts, ready to personalize",
-    desc: "Email, phone, door-knock, and handwritten note templates. You fill in the name — everything else is written."
+    detail: "Email, phone, door-knock, and handwritten note templates. You fill in the name — everything else is written"
   },
   {
     icon: "🛡️",
     title: "Objection responses, pre-written",
-    desc: "Every pushback a partner might give, with confident, non-salesy answers prepared before you even pick up the phone."
+    detail: "Every pushback a partner might give, with confident, non-salesy answers prepared before you ever pick up the phone"
   },
   {
     icon: "📅",
     title: "A 90-day action plan, week by week",
-    desc: "Exactly what to do each week to build relationships that generate consistent referrals — no guessing."
+    detail: "Exactly what to do each week to build relationships that generate consistent referrals — no guessing"
   },
   {
     icon: "📊",
     title: "12-month production math",
-    desc: "How many partners you need, at what referral rate, to hit your annual income goal — in black and white."
+    detail: "How many partners you need, at what referral rate, to hit your annual income goal — in black and white"
   },
 ];
 
@@ -38,202 +38,196 @@ export default function HeroSection({ onStart }) {
   const { theme } = useTheme();
 
   return (
-    <section style={{
+    <div style={{
       background: '#1B2A4A',
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
       fontFamily: "'Sora', -apple-system, sans-serif",
+      color: '#fff',
     }}>
-      {/* Nav */}
+      {/* NAV */}
       <nav style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 48px', height: 54,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         borderBottom: '1px solid rgba(255,255,255,0.08)',
         flexShrink: 0,
       }}>
-        <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{
-          display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none'
-        }}>
+        <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer"
+          style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <div style={{
-            width: 32, height: 32, background: '#F0A422', borderRadius: 6,
+            width: 30, height: 30, background: '#F0A422', borderRadius: 7,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 800, fontSize: 15, color: '#1B2A4A', flexShrink: 0,
+            fontWeight: 800, fontSize: 14, color: '#1B2A4A',
           }}>{theme.logoMark}</div>
-          <span style={{ color: '#fff', fontWeight: 600, fontSize: 15 }}>{theme.brandName}</span>
+          <span style={{ fontWeight: 700, fontSize: 15, color: '#fff' }}>{theme.brandName}</span>
         </a>
         <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{
-          color: '#F7BC55', fontSize: 13, fontWeight: 600, textDecoration: 'none',
-          border: '1px solid rgba(247,188,85,0.45)', padding: '7px 16px', borderRadius: 20,
+          color: '#F0A422', fontSize: 13, fontWeight: 600, textDecoration: 'none',
+          border: '1px solid rgba(240,164,34,0.4)', padding: '6px 16px', borderRadius: 20,
+          whiteSpace: 'nowrap',
         }}>
           Visit {theme.brandName} →
         </a>
       </nav>
 
-      {/* Hero body */}
+      {/* HERO GRID */}
       <div style={{
-        flex: 1,
-        display: 'flex',
-        alignItems: 'stretch',
-        maxWidth: 1280,
-        width: '100%',
-        margin: '0 auto',
-        padding: '48px 48px 56px',
+        maxWidth: 1200, margin: '0 auto', width: '100%',
+        padding: '32px 48px 56px',
+        display: 'grid',
+        gridTemplateColumns: '1fr 560px',
         gap: 72,
+        alignItems: 'start',
         boxSizing: 'border-box',
-      }} className="hero-columns">
+        flex: 1,
+      }} className="hero-grid">
+
         {/* LEFT */}
-        <div style={{ flex: '0 0 auto', width: '42%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div>
           {/* Badge */}
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            background: 'rgba(240,164,34,0.15)', border: '1px solid rgba(240,164,34,0.35)',
-            color: '#F7BC55', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em',
-            textTransform: 'uppercase', padding: '6px 14px', borderRadius: 20,
-            marginBottom: 24, width: 'fit-content',
+            display: 'inline-flex', alignItems: 'center',
+            background: 'rgba(240,164,34,0.14)', border: '1px solid rgba(240,164,34,0.3)',
+            borderRadius: 20, padding: '5px 14px', marginBottom: 20,
+            color: '#F0A422', fontSize: 11, fontWeight: 700,
+            letterSpacing: '0.09em', textTransform: 'uppercase',
           }}>✦ Free Tool for Real Estate Agents</div>
 
-          {/* Headline */}
+          {/* H1 */}
           <h1 style={{
-            fontSize: 48, fontWeight: 800, lineHeight: 1.15, letterSpacing: '-0.02em',
-            color: '#fff', marginBottom: 20,
+            fontSize: 50, fontWeight: 800, color: '#fff',
+            margin: '0 0 18px', lineHeight: 1.08, letterSpacing: '-0.03em',
           }}>
-            Find the{' '}
-            <span style={{ color: '#F0A422' }}>10 People</span>
-            {' '}Who Already Know Your Next{' '}
-            <span style={{ color: '#F0A422' }}>50 Clients</span>
+            Find the <span style={{ color: '#F0A422' }}>10 People</span><br />
+            Who Already Know<br />
+            Your Next <span style={{ color: '#F7BC55' }}>50 Clients</span>
           </h1>
 
-          {/* Sub */}
-          <p style={{ color: 'rgba(255,255,255,0.78)', fontSize: 17, lineHeight: 1.6, marginBottom: 32, maxWidth: 440 }}>
+          <p style={{ fontSize: 18, color: '#fff', lineHeight: 1.55, margin: '0 0 28px', maxWidth: 500 }}>
             Get a complete 10-prompt AI blueprint to build your Dream 100 referral partner system — built for your niche and your market in minutes.
           </p>
 
-          {/* CTA */}
           <button onClick={onStart} style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: '#F0A422', color: '#1B2A4A',
-            fontSize: 17, fontWeight: 800, padding: '17px 32px',
-            borderRadius: 50, border: 'none', cursor: 'pointer',
-            boxShadow: '0 4px 24px rgba(240,164,34,0.4)',
-            fontFamily: "'Sora', sans-serif",
-            width: 'fit-content', marginBottom: 14,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            background: '#F0A422', color: '#1B2A4A', border: 'none', borderRadius: 12,
+            padding: '16px 34px', fontFamily: "'Sora', sans-serif",
+            fontWeight: 800, fontSize: 17, cursor: 'pointer',
+            boxShadow: '0 4px 20px rgba(240,164,34,0.38)',
+            whiteSpace: 'nowrap',
           }}>
             Build My Free Blueprint — It's Free ⚡
           </button>
 
-          <p style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13 }}>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginTop: 12 }}>
             Takes about 3 minutes · No account needed · Use it as many times as you want
           </p>
 
-          {/* Credit box */}
+          {/* Credit */}
           <div style={{
-            marginTop: 32,
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            borderRadius: 12, padding: '18px 20px',
+            marginTop: 36, padding: '18px 20px',
+            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.11)',
+            borderRadius: 12, display: 'flex', gap: 14, alignItems: 'flex-start',
           }}>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <span style={{ fontSize: 20, flexShrink: 0, marginTop: 2 }}>🧠</span>
-              <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 13, lineHeight: 1.65, margin: 0 }}>
-                Built on a framework co-developed by a leading AI strategist and a top-producing agent who's used AI to transform his real estate business — adapted by {theme.brandName} into a tool anyone can use in minutes.{' '}
-                <a
-                  href="https://www.facebook.com/groups/aipromptsforrealestateprofessionals"
-                  target="_blank" rel="noopener noreferrer"
-                  style={{ color: '#F0A422', textDecoration: 'underline' }}
-                >
-                  For more excellent AI advice for Realtors, visit their Facebook group →
-                </a>
-              </p>
-            </div>
+            <span style={{ fontSize: 22, flexShrink: 0, marginTop: 1 }}>🧠</span>
+            <p style={{ fontSize: 14, color: '#fff', lineHeight: 1.6, margin: 0 }}>
+              Built on a framework co-developed by a leading AI strategist and a top-producing agent who's used AI to transform his real estate business — adapted by {theme.brandName} into a tool anyone can use in minutes.<br /><br />
+              <a href="https://www.facebook.com/groups/aipromptsforrealestateprofessionals"
+                target="_blank" rel="noopener noreferrer"
+                style={{ color: '#F0A422', textDecoration: 'underline' }}>
+                For more excellent AI advice for Realtors, visit their Facebook group →
+              </a>
+            </p>
           </div>
         </div>
 
-        {/* RIGHT — features card */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        {/* RIGHT — white panel */}
+        <div style={{
+          background: '#fff',
+          borderRadius: 18,
+          overflow: 'hidden',
+          boxShadow: '0 24px 64px rgba(0,0,0,0.32)',
+        }}>
+          {/* Panel header — dark gradient */}
           <div style={{
-            background: '#243659',
-            border: '1px solid rgba(255,255,255,0.12)',
-            borderRadius: 16,
-            overflow: 'hidden',
+            background: 'linear-gradient(135deg, #111D33, #243659)',
+            padding: '20px 24px',
           }}>
-            {/* Card header */}
             <div style={{
-              padding: '20px 28px 16px',
-              borderBottom: '1px solid rgba(255,255,255,0.1)',
+              fontSize: 16.7, fontWeight: 800, letterSpacing: '0.04em',
+              textTransform: 'uppercase', color: '#fff', marginBottom: 6,
             }}>
-              <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', color: '#F0A422', textTransform: 'uppercase', marginBottom: 4 }}>
-                What These Prompts Will Build For You
+              What These Prompts Will Build For You
+            </div>
+            <p style={{ fontSize: 15.5, color: '#fff', lineHeight: 1.5, margin: 0 }}>
+              Implement these prompts using the included step-by-step instructions and you'll have all of this:
+            </p>
+          </div>
+
+          {/* Outcome rows */}
+          {OUTCOMES.map((o, i) => (
+            <div key={i} style={{
+              display: 'flex', gap: 14, padding: '14px 20px',
+              borderBottom: i < OUTCOMES.length - 1 ? '1px solid #DDD5C5' : 'none',
+              background: '#fff',
+            }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 9,
+                background: '#FDF0D5', border: '1px solid rgba(240,164,34,0.25)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 18, flexShrink: 0,
+              }}>{o.icon}</div>
+              <div>
+                <div style={{ fontSize: 15.5, fontWeight: 700, color: '#1A1A2E', marginBottom: 3, lineHeight: 1.3 }}>{o.title}</div>
+                <p style={{ fontSize: 13.9, color: '#5A6278', lineHeight: 1.5, margin: 0 }}>{o.detail}</p>
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, margin: 0, lineHeight: 1.5 }}>
-                Implement these prompts using the included step-by-step instructions and you'll have all of this:
-              </p>
             </div>
+          ))}
 
-            {/* Feature rows */}
-            <div style={{ padding: '8px 0' }}>
-              {FEATURES.map((f, i) => (
-                <div key={i} style={{
-                  display: 'flex', gap: 14, alignItems: 'flex-start',
-                  padding: '14px 28px',
-                  borderBottom: i < FEATURES.length - 1 ? '1px solid rgba(255,255,255,0.07)' : 'none',
-                }}>
-                  <div style={{
-                    width: 36, height: 36, flexShrink: 0,
-                    background: 'rgba(255,255,255,0.07)', borderRadius: 8,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 18,
-                  }}>{f.icon}</div>
-                  <div>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', marginBottom: 3, lineHeight: 1.3 }}>{f.title}</div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.55 }}>{f.desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Card footer */}
-            <div style={{
-              padding: '12px 28px',
-              borderTop: '1px solid rgba(255,255,255,0.1)',
-              color: 'rgba(255,255,255,0.4)', fontSize: 12, textAlign: 'center',
-            }}>
+          {/* Panel footer */}
+          <div style={{ padding: '16px 20px', background: '#F2EEE8', borderTop: '1px solid #DDD5C5' }}>
+            <p style={{ textAlign: 'center', fontSize: 13.3, color: '#5A6278', margin: 0 }}>
               Takes 3 minutes · No login · Use it as many times as you want
-            </div>
+            </p>
           </div>
         </div>
+
       </div>
 
-      {/* Footer */}
-      <div style={{
-        borderTop: '1px solid rgba(255,255,255,0.1)',
-        padding: '14px 48px',
+      {/* FOOTER */}
+      <footer style={{
+        borderTop: '1px solid rgba(255,255,255,0.07)',
+        padding: '16px 48px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         flexShrink: 0,
       }}>
-        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 13, margin: 0 }}>
+        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', margin: 0 }}>
           This free tool is brought to you by{' '}
-          <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#F0A422', textDecoration: 'none', fontWeight: 600 }}>{theme.brandName}</a>
+          <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer"
+            style={{ color: 'rgba(240,164,34,0.7)', textDecoration: 'none', fontWeight: 600 }}>
+            {theme.brandName}
+          </a>
           {' '}— {theme.footerText}.
         </p>
-        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, margin: 0 }}>
-          © 2025 {theme.brandName} &nbsp;·&nbsp;{' '}
-          <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#F0A422', textDecoration: 'none' }}>Learn More</a>
-        </p>
-      </div>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)' }}>
+          © 2025 {theme.brandName} ·{' '}
+          <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer"
+            style={{ color: '#F0A422', textDecoration: 'none' }}>
+            Learn More
+          </a>
+        </div>
+      </footer>
 
       <style>{`
-        @media (max-width: 900px) {
-          .hero-columns {
-            flex-direction: column !important;
-            padding: 32px 20px 48px !important;
-            gap: 40px !important;
+        @media (max-width: 768px) {
+          .hero-grid {
+            grid-template-columns: 1fr !important;
+            gap: 32px !important;
+            padding: 24px 20px 40px !important;
           }
-          .hero-columns > div:first-child {
-            width: 100% !important;
-          }
+          .hero-grid h1 { font-size: 34px !important; }
         }
       `}</style>
-    </section>
+    </div>
   );
 }
