@@ -317,22 +317,30 @@ function parseMarkdown(text) {
       i++; continue;
     }
 
-    if (trimmed.startsWith('> ')) {
-      const quoteText = trimmed.slice(2).trim();
-      elements.push(new Table({
-        width: { size: 9360, type: WidthType.DXA },
-        columnWidths: [9360],
-        rows: [new TableRow({
-          children: [new TableCell({
-            borders: { top: noBorder().top, bottom: noBorder().bottom, right: noBorder().right, left: { style: BorderStyle.SINGLE, size: 12, color: STEEL } },
-            shading: { fill: "F0F4FA", type: ShadingType.CLEAR },
-            margins: { top: 80, bottom: 80, left: 200, right: 200 },
-            width: { size: 9360, type: WidthType.DXA },
-            children: [new Paragraph({ children: [new TextRun({ text: quoteText, font: "Arial", size: 20, color: BODY_TEXT, italics: true })] })]
+    if (trimmed.startsWith('>')) {
+      // Accumulate all consecutive blockquote lines
+      const quoteLines = [];
+      while (i < lines.length && lines[i].trim().startsWith('>')) {
+        const lineText = lines[i].trim().replace(/^>\s?/, '').trim();
+        if (lineText) quoteLines.push(lineText);
+        i++;
+      }
+      if (quoteLines.length > 0) {
+        elements.push(new Table({
+          width: { size: 9360, type: WidthType.DXA },
+          columnWidths: [9360],
+          rows: [new TableRow({
+            children: [new TableCell({
+              borders: { top: noBorder().top, bottom: noBorder().bottom, right: noBorder().right, left: { style: BorderStyle.SINGLE, size: 12, color: STEEL } },
+              shading: { fill: "F0F4FA", type: ShadingType.CLEAR },
+              margins: { top: 80, bottom: 80, left: 200, right: 200 },
+              width: { size: 9360, type: WidthType.DXA },
+              children: quoteLines.map(ql => new Paragraph({ children: [new TextRun({ text: ql, font: "Arial", size: 20, color: BODY_TEXT, italics: true })], spacing: { before: 40, after: 40 } }))
+            })]
           })]
-        })]
-      }));
-      i++; continue;
+        }));
+      }
+      continue;
     }
 
     if (trimmed.startsWith('★') || trimmed.startsWith('**★')) {
@@ -685,7 +693,7 @@ function buildDocumentShell(config, children) {
 
 export async function buildReport(config, phaseResults) {
   const resolvedConfig = {
-    agentName:   config.agentName   || "Agent",
+    agentName:   config.agentName ? config.agentName.replace(/\b\w/g, c => c.toUpperCase()) : "Agent",
     niche:       config.niche       || "Real Estate Specialist",
     subniche:    config.subniche    || "",
     market:      config.market      || "Your Market",
