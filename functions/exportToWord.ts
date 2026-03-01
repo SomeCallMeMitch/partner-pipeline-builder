@@ -317,8 +317,8 @@ function parseMarkdown(text) {
       i++; continue;
     }
 
+    // ── Multi-line blockquote accumulator ──────────────────────────────
     if (trimmed.startsWith('>')) {
-      // Accumulate all consecutive blockquote lines
       const quoteLines = [];
       while (i < lines.length && lines[i].trim().startsWith('>')) {
         const lineText = lines[i].trim().replace(/^>\s?/, '').trim();
@@ -331,11 +331,19 @@ function parseMarkdown(text) {
           columnWidths: [9360],
           rows: [new TableRow({
             children: [new TableCell({
-              borders: { top: noBorder().top, bottom: noBorder().bottom, right: noBorder().right, left: { style: BorderStyle.SINGLE, size: 12, color: STEEL } },
+              borders: {
+                top:    noBorder().top,
+                bottom: noBorder().bottom,
+                right:  noBorder().right,
+                left:   { style: BorderStyle.SINGLE, size: 12, color: STEEL }
+              },
               shading: { fill: "F0F4FA", type: ShadingType.CLEAR },
               margins: { top: 80, bottom: 80, left: 200, right: 200 },
               width: { size: 9360, type: WidthType.DXA },
-              children: quoteLines.map(ql => new Paragraph({ children: [new TextRun({ text: ql, font: "Arial", size: 20, color: BODY_TEXT, italics: true })], spacing: { before: 40, after: 40 } }))
+              children: quoteLines.map(ql => new Paragraph({
+                children: [new TextRun({ text: ql, font: "Arial", size: 20, color: BODY_TEXT, italics: true })],
+                spacing: { before: 40, after: 40 }
+              }))
             })]
           })]
         }));
@@ -385,6 +393,27 @@ function parseMarkdown(text) {
     }
 
     if (trimmed === '') { elements.push(spacer(4)); i++; continue; }
+
+    // ── Objection section labels — render as styled steel-blue sub-headers
+    // so "Conversational Response" / "Follow-Up Question" visually connect
+    // to the blockquote box that immediately follows them in the document.
+    const OBJECTION_LABELS = [
+      "Conversational Response",
+      "Follow-Up Question",
+      "Why This Objection Comes Up",
+      "Response",
+      "Follow-Up",
+    ];
+    if (OBJECTION_LABELS.some(lbl => trimmed === lbl || trimmed.startsWith(lbl + " "))) {
+      elements.push(new Paragraph({
+        children: [
+          new TextRun({ text: "▸  ", font: "Arial", size: 19, bold: true, color: GOLD }),
+          new TextRun({ text: trimmed, font: "Arial", size: 19, bold: true, color: STEEL, italics: true }),
+        ],
+        spacing: { before: 140, after: 16 },
+      }));
+      i++; continue;
+    }
 
     if (trimmed) {
       elements.push(new Paragraph({ children: parseInlineBold(trimmed), spacing: { before: 60, after: 60 } }));
