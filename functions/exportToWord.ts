@@ -721,11 +721,13 @@ function buildDocumentShell(config, children) {
 // ═════════════════════════════════════════════════════════════════════════
 
 export async function buildReport(config, phaseResults) {
+  const toTitleCase = (str) => str ? str.replace(/\b\w/g, c => c.toUpperCase()) : "";
+
   const resolvedConfig = {
-    agentName:   config.agentName ? config.agentName.replace(/\b\w/g, c => c.toUpperCase()) : "Agent",
-    niche:       config.niche       || "Real Estate Specialist",
-    subniche:    config.subniche    || "",
-    market:      config.market      || "Your Market",
+    agentName:   config.agentName   ? toTitleCase(config.agentName)  : "Agent",
+    niche:       config.niche       ? toTitleCase(config.niche)       : "Real Estate Specialist",
+    subniche:    config.subniche    ? toTitleCase(config.subniche)    : "",
+    market:      config.market      ? toTitleCase(config.market)      : "Your Market",
     idealClient: config.idealClient || "High Net Worth Investors",
   };
 
