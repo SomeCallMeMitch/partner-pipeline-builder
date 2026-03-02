@@ -26,8 +26,145 @@ const C = {
 };
 const font = "'Sora', -apple-system, sans-serif";
 
+// ─── CONTEXT CHAINING ────────────────────────────────────────────────────────
+// Extracts key outputs from completed phases so later phases can build on them.
+// This is what makes the final document read as ONE cohesive strategy.
+
+function buildContextForPhase(phaseId, completedResults) {
+  const parts = [];
+
+  // Phase 2+ benefits from knowing the top lifecycle triggers
+  if (completedResults["1"] && [2, 3, "4a", "4b", 5, 6, "7a", "7b"].includes(phaseId)) {
+    const triggers = extractSection(completedResults["1"], "trigger", 5);
+    if (triggers) {
+      parts.push(`TOP LIFECYCLE TRIGGERS IDENTIFIED (from Phase 1):\n${triggers}`);
+    }
+  }
+
+  // Phase 3+ benefits from knowing the upstream/side-stream partners
+  if (completedResults["2"] && [3, "4a", "4b", 5, 6, "7a", "7b"].includes(phaseId)) {
+    const partners = extractSection(completedResults["2"], "upstream", 8);
+    if (partners) {
+      parts.push(`KEY PARTNER TYPES IDENTIFIED (from Phase 2):\n${partners}`);
+    }
+  }
+
+  // Phase 4+ MUST know the Dream 10 list — this is the critical chain
+  if (completedResults["3"] && ["4a", "4b", 5, 6, "7a", "7b"].includes(phaseId)) {
+    const dream10 = extractDream10(completedResults["3"]);
+    if (dream10) {
+      parts.push(`THE DREAM 10 PARTNER LIST (from Phase 3 — use these exact partner types):\n${dream10}`);
+    }
+  }
+
+  // Phase 4b should know what 4a already covered
+  if (completedResults["4a"] && phaseId === "4b") {
+    const covered = extractPartnerNames(completedResults["4a"]);
+    if (covered) {
+      parts.push(`PARTNERS ALREADY COVERED IN PHASE 4a (do NOT repeat these — cover the NEXT 3):\n${covered}`);
+    }
+  }
+
+  // Phase 5-6 benefit from the value strategy approach
+  if (completedResults["4a"] && [5, 6].includes(phaseId)) {
+    const valueApproach = extractSection(completedResults["4a"], "value gift", 3);
+    if (valueApproach) {
+      parts.push(`VALUE GIFTS IDENTIFIED (from Phase 4a — reference these in scripts):\n${valueApproach}`);
+    }
+  }
+
+  if (parts.length === 0) return "";
+
+  return "\n\n" + "=".repeat(50) + "\n" +
+    "CONTEXT FROM COMPLETED PHASES — Use this to maintain consistency:\n" +
+    "=".repeat(50) + "\n\n" +
+    parts.join("\n\n---\n\n") +
+    "\n\n" + "=".repeat(50) + "\n" +
+    "IMPORTANT: Reference the specific partner types, triggers, and strategies above. " +
+    "Do NOT reinvent or contradict them. Build on what was already established.\n" +
+    "=".repeat(50);
+}
+
+// Helper: extract the Dream 10 table or list from Phase 3 output
+function extractDream10(text) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  const tableLines = [];
+  let inTable = false;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+      inTable = true;
+      // Skip separator rows like |---|---|
+      if (!/^\|[\s-:|]+\|$/.test(trimmed)) {
+        tableLines.push(trimmed);
+      }
+    } else if (inTable && tableLines.length >= 2) {
+      break; // Found the end of the first substantial table
+    }
+  }
+
+  if (tableLines.length >= 3) {
+    return tableLines.slice(0, 12).join('\n'); // Header + up to 10 data rows
+  }
+
+  // Fallback: look for numbered list of partner types
+  const numbered = lines.filter(l => /^\s*\d+[\.\)]\s+/.test(l)).slice(0, 10);
+  if (numbered.length >= 3) {
+    return numbered.join('\n');
+  }
+
+  // Last fallback: grab first 500 chars of the section with "Dream 10" or "Rank"
+  const idx = text.toLowerCase().indexOf('dream 10');
+  if (idx >= 0) {
+    return text.slice(idx, idx + 600).split('\n').slice(0, 12).join('\n');
+  }
+
+  return text.slice(0, 500); // absolute fallback
+}
+
+// Helper: extract partner names/types from value strategy cards
+function extractPartnerNames(text) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  const headers = lines.filter(l =>
+    /^#{1,3}\s+/.test(l.trim()) ||
+    /^(Partner|Card)\s*\d/i.test(l.trim()) ||
+    /^\*\*\d+[\.\)]\s+/.test(l.trim())
+  ).slice(0, 4);
+
+  if (headers.length > 0) {
+    return headers.map(h => h.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim()).join('\n');
+  }
+
+  // Fallback: grab first 200 chars
+  return text.slice(0, 200);
+}
+
+// Helper: extract key lines matching a keyword from a phase result
+function extractSection(text, keyword, maxLines = 5) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  const keyLines = [];
+  const kw = keyword.toLowerCase();
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.toLowerCase().includes(kw) && line.length > 15) {
+      // Grab this line and a few following lines for context
+      for (let j = i; j < Math.min(i + 3, lines.length); j++) {
+        if (lines[j].trim()) keyLines.push(lines[j].trim());
+      }
+    }
+    if (keyLines.length >= maxLines * 2) break;
+  }
+
+  return keyLines.length > 0 ? keyLines.slice(0, maxLines * 2).join('\n') : null;
+}
+
 // ─── PHASE CARD ───────────────────────────────────────────────────────────────
-function PhaseCard({ phase, status, result, isActive, errorMessage }) {
+function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, retrying }) {
   const [expanded, setExpanded] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const intervalRef = useRef(null);
@@ -103,7 +240,19 @@ function PhaseCard({ phase, status, result, isActive, errorMessage }) {
           </span>
         )}
         {isDone && <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>Complete</span>}
-        {isError && <span style={{ fontSize: 12, color: C.error, fontWeight: 600, fontFamily: font }}>Error</span>}
+        {isError && !retrying && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onRetry && onRetry(phase.id); }}
+            style={{
+              background: C.errorBg, border: `1px solid ${C.error}`, borderRadius: 6,
+              padding: "4px 10px", fontSize: 11, color: C.error, fontWeight: 700,
+              fontFamily: font, cursor: "pointer",
+            }}
+          >↺ Retry</button>
+        )}
+        {isError && retrying && (
+          <span style={{ fontSize: 12, color: C.gold, fontWeight: 600, fontFamily: font }}>Retrying...</span>
+        )}
         {isDone && (
           <span style={{
             color: C.muted, fontSize: 16, lineHeight: 1, marginLeft: 4,
@@ -157,6 +306,7 @@ export default function RunBlueprint() {
   const [errors, setErrors]             = useState({});
   const [allDone, setAllDone]           = useState(false);
   const [exportingWord, setExportingWord] = useState(false);
+  const [retryingPhase, setRetryingPhase] = useState(null);
   const resultsRef = useRef({});
 
   useEffect(() => {
@@ -171,6 +321,7 @@ export default function RunBlueprint() {
     });
   }, []);
 
+  // Always use Claude-optimized prompts when running via API
   const phases = landingData
     ? buildPrompts(landingData).map(p => ({ id: p.id, title: p.title, prompt: p.prompt }))
     : build ? buildPhasePrompts(build) : [];
@@ -179,17 +330,55 @@ export default function RunBlueprint() {
     ? `${landingData.niche || landingData.nicheBase} — ${landingData.geo}`
     : build ? build.name : "";
 
+  // System prompt — sent as a separate system message for better Claude behavior
+  const SYSTEM_PROMPT = `You are a Strategic Alliances Director specializing in referral partner systems for high-performing real estate professionals. You use the Dream 100 methodology to build systematic referral networks.
+
+Your output style:
+- Use markdown formatting with clear headers, tables, and bullet points
+- Be specific to the agent's niche and market — never generic
+- Prioritize strategic depth and actionable specificity
+- Every recommendation should be something the agent can act on this week
+- When referencing partner types, use the EXACT types established in earlier phases
+- Deliver exactly the deliverables described in the task`;
+
+  // Core API call with built-in retry
+  async function callClaude(prompt, maxRetries = 1) {
+    let lastError = null;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const response = await base44.functions.invoke("invokeClaude", {
+          prompt,
+          systemPrompt: SYSTEM_PROMPT,
+          model: "claude-sonnet-4-6",
+          max_tokens: 16000
+        });
+        const result = response.data?.result;
+        if (!result) throw new Error("Empty response from Claude");
+        return result;
+      } catch (e) {
+        lastError = e;
+        if (attempt < maxRetries) {
+          await new Promise(r => setTimeout(r, 5000));
+        }
+      }
+    }
+    throw lastError;
+  }
+
   async function runAll() {
     setRunning(true); setResults({}); setStatus({}); setErrors({});
     setAllDone(false); resultsRef.current = {};
+
     for (const phase of phases) {
       setActivePhase(phase.id);
       setStatus(s => ({ ...s, [phase.id]: "running" }));
+
       try {
-        const response = await base44.functions.invoke("invokeClaude", {
-          prompt: phase.prompt, model: "claude-sonnet-4-6"
-        });
-        const result = response.data?.result;
+        // Build the prompt WITH context from completed phases
+        const context = buildContextForPhase(phase.id, resultsRef.current);
+        const fullPrompt = phase.prompt + context;
+
+        const result = await callClaude(fullPrompt);
         resultsRef.current[phase.id] = result;
         setResults(r => ({ ...r, [phase.id]: result }));
         setStatus(s => ({ ...s, [phase.id]: "done" }));
@@ -197,9 +386,43 @@ export default function RunBlueprint() {
         const msg = e?.response?.data?.error || e?.message || String(e);
         setErrors(err => ({ ...err, [phase.id]: msg }));
         setStatus(s => ({ ...s, [phase.id]: "error" }));
+        // Continue to next phase even if one fails
       }
     }
     setActivePhase(null); setRunning(false); setAllDone(true);
+  }
+
+  // Retry a single failed phase
+  async function retryPhase(phaseId) {
+    setRetryingPhase(phaseId);
+    setActivePhase(phaseId);
+    setStatus(s => ({ ...s, [phaseId]: "running" }));
+    setErrors(err => { const copy = { ...err }; delete copy[phaseId]; return copy; });
+
+    const phase = phases.find(p => p.id === phaseId);
+    if (!phase) { setRetryingPhase(null); return; }
+
+    try {
+      const context = buildContextForPhase(phase.id, resultsRef.current);
+      const fullPrompt = phase.prompt + context;
+
+      const result = await callClaude(fullPrompt, 2); // Extra retries for manual retry
+      resultsRef.current[phase.id] = result;
+      setResults(r => ({ ...r, [phase.id]: result }));
+      setStatus(s => ({ ...s, [phase.id]: "done" }));
+    } catch (e) {
+      const msg = e?.response?.data?.error || e?.message || String(e);
+      setErrors(err => ({ ...err, [phaseId]: msg }));
+      setStatus(s => ({ ...s, [phaseId]: "error" }));
+    }
+
+    setActivePhase(null);
+    setRetryingPhase(null);
+
+    // Check if all phases are now done
+    const updatedStatus = { ...status, [phaseId]: resultsRef.current[phaseId] ? "done" : "error" };
+    const allPhasesComplete = phases.every(p => updatedStatus[p.id] === "done" || updatedStatus[p.id] === "error");
+    if (allPhasesComplete) setAllDone(true);
   }
 
   async function downloadWord() {
@@ -212,6 +435,10 @@ export default function RunBlueprint() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ config, phaseResults: resultsRef.current }),
       });
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`Document generation failed (${res.status}): ${errText}`);
+      }
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -219,7 +446,10 @@ export default function RunBlueprint() {
       a.download = `Dream100_Blueprint_${(config.agentName || "Blueprint").replace(/\s+/g, "_")}.docx`;
       document.body.appendChild(a); a.click();
       document.body.removeChild(a); URL.revokeObjectURL(url);
-    } catch(e) { console.error(e); }
+    } catch(e) {
+      console.error("Word export error:", e);
+      alert("Document export failed: " + (e?.message || "Unknown error") + "\n\nTry the Markdown download instead.");
+    }
     setExportingWord(false);
   }
 
@@ -238,6 +468,7 @@ export default function RunBlueprint() {
   }
 
   const completedCount = Object.values(status).filter(s => s === "done").length;
+  const errorCount = Object.values(status).filter(s => s === "error").length;
   const progress = phases.length ? (completedCount / phases.length) * 100 : 0;
 
   if (loading) return (
@@ -269,6 +500,7 @@ export default function RunBlueprint() {
             {(running || allDone) && (
               <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontFamily: font, marginRight: 4 }}>
                 {completedCount} of {phases.length} phases
+                {errorCount > 0 && ` · ${errorCount} failed`}
               </span>
             )}
             {allDone && (
@@ -320,7 +552,7 @@ export default function RunBlueprint() {
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 6, fontFamily: font }}>NurturInk · Dream 100 Blueprint</div>
               <div style={{ color: C.white, fontWeight: 800, fontSize: 17, fontFamily: font, marginBottom: 4 }}>{displayName}</div>
               <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: font }}>
-                Sending each of the {phases.length} phases to Claude AI one at a time. <strong style={{ color: "rgba(255,255,255,0.8)" }}>Each phase takes 1–6 minutes.</strong>
+                Each phase builds on the last to create one cohesive strategy. <strong style={{ color: "rgba(255,255,255,0.8)" }}>Each phase takes 1–4 minutes.</strong>
               </div>
             </div>
 
@@ -341,6 +573,8 @@ export default function RunBlueprint() {
                   result={results[phase.id]}
                   isActive={activePhase === phase.id}
                   errorMessage={errors[phase.id]}
+                  onRetry={retryPhase}
+                  retrying={retryingPhase === phase.id}
                 />
               ))}
             </div>
@@ -348,8 +582,14 @@ export default function RunBlueprint() {
             {/* All done banner */}
             {allDone && (
               <div style={{ marginTop: 24, background: C.successBg, border: `1.5px solid ${C.success}`, borderRadius: 12, padding: "16px 20px", textAlign: "center" }}>
-                <div style={{ fontSize: 16, fontWeight: 800, color: C.success, fontFamily: font, marginBottom: 4 }}>✓ All {phases.length} Phases Complete</div>
-                <div style={{ fontSize: 13, color: C.muted, fontFamily: font }}>Download your blueprint using the buttons in the nav bar above.</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: C.success, fontFamily: font, marginBottom: 4 }}>
+                  ✓ {errorCount === 0 ? `All ${phases.length} Phases Complete` : `${completedCount} of ${phases.length} Phases Complete`}
+                </div>
+                <div style={{ fontSize: 13, color: C.muted, fontFamily: font }}>
+                  {errorCount > 0
+                    ? `${errorCount} phase${errorCount > 1 ? 's' : ''} failed — click "Retry" on any failed phase, or download what completed.`
+                    : "Download your blueprint using the buttons in the nav bar above."}
+                </div>
               </div>
             )}
           </div>
@@ -383,7 +623,7 @@ export default function RunBlueprint() {
                   </div>
                 </div>
                 <div style={{ fontSize: 13, fontWeight: 700, color: allDone ? C.success : running ? C.gold : C.muted, fontFamily: font, marginTop: 8 }}>
-                  {allDone ? "All phases complete" : running ? `Running phase ${activePhase}...` : "Ready to Run"}
+                  {allDone ? (errorCount > 0 ? `${completedCount} complete, ${errorCount} failed` : "All phases complete") : running ? `Running phase ${activePhase}...` : "Ready to Run"}
                 </div>
                 {!running && !allDone && (
                   <div style={{ fontSize: 11, color: C.muted, fontFamily: font, marginTop: 2 }}>Click Run to begin all phases.</div>
