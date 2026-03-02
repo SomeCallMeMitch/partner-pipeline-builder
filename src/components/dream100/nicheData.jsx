@@ -1,3 +1,4 @@
+
 export const NICHES = [
   { value: 'Luxury & High-End Residential', icon: '🏛️', title: 'Luxury & High-End', desc: '$1M+ properties' },
   { value: 'First-Time Homebuyers', icon: '🔑', title: 'First-Time Buyers', desc: 'FHA, down payment programs' },
@@ -58,13 +59,4 @@ export const YEARS_OPTIONS = [
   { value: "I have 3–5 years of experience and am building more consistent systems", label: "3–5 years" },
   { value: "I have 6–10 years of experience and am refining my referral approach", label: "6–10 years" },
   { value: "I have over 10 years of experience and want to systematize what I've been doing informally", label: "10+ years" },
-];
-
-export const LLM_OPTIONS = [
-  { value: "ChatGPT", label: "ChatGPT" },
-  { value: "Claude (Anthropic)", label: "Claude (Anthropic)" },
-  { value: "Perplexity", label: "Perplexity" },
-  { value: "Gemini", label: "Gemini" },
-  { value: "Grok", label: "Grok (xAI)" },
-  { value: "I'm not sure yet", label: "Not sure yet" },
 ];

@@ -23,7 +23,6 @@ export default function Landing() {
     challenge: '',
     name: '',
     years: '',
-    llm: 'ChatGPT',
   });
   const [prompts, setPrompts] = useState([]);
   const mainRef = useRef(null);
