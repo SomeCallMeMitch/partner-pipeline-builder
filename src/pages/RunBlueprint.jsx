@@ -167,21 +167,46 @@ function extractSection(text, keyword, maxLines = 5) {
 function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, retrying, usage }) {
   const [expanded, setExpanded] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [finalElapsed, setFinalElapsed] = useState(null); // Change 1: retain elapsed when done
+  const [copied, setCopied] = useState(false); // Change 5: copy button state
   const intervalRef = useRef(null);
 
   useEffect(() => {
     if (isActive) {
       setElapsed(0);
+      setFinalElapsed(null);
       intervalRef.current = setInterval(() => setElapsed(s => s + 1), 1000);
     } else {
       clearInterval(intervalRef.current);
+      // Change 1: save final elapsed time when phase completes
+      if (status === "done" || status === "error") {
+        setFinalElapsed(prev => prev === null ? elapsed : prev);
+      }
     }
     return () => clearInterval(intervalRef.current);
   }, [isActive]);
 
+  // Capture elapsed when status becomes done/error
+  useEffect(() => {
+    if ((status === "done" || status === "error") && finalElapsed === null && elapsed > 0) {
+      setFinalElapsed(elapsed);
+    }
+  }, [status]);
+
   const fmt = s => {
     const m = Math.floor(s / 60), sec = s % 60;
     return `${m}:${String(sec).padStart(2, "0")}`;
+  };
+
+  // Change 5: copy to clipboard handler
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    if (result) {
+      navigator.clipboard.writeText(result).then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      });
+    }
   };
 
   const isDone    = status === "done";
@@ -239,9 +264,12 @@ function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, ret
             {fmt(elapsed)}
           </span>
         )}
+        {/* Change 1: show time taken + word count when done */}
         {isDone && (
           <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>
-            Complete{usage?.wordCount ? ` · ${usage.wordCount.toLocaleString()} words` : ''}
+            Complete
+            {finalElapsed ? ` · ${fmt(finalElapsed)}` : ''}
+            {usage?.wordCount ? ` · ${usage.wordCount.toLocaleString()} words` : ''}
           </span>
         )}
         {isError && !retrying && (
@@ -283,15 +311,27 @@ function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, ret
         }}>Click to expand result</div>
       )}
 
-      {/* Result content */}
+      {/* Result content — Change 5: Copy button in expanded view */}
       {isDone && expanded && (
-        <div style={{
-          borderTop: `1px solid ${C.border}`,
-          padding: "16px 18px", background: C.cream,
-          fontSize: 13, lineHeight: 1.75, color: C.text, fontFamily: font,
-          maxHeight: 400, overflowY: "auto",
-          whiteSpace: "pre-wrap",
-        }}>{result}</div>
+        <div style={{ borderTop: `1px solid ${C.border}`, background: C.cream }}>
+          <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 18px 0" }}>
+            <button
+              onClick={handleCopy}
+              style={{
+                background: copied ? C.success : C.navy, color: C.white,
+                border: "none", borderRadius: 6, padding: "5px 14px",
+                fontSize: 12, fontWeight: 700, fontFamily: font, cursor: "pointer",
+                transition: "background 0.2s",
+              }}
+            >{copied ? "✓ Copied!" : "Copy"}</button>
+          </div>
+          <div style={{
+            padding: "12px 18px 16px",
+            fontSize: 13, lineHeight: 1.75, color: C.text, fontFamily: font,
+            maxHeight: 400, overflowY: "auto",
+            whiteSpace: "pre-wrap",
+          }}>{result}</div>
+        </div>
       )}
     </div>
   );
