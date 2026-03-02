@@ -508,7 +508,7 @@ function coverPage(config) {
       alignment: AlignmentType.CENTER,
       border: { top: { style: BorderStyle.SINGLE, size: 4, color: "D5E8F0", space: 1 } },
       spacing: { before: 200, after: 0 },
-      children: [new TextRun({ text: "7 Phases  ·  Dream 10 Partners  ·  90-Day Launch System  ·  Complete Script Suite", font: "Arial", size: 18, color: "888888" })]
+      children: [new TextRun({ text: "Quick Start Guide  ·  7 Phases  ·  Dream 10 Partners  ·  90-Day Launch System  ·  Complete Script Suite", font: "Arial", size: 18, color: "888888" })]
     }),
     new Paragraph({ children: [new PageBreak()] })
   ];
@@ -564,7 +564,7 @@ function howToUsePage() {
     spacer(8),
     bodyText("This document is your complete system for building a consistent, self-sustaining referral network. Everything you need — the partners, the strategy, the scripts, and the calendar — is inside."),
     ...[
-      "This blueprint is organized into 7 phases. Read it once end-to-end before taking any action.",
+      "This blueprint is organized into 7 phases. Start with the Quick Start page that follows, then read each phase when you're ready.",
       "Phase 3 contains your Dream 10 priority list. Start there after reading.",
       "Phases 4 and 5 give you your conversation strategy. Study them before your first outreach.",
       "Phase 6 contains your complete script suite — customize each script with the specific partner's name and details before sending.",
@@ -645,28 +645,230 @@ function buildPhaseSection(phaseNum, _title, subtitle, intro, markdownText) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
+// SECTION 5B — QUICK START PAGE
+// ═════════════════════════════════════════════════════════════════════════
+
+function quickStartPage(config) {
+  const { agentName } = config;
+  const name = agentName || "you";
+  return [
+    new Paragraph({ children: [], spacing: { before: 400, after: 0 } }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: "START HERE", font: "Arial", size: 36, bold: true, color: NAVY, allCaps: true, characterSpacing: 80 })]
+    }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: "Your 3 Actions This Week", font: "Arial", size: 26, bold: true, color: STEEL })]
+    }),
+    spacer(8),
+    new Paragraph({
+      border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: GOLD, space: 1 } },
+      children: [], spacing: { before: 0, after: 200 }
+    }),
+    spacer(8),
+    new Paragraph({
+      children: [new TextRun({
+        text: "This blueprint is comprehensive — 7 phases, 50+ pages. You don't need to absorb it all at once. Here's exactly what to do with it this week.",
+        font: "Arial", size: 22, color: BODY_TEXT, italics: true
+      })],
+      spacing: { before: 0, after: 200 }
+    }),
+
+    // ── Action 1 ──
+    new Table({
+      width: { size: 9360, type: WidthType.DXA },
+      columnWidths: [800, 8560],
+      rows: [new TableRow({
+        children: [
+          new TableCell({
+            borders: noBorder(),
+            shading: { fill: NAVY, type: ShadingType.CLEAR },
+            margins: { top: 160, bottom: 160, left: 80, right: 80 },
+            verticalAlign: VerticalAlign.TOP,
+            width: { size: 800, type: WidthType.DXA },
+            children: [new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [new TextRun({ text: "1", font: "Arial", size: 32, bold: true, color: WHITE })]
+            })]
+          }),
+          new TableCell({
+            borders: { top: noBorder().top, bottom: { style: BorderStyle.SINGLE, size: 2, color: MID_GRAY }, left: noBorder().left, right: noBorder().right },
+            margins: { top: 140, bottom: 160, left: 240, right: 120 },
+            width: { size: 8560, type: WidthType.DXA },
+            children: [
+              new Paragraph({
+                spacing: { before: 0, after: 60 },
+                children: [new TextRun({ text: "Read Phase 3 — Your Dream 10 List", font: "Arial", size: 24, bold: true, color: NAVY })]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 60 },
+                children: [new TextRun({ text: "These are the 10 partner types that will send you the most referrals. Flip to Phase 3 now and circle your top 3. Ask yourself: ", font: "Arial", size: 21, color: BODY_TEXT }),
+                new TextRun({ text: "\"Which of these do I already know someone in?\"", font: "Arial", size: 21, color: NAVY, bold: true, italics: true })]
+              }),
+              new Paragraph({
+                spacing: { before: 60, after: 0 },
+                children: [new TextRun({ text: "⏱ Time: 10 minutes", font: "Arial", size: 19, color: MID_GRAY })]
+              })
+            ]
+          })
+        ]
+      })]
+    }),
+    spacer(10),
+
+    // ── Action 2 ──
+    new Table({
+      width: { size: 9360, type: WidthType.DXA },
+      columnWidths: [800, 8560],
+      rows: [new TableRow({
+        children: [
+          new TableCell({
+            borders: noBorder(),
+            shading: { fill: GOLD, type: ShadingType.CLEAR },
+            margins: { top: 160, bottom: 160, left: 80, right: 80 },
+            verticalAlign: VerticalAlign.TOP,
+            width: { size: 800, type: WidthType.DXA },
+            children: [new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [new TextRun({ text: "2", font: "Arial", size: 32, bold: true, color: WHITE })]
+            })]
+          }),
+          new TableCell({
+            borders: { top: noBorder().top, bottom: { style: BorderStyle.SINGLE, size: 2, color: MID_GRAY }, left: noBorder().left, right: noBorder().right },
+            shading: { fill: "FFFDF0", type: ShadingType.CLEAR },
+            margins: { top: 140, bottom: 160, left: 240, right: 120 },
+            width: { size: 8560, type: WidthType.DXA },
+            children: [
+              new Paragraph({
+                spacing: { before: 0, after: 60 },
+                children: [new TextRun({ text: "Write One Handwritten Note", font: "Arial", size: 24, bold: true, color: DARK_GOLD })]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 60 },
+                children: [new TextRun({ text: "Use Script 4 from Phase 6. Pick the #1 partner type from your Dream 10 list. Google a specific person in that role in your market. Write 3 sentences by hand. Mail it today.", font: "Arial", size: 21, color: BODY_TEXT })]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 60 },
+                children: [new TextRun({ text: "This is the move that separates you from every other agent who sends an email. One real note in a real envelope — it's how every relationship in this system begins.", font: "Arial", size: 21, color: BODY_TEXT, italics: true })]
+              }),
+              new Paragraph({
+                spacing: { before: 60, after: 0 },
+                children: [new TextRun({ text: "⏱ Time: 5 minutes to write, 1 stamp to mail", font: "Arial", size: 19, color: MID_GRAY })]
+              })
+            ]
+          })
+        ]
+      })]
+    }),
+    spacer(10),
+
+    // ── Action 3 ──
+    new Table({
+      width: { size: 9360, type: WidthType.DXA },
+      columnWidths: [800, 8560],
+      rows: [new TableRow({
+        children: [
+          new TableCell({
+            borders: noBorder(),
+            shading: { fill: STEEL, type: ShadingType.CLEAR },
+            margins: { top: 160, bottom: 160, left: 80, right: 80 },
+            verticalAlign: VerticalAlign.TOP,
+            width: { size: 800, type: WidthType.DXA },
+            children: [new Paragraph({
+              alignment: AlignmentType.CENTER,
+              children: [new TextRun({ text: "3", font: "Arial", size: 32, bold: true, color: WHITE })]
+            })]
+          }),
+          new TableCell({
+            borders: { top: noBorder().top, bottom: { style: BorderStyle.SINGLE, size: 2, color: MID_GRAY }, left: noBorder().left, right: noBorder().right },
+            margins: { top: 140, bottom: 160, left: 240, right: 120 },
+            width: { size: 8560, type: WidthType.DXA },
+            children: [
+              new Paragraph({
+                spacing: { before: 0, after: 60 },
+                children: [new TextRun({ text: "Block 30 Minutes on Friday", font: "Arial", size: 24, bold: true, color: NAVY })]
+              }),
+              new Paragraph({
+                spacing: { before: 0, after: 60 },
+                children: [new TextRun({ text: "Open Phase 7a. Print the 90-day plan. Mark Week 1 actions on your calendar. Set a recurring 30-minute Friday block labeled \"Dream 10 — Weekly Actions.\" That weekly habit is the engine.", font: "Arial", size: 21, color: BODY_TEXT })]
+              }),
+              new Paragraph({
+                spacing: { before: 60, after: 0 },
+                children: [new TextRun({ text: "⏱ Time: 30 minutes, once", font: "Arial", size: 19, color: MID_GRAY })]
+              })
+            ]
+          })
+        ]
+      })]
+    }),
+    spacer(20),
+
+    // ── Bottom message ──
+    new Table({
+      width: { size: 9360, type: WidthType.DXA },
+      columnWidths: [9360],
+      rows: [new TableRow({
+        children: [new TableCell({
+          borders: {
+            top:    { style: BorderStyle.SINGLE, size: 6, color: NAVY },
+            bottom: { style: BorderStyle.SINGLE, size: 6, color: NAVY },
+            left:   { style: BorderStyle.SINGLE, size: 6, color: NAVY },
+            right:  { style: BorderStyle.SINGLE, size: 6, color: NAVY },
+          },
+          shading: { fill: "F0F4F9", type: ShadingType.CLEAR },
+          margins: { top: 200, bottom: 200, left: 300, right: 300 },
+          width: { size: 9360, type: WidthType.DXA },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 0, after: 100 },
+              children: [new TextRun({
+                text: "That's it for this week.",
+                font: "Arial", size: 24, bold: true, color: NAVY
+              })]
+            }),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 0, after: 0 },
+              children: [new TextRun({
+                text: "Everything else in this blueprint supports these three moves. Read the phases when you're ready. But start with the note. Start today.",
+                font: "Arial", size: 21, color: BODY_TEXT
+              })]
+            }),
+          ]
+        })]
+      })]
+    }),
+    new Paragraph({ children: [new PageBreak()] })
+  ];
+}
+
+// ═════════════════════════════════════════════════════════════════════════
 // SECTION 6 — DOCUMENT ASSEMBLY
 // ═════════════════════════════════════════════════════════════════════════
 
 function assembleDocument(config, phaseResults) {
   const p = phaseResults;
 
+  const { agentName, niche, market, idealClient } = config;
   const phaseIntros = {
-    "1": "Your ideal client has a predictable business lifecycle. Every major event below represents a window where a trusted professional sees them before they contact a real estate agent. These are your entry points.",
-    "2": "Upstream partners see your client 3–12 months before a transaction. Side-stream partners interact during the transaction itself. Both create referral opportunities — but upstream partners are your highest-priority targets.",
+    "1": `In the ${niche} market in ${market}, your ideal client — ${idealClient} — has a predictable lifecycle. Every major event below represents a window where a trusted professional sees them before they contact a real estate agent. These are your entry points.`,
+    "2": `Upstream partners see your ${niche} client 3–12 months before a transaction. Side-stream partners interact during the transaction itself. Both create referral opportunities — but upstream partners are ${agentName}'s highest-priority targets.`,
     "3": "Your Dream 10 is the prioritized shortlist of partner types to target. Work through them in order. Build one solid Tier 1 relationship at a time before moving to the next.",
     "4a": "The fastest way to build a referral relationship is to give value before you ever ask for anything. Each Value Strategy Card below identifies the gap in your partner's client service and gives you a specific, tangible asset to lead with.",
-    "4b": "Continuing your Value Strategy Cards for partners 4–6, plus the Value Manifesto — your positioning statement when meeting new referral partners in person.",
+    "4b": `Continuing your Value Strategy Cards for partners 4–6, plus ${agentName}'s Value Manifesto — your positioning statement when meeting new referral partners in person.`,
     "5": "You will encounter resistance when building referral partnerships. The objections below are not personal — they are predictable. Each one has a specific fear underneath it. Know the fear, and your response becomes natural.",
-    "6": "These scripts are your full communication toolkit. Customize the bracketed fields with each specific partner's name, business, and details before sending.",
-    "7a": "This is your execution system. Part A is your week-by-week 90-day sequence for activating a new Tier 1 partner. Part B is your relationship tracker template.",
-    "7b": "Part C is your quarterly 12-month calendar. Part D is the production math — showing you what consistent execution actually translates to in closed volume.",
+    "6": `These scripts are ${agentName}'s full communication toolkit. Customize the bracketed fields with each specific partner's name, business, and details before sending.`,
+    "7a": "This is your execution system. Part A is your week-by-week 90-day sequence for activating a new Tier 1 partner. Part B is your relationship tracker template. Print Part A and put it on your desk.",
+    "7b": `Part C is your quarterly 12-month calendar for maintaining active partnerships. Part D is the production math — showing what consistent execution in ${market} translates to in closed volume.`,
   };
 
   return [
     ...coverPage(config),
     ...disclaimerPage(),
     ...howToUsePage(),
+    ...quickStartPage(config),
     ...(p["1"]   ? buildPhaseSection("Phase 1",  "", "Lifecycle Trigger Mapping",                        phaseIntros["1"],  p["1"])  : []),
     ...(p["2"]   ? buildPhaseSection("Phase 2",  "", "Upstream & Side-stream Partner Mapping",            phaseIntros["2"],  p["2"])  : []),
     ...(p["3"]   ? buildPhaseSection("Phase 3",  "", "Dream 10 Tier Ranking & Shortlist",                 phaseIntros["3"],  p["3"])  : []),
