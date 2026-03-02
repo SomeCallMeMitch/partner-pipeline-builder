@@ -1,14 +1,7 @@
-export function getLLMNote(llm) {
-  const m = {
-    'ChatGPT': 'Format your response with clear section headers and bullet points where helpful. Be specific to the niche and market provided.',
-    'Claude (Anthropic)': 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described.',
-    'Perplexity': 'Search for real, currently active businesses and professionals in the specified geographic area. Cite sources. Prioritize actionable, locally specific intelligence.',
-    'Gemini': 'Respond in clearly organized sections. Ground your response in the specific niche and market. Use examples wherever possible.',
-    'Grok': 'Be direct and specific. Avoid generic advice. Ground every recommendation in the specific niche and geographic market provided. Format with clear section headers.',
-    "I'm not sure yet": 'Format your response with clear section headers. Be specific to the niche and market. Avoid generic real estate advice.'
-  };
-  return m[llm] || m['ChatGPT'];
-}
+// Dream 100 Prompt Builder — Claude-Optimized
+// All prompts are built for Claude API execution.
+
+const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described.';
 
 export function buildPrompts(formData) {
   const n = formData.name || 'I';
@@ -17,23 +10,20 @@ export function buildPrompts(formData) {
   const client = formData.client ? formData.client : `buyers and sellers in the ${niche} segment`;
   const challenge = formData.challenge || 'building consistent referral partner relationships';
   const years = formData.years || '';
-  const llm = formData.llm || 'ChatGPT';
-  const llmNote = getLLMNote(llm);
 
-  return [
-    {
-      id: 1,
-      title: 'Phase 1: Lifecycle Trigger Mapping',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director specializing in real estate referral systems.
-
-MY CONTEXT:
+  const ctx = `MY CONTEXT:
 - Real estate niche: ${niche}
 - Market area: ${geo}
 - Ideal client: ${client}
 - Referral challenge: ${challenge}
 ${years ? `- My experience: ${years}` : ''}
+- My name: ${n}`;
+
+  return [
+    {
+      id: 1,
+      title: 'Phase 1: Lifecycle Trigger Mapping',
+      prompt: `${ctx}
 
 TASK — Lifecycle Trigger Mapping
 
@@ -50,19 +40,12 @@ DELIVERABLE: Markdown table with columns:
 
 Include at least 12 distinct trigger events. Mark top 3 with ★ and explain in 2-3 sentences each why they are the priority.
 
-${llmNote}`
+${CLAUDE_NOTE}`
     },
     {
       id: 2,
       title: 'Phase 2: Upstream & Side-stream Partner Mapping',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director specializing in real estate referral systems.
-
-MY CONTEXT:
-- Real estate niche: ${niche}
-- Market area: ${geo}
-- Ideal client: ${client}
+      prompt: `${ctx}
 
 TASK — Upstream & Side-stream Partner Mapping
 
@@ -79,21 +62,12 @@ List 4–6 partner types. Same format.
 UNDERUTILIZED PARTNERS:
 Identify the top 3 underutilized partner types most agents overlook. Explain why they are high-value and underserved.
 
-Use markdown formatting with clear headers.
-
-${llmNote}`
+${CLAUDE_NOTE}`
     },
     {
       id: 3,
       title: 'Phase 3: Dream 10 Tier Ranking & Shortlist',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director specializing in real estate referral systems.
-
-MY CONTEXT:
-- Real estate niche: ${niche}
-- Market area: ${geo}
-- Ideal client: ${client}
+      prompt: `${ctx}
 
 TASK — Dream 10 Tier Ranking & Shortlist
 
@@ -105,53 +79,39 @@ TIER STRUCTURE:
 Build the Dream 10 table:
 | Rank | Partner Type | Tier | Est. Monthly Referral Potential | Why Top Priority for ${niche} | First Contact Strategy |
 
-Then answer: What 3 personal characteristics should I look for when identifying WHICH INDIVIDUAL at each company to target (beyond just finding the business)?
+Then answer: What 3 personal characteristics should ${n} look for when identifying WHICH INDIVIDUAL at each company to target (beyond just finding the business)?
 
-Use markdown formatting with clear headers.
+IMPORTANT: The Dream 10 list you create here will be used as the foundation for all remaining phases. Be specific and deliberate with your rankings.
 
-${llmNote}`
+${CLAUDE_NOTE}`
     },
     {
       id: "4a",
       title: 'Phase 4a: Value Strategy Cards (Partners 1–3)',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director specializing in real estate referral systems.
-
-MY CONTEXT:
-- Real estate niche: ${niche}
-- Market area: ${geo}
-- My name: ${n}
+      prompt: `${ctx}
 
 TASK — Value Strategy Cards for Top 3 Partner Types
 
-For each of the top 3 referral partner types for ${niche} in ${geo}, create a Value Strategy Card:
+For each of the top 3 referral partner types from the Dream 10 ranking, create a Value Strategy Card:
 
 **1. THE GAP:** What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
 
-**2. THE VALUE GIFT:** What specific, tangible asset can ${n} create or offer to start the relationship — with no ask? Be specific.
+**2. THE VALUE GIFT:** What specific, tangible asset can ${n} create or offer to start the relationship — with no ask? Be extremely specific (not "a market report" but "a quarterly ${niche}-specific absorption rate report for ${geo} with their branding included").
 
 **3. THE RECURRING TOUCHPOINT:** What ongoing value can ${n} deliver monthly or quarterly to keep the relationship warm?
 
-Format each card clearly with the partner name as a header. Use markdown.
+Format each card clearly with the partner type as a header.
 
-${llmNote}`
+${CLAUDE_NOTE}`
     },
     {
       id: "4b",
       title: 'Phase 4b: Value Strategy Cards (Partners 4–6) + Value Manifesto',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director specializing in real estate referral systems.
-
-MY CONTEXT:
-- Real estate niche: ${niche}
-- Market area: ${geo}
-- My name: ${n}
+      prompt: `${ctx}
 
 TASK — Value Strategy Cards for Partners 4–6 + Value Manifesto
 
-For each of the next 3 referral partner types (partners ranked 4–6 from the Dream 10 for ${niche} in ${geo}), create a Value Strategy Card:
+For each of the next 3 referral partner types (partners ranked 4–6 from the Dream 10), create a Value Strategy Card:
 
 **1. THE GAP:** What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
 
@@ -163,22 +123,12 @@ For each of the next 3 referral partner types (partners ranked 4–6 from the Dr
 
 Then write ${n}'s **Value Manifesto** — a 3-paragraph positioning statement ${n} would use when meeting new referral partners in person. It should focus entirely on how ${n} serves the partner's clients, not on promoting ${n}'s own production. Warm, peer-to-peer tone. No buzzwords.
 
-Use markdown formatting.
-
-${llmNote}`
+${CLAUDE_NOTE}`
     },
     {
       id: 5,
       title: 'Phase 5: Objection Anticipation & Response Prep',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director specializing in real estate referral systems.
-
-MY CONTEXT:
-- Real estate niche: ${niche}
-- Market area: ${geo}
-- My name: ${n}
-- Challenge: ${challenge}
+      prompt: `${ctx}
 
 TASK — Objection Anticipation & Response Prep
 
@@ -199,26 +149,18 @@ OBJECTIONS:
 
 BONUS: Write a "trust reset" script for: (a) a relationship that went cold after initial contact, and (b) a past referral relationship that ended badly.
 
-TONE: Confident, low-pressure, peer-to-peer. Not salesy. Use markdown headers.
+TONE: Confident, low-pressure, peer-to-peer. Not salesy.
 
-${llmNote}`
+${CLAUDE_NOTE}`
     },
     {
       id: 6,
       title: 'Phase 6: Complete Outreach Script Suite',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director and copywriter specializing in real estate referral systems.
-
-MY CONTEXT:
-- Real estate niche: ${niche}
-- Market area: ${geo}
-- My name: ${n}
-${years ? `- Experience: ${years}` : ''}
+      prompt: `${ctx}
 
 TASK — Complete Outreach Script Suite
 
-Write all 6 scripts:
+Write all 6 scripts below. Each script should reference the specific partner types and value gifts established in earlier phases.
 
 **SCRIPT 1 — Cold Intro Email**
 3 subject line options. Body under 150 words. Focus on partner's business, not ${n}'s needs. Mention a specific value gift. End with a low-commitment ask.
@@ -230,7 +172,7 @@ Under 300 characters. Reference something real about their work. Do not mention 
 4–6 sentences. Frame around their business growth. Include a curiosity hook specific to ${niche} in ${geo}.
 
 **SCRIPT 4 — Handwritten Note Introduction**
-3–4 sentences. Sent BEFORE any other outreach. Completely personal. Zero sales language. This is the first impression that opens every door.
+3–4 sentences. Sent BEFORE any other outreach. Completely personal. Zero sales language. This is the first impression that opens every door. This is the most important script in the entire suite.
 
 **SCRIPT 5 — Value-First Follow-Up**
 Brief message after delivering the value gift. Conversational. Plant a seed without making an ask.
@@ -238,21 +180,14 @@ Brief message after delivering the value gift. Conversational. Plant a seed with
 **SCRIPT 6 — Referral Thank-You Note**
 Warm, personal, non-templated. Sent immediately after receiving a referral.
 
-All scripts sound like ${n} — warm, credible, peer-to-peer. No buzzwords. Use markdown headers.
+All scripts sound like ${n} — warm, credible, peer-to-peer. No buzzwords.
 
-${llmNote}`
+${CLAUDE_NOTE}`
     },
     {
       id: "7a",
       title: 'Phase 7a: 90-Day Week-by-Week Plan + Relationship Tracker',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director specializing in real estate referral systems.
-
-MY CONTEXT:
-- Real estate niche: ${niche}
-- Market area: ${geo}
-- My name: ${n}
+      prompt: `${ctx}
 
 TASK — 90-Day Launch Plan + Relationship Tracker
 
@@ -263,25 +198,20 @@ For a new Tier 1 referral partner, provide a week-by-week action plan for the fi
 — Goal of the touchpoint
 — Time investment estimate
 
+The handwritten note should always be the first touchpoint (Week 1). Emphasize this as the foundation of the entire sequence.
+
 **PART B — Relationship Tracker Template**
 Design a simple tracker structure for managing all 10 Dream Partners. Include columns for:
 partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, referral count.
 
 Format both parts clearly with markdown headers and tables where appropriate.
 
-${llmNote}`
+${CLAUDE_NOTE}`
     },
     {
       id: "7b",
       title: 'Phase 7b: 12-Month Calendar + Production Math',
-      model: llm,
-      modelNote: `Optimized for ${llm}. ${llmNote}`,
-      prompt: `You are a Strategic Alliances Director specializing in real estate referral systems.
-
-MY CONTEXT:
-- Real estate niche: ${niche}
-- Market area: ${geo}
-- My name: ${n}
+      prompt: `${ctx}
 
 TASK — 12-Month Quarterly Calendar + Production Math
 
@@ -301,7 +231,7 @@ Walk through the math simply and conservatively:
 
 Format with markdown headers and tables.
 
-${llmNote}`
+${CLAUDE_NOTE}`
     }
   ];
 }
