@@ -197,7 +197,7 @@ export default function OutputView({ formData, prompts, onRestart }) {
                 border: '1px solid rgba(255,255,255,0.1)', padding: '12px 14px',
                 marginBottom: 18, position: 'relative', fontSize: 13, color: '#fff', lineHeight: 1.5,
               }}>
-                Takes about <strong style={{ color: S.gold }}>5–10 minutes</strong> total. Progress shows live as each phase completes.
+                Takes about <strong style={{ color: S.gold }}>9-14 minutes</strong> total. Progress shows live as each phase completes.
               </div>
               <button onClick={runWithAI} style={{
                 width: '100%', background: S.gold, color: S.navy, border: 'none', borderRadius: 11,
