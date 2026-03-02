@@ -2,7 +2,7 @@
 // All prompts are built for Claude API execution.
 // Uses INDUSTRY_DATA for richer, more specific prompts.
 
-const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described.';
+const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described. Do NOT use emoji as section headers or labels — use plain text headers only (e.g., "THE GAP" not "🕳️ THE GAP"). Emoji render inconsistently in Word documents.';
 
 // ── Industry-Specific Context ─────────────────────────────────────────────
 // This data enriches every prompt with specific partner types, trigger events,
@@ -153,7 +153,9 @@ For each of the next 3 referral partner types (partners ranked 4–6 from the Dr
 
 Then write ${n}'s **Value Manifesto** — a 3-paragraph positioning statement ${n} would use when meeting new referral partners in person. It should focus entirely on how ${n} serves the partner's clients, not on promoting ${n}'s own production. Warm, peer-to-peer tone. No buzzwords.
 
-The manifesto should feel like something ${n} would actually say at a coffee meeting — not a marketing page.
+Start with a **"Cocktail Party Version"** — 2-3 sentences that ${n} could deliver in 30 seconds when someone asks "what do you do?" This is the quick version for casual introductions.
+
+Then write the full 3-paragraph version — what ${n} would say in a sit-down coffee meeting. The manifesto should feel like something ${n} would actually say — not a marketing page.
 
 ${CLAUDE_NOTE}`
     },
@@ -166,7 +168,10 @@ TASK — Objection Anticipation & Response Prep
 
 Known objection categories in real estate referral partnerships: ${IND.objectionContext}
 
+For each objection, frame it around a SPECIFIC Dream 10 partner type from Phase 3 — name the partner type in the header (e.g., "When a Wealth Manager says..." or "When a CPA says..."). Choose the partner type where that objection is most likely to surface.
+
 For each objection provide:
+— The specific Dream 10 partner type most likely to say this
 — WHY this objection comes up (the real fear underneath it)
 — A non-defensive, conversational response that reframes without being pushy
 — A follow-up question that keeps the door open
@@ -236,9 +241,13 @@ For a new Tier 1 referral partner, provide a week-by-week action plan for the fi
 
 The handwritten note should always be the first touchpoint (Week 1). This is non-negotiable — it's the foundation of the entire sequence and what makes this system different from generic networking.
 
+**End Part A with a "Quick Reference Grid"** — a compact summary table showing all 13 weeks in one view:
+| Week | Channel | Action (5 words max) |
+This should fit on one printed page and serve as a desk reference ${n} can print and check off.
+
 **PART B — Relationship Tracker Template**
 Design a simple tracker structure for managing all 10 Dream Partners. Include columns for:
-partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, referral count.
+partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, inbound referral count, outbound referrals sent TO this partner. The outbound column is critical — it makes referral reciprocity visible and trackable, not just aspirational.
 
 Format both parts clearly with markdown headers and tables where appropriate.
 
@@ -263,6 +272,7 @@ Walk through the math simply and conservatively:
 — How many Dream 10 partnerships at what referral frequency = what level of closed volume?
 — Assume average deal size for ${niche} in ${geo}
 — Show 3 scenarios: conservative, moderate, strong
+— For each scenario, NAME which specific Dream 10 partner types (by rank from Phase 3) are active. For example, the conservative scenario might assume partners #1, #2, #3, #5, and #9 are active. This makes the math feel concrete and tied to the actual Dream 10 list, not abstract.
 — What does ${n} need to believe is true for this system to work?
 
 Be honest about the assumptions. Realtors respect straight talk over hype.
