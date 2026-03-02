@@ -1,6 +1,6 @@
 /**
  * NurturInk Dream 100 Blueprint — DOCX Builder (Deno / Base44)
- * File: functions/exportToWord.js
+ * File: functions/exportToWord.ts
  */
 
 import {
@@ -43,7 +43,7 @@ const spacer = (pts = 6) => new Paragraph({
   spacing: { before: pts * 20, after: 0 }
 });
 
-const body = (text) => new Paragraph({
+const bodyText = (text) => new Paragraph({
   children: [new TextRun({ text, font: "Arial", size: 21, color: BODY_TEXT })],
   spacing: { before: 60, after: 60 }
 });
@@ -127,6 +127,35 @@ function infoBox(text) {
       })]
     })]
   });
+}
+
+// Smart column width calculation — proportional to content length
+function calcColumnWidths(headers, rows, totalWidth = 9360) {
+  const minColWidth = 900; // minimum ~0.625 inches
+
+  // Sample content length for each column (header + first few data rows)
+  const avgLengths = headers.map((h, i) => {
+    const dataLens = rows.slice(0, 8).map(r => (r[i] || '').length);
+    const avgData = dataLens.length > 0 ? dataLens.reduce((a, b) => a + b, 0) / dataLens.length : 0;
+    return Math.max(h.length, avgData);
+  });
+
+  const totalLen = avgLengths.reduce((a, b) => a + b, 0) || 1;
+  const available = totalWidth - (minColWidth * headers.length);
+
+  if (available <= 0) {
+    // All columns at minimum width
+    const colW = Math.floor(totalWidth / headers.length);
+    return headers.map((_, i) => i === headers.length - 1 ? totalWidth - colW * (headers.length - 1) : colW);
+  }
+
+  const widths = avgLengths.map(len => minColWidth + Math.floor((len / totalLen) * available));
+
+  // Adjust last column to account for rounding
+  const sum = widths.reduce((a, b) => a + b, 0);
+  widths[widths.length - 1] += (totalWidth - sum);
+
+  return widths;
 }
 
 function dataTable(headers, rows, colWidths) {
@@ -234,25 +263,53 @@ function starItem(label, text) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// SECTION 3 — MARKDOWN → DOCX PARSER
+// SECTION 3 — MARKDOWN → DOCX PARSER (IMPROVED)
 // ═════════════════════════════════════════════════════════════════════════
 
-function parseInlineBold(text) {
+// Parse inline formatting: **bold**, *italic*, ***bold italic***, and [links](url)
+function parseInlineFormatting(text) {
+  // Strip markdown links but keep the text
   text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+
   const runs = [];
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
-  for (const part of parts) {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      runs.push(new TextRun({ text: part.slice(2, -2), font: "Arial", size: 21, bold: true, color: NAVY }));
-    } else if (part) {
-      runs.push(new TextRun({ text: part, font: "Arial", size: 21, color: BODY_TEXT }));
+  // Match ***bold italic***, **bold**, *italic*, or plain text
+  const pattern = /(\*\*\*[^*]+\*\*\*|\*\*[^*]+\*\*|\*[^*]+\*)/g;
+  let lastIndex = 0;
+  let match;
+
+  while ((match = pattern.exec(text)) !== null) {
+    // Add plain text before this match
+    if (match.index > lastIndex) {
+      const plain = text.slice(lastIndex, match.index);
+      if (plain) runs.push(new TextRun({ text: plain, font: "Arial", size: 21, color: BODY_TEXT }));
     }
+
+    const token = match[0];
+    if (token.startsWith('***') && token.endsWith('***')) {
+      // Bold + italic
+      runs.push(new TextRun({ text: token.slice(3, -3), font: "Arial", size: 21, bold: true, italics: true, color: NAVY }));
+    } else if (token.startsWith('**') && token.endsWith('**')) {
+      // Bold
+      runs.push(new TextRun({ text: token.slice(2, -2), font: "Arial", size: 21, bold: true, color: NAVY }));
+    } else if (token.startsWith('*') && token.endsWith('*')) {
+      // Italic
+      runs.push(new TextRun({ text: token.slice(1, -1), font: "Arial", size: 21, italics: true, color: BODY_TEXT }));
+    }
+
+    lastIndex = match.index + token.length;
   }
+
+  // Add remaining plain text
+  if (lastIndex < text.length) {
+    const remaining = text.slice(lastIndex);
+    if (remaining) runs.push(new TextRun({ text: remaining, font: "Arial", size: 21, color: BODY_TEXT }));
+  }
+
   return runs.length > 0 ? runs : [new TextRun({ text, font: "Arial", size: 21, color: BODY_TEXT })];
 }
 
 function parseMarkdown(text) {
-  if (!text) return [body("No content generated for this phase.")];
+  if (!text) return [bodyText("No content generated for this phase.")];
 
   const elements = [];
   const lines = text.split('\n');
@@ -268,15 +325,15 @@ function parseMarkdown(text) {
       .filter(r => r.trim())
       .map(r => r.split('|').map(c => c.trim()).filter(Boolean));
     if (headerCells.length === 0) { tableBuffer = []; inTable = false; return; }
-    const total = 9360;
-    const colW = Math.floor(total / headerCells.length);
-    const colWidths = headerCells.map((_, idx) =>
-      idx === headerCells.length - 1 ? total - colW * (headerCells.length - 1) : colW
-    );
+
     const paddedRows = dataRows.map(row => {
       while (row.length < headerCells.length) row.push('');
       return row.slice(0, headerCells.length);
     });
+
+    // Smart column widths based on content
+    const colWidths = calcColumnWidths(headerCells, paddedRows);
+
     if (paddedRows.length > 0) elements.push(dataTable(headerCells, paddedRows, colWidths));
     tableBuffer = [];
     inTable = false;
@@ -368,26 +425,26 @@ function parseMarkdown(text) {
       i++; continue;
     }
 
+    // ── Bullet points — now with proper inline formatting ──────────────
     if (trimmed.match(/^[-—•*]\s+/)) {
-      const txt = trimmed.replace(/^[-—•*]\s+/, '').replace(/\*\*/g, '').trim();
-      const isBoldTitle = trimmed.includes('**') && trimmed.indexOf('**', 2) > 2;
-      if (isBoldTitle) {
-        elements.push(new Paragraph({
-          numbering: { reference: "bullets", level: 0 },
-          spacing: { before: 120, after: 40 },
-          children: [new TextRun({ text: txt.replace(/\*\*(.+?)\*\*/g, '$1'), font: "Arial", size: 21, bold: true, color: NAVY })]
-        }));
-      } else {
-        elements.push(bullet(txt));
-      }
+      const rawTxt = trimmed.replace(/^[-—•*]\s+/, '').trim();
+      // Parse inline bold/italic instead of stripping them
+      const inlineRuns = parseInlineFormatting(rawTxt);
+      elements.push(new Paragraph({
+        numbering: { reference: "bullets", level: 0 },
+        spacing: { before: 40, after: 40 },
+        children: inlineRuns
+      }));
       i++; continue;
     }
 
+    // ── Numbered list — now with proper inline formatting ──────────────
     if (trimmed.match(/^\d+\.\s+/)) {
-      const txt = trimmed.replace(/^\d+\.\s+/, '').replace(/\*\*/g, '').trim();
+      const rawTxt = trimmed.replace(/^\d+\.\s+/, '').trim();
+      const inlineRuns = parseInlineFormatting(rawTxt);
       elements.push(new Paragraph({
         numbering: { reference: "numbers", level: 0 },
-        children: [new TextRun({ text: txt, font: "Arial", size: 21, color: BODY_TEXT })]
+        children: inlineRuns
       }));
       i++; continue;
     }
@@ -395,8 +452,6 @@ function parseMarkdown(text) {
     if (trimmed === '') { elements.push(spacer(4)); i++; continue; }
 
     // ── Objection section labels — render as styled steel-blue sub-headers
-    // so "Conversational Response" / "Follow-Up Question" visually connect
-    // to the blockquote box that immediately follows them in the document.
     const OBJECTION_LABELS = [
       "Conversational Response",
       "Follow-Up Question",
@@ -415,8 +470,9 @@ function parseMarkdown(text) {
       i++; continue;
     }
 
+    // ── Default paragraph with inline formatting ──────────────────────
     if (trimmed) {
-      elements.push(new Paragraph({ children: parseInlineBold(trimmed), spacing: { before: 60, after: 60 } }));
+      elements.push(new Paragraph({ children: parseInlineFormatting(trimmed), spacing: { before: 60, after: 60 } }));
     }
     i++;
   }
@@ -506,7 +562,7 @@ function howToUsePage() {
   return [
     ...sectionHeader("How to Use This Blueprint"),
     spacer(8),
-    body("This document is your complete system for building a consistent, self-sustaining referral network. Everything you need — the partners, the strategy, the scripts, and the calendar — is inside."),
+    bodyText("This document is your complete system for building a consistent, self-sustaining referral network. Everything you need — the partners, the strategy, the scripts, and the calendar — is inside."),
     ...[
       "This blueprint is organized into 7 phases. Read it once end-to-end before taking any action.",
       "Phase 3 contains your Dream 10 priority list. Start there after reading.",
@@ -527,7 +583,7 @@ function researchPromptPage(config) {
   return [
     ...sectionHeader("Go Deeper", "Your Local Research Prompt"),
     spacer(8),
-    body(`The partner types in this report are proven. The next step is finding the specific people in ${market} who fill those roles right now.`),
+    bodyText(`The partner types in this report are proven. The next step is finding the specific people in ${market} who fill those roles right now.`),
     spacer(10),
     calloutBox("Why do this research yourself?", "AI-generated reports identify the categories and strategies. But the actual names — the advisor who served a client last month, the attorney who spoke at a local event — those require live web research."),
     spacer(12),
@@ -543,7 +599,7 @@ function researchPromptPage(config) {
           margins: { top: 200, bottom: 200, left: 240, right: 240 },
           width: { size: 9360, type: WidthType.DXA },
           children: [
-            body(`I am a ${niche} specialist in ${market}. My ideal client is: ${idealClient}. I am building a Dream 100 referral partner network and need help finding currently active, real local businesses and professionals in each of the following categories.`),
+            bodyText(`I am a ${niche} specialist in ${market}. My ideal client is: ${idealClient}. I am building a Dream 100 referral partner network and need help finding currently active, real local businesses and professionals in each of the following categories.`),
             ...["Currently active (verified via website, LinkedIn, or recent online activity)", `Relevant to the ${niche} niche and the ${idealClient} client profile`, "Reachable through professional outreach (website, LinkedIn, or business listing)"].map(t => bullet(t)),
             spacer(8),
             new Paragraph({ children: [new TextRun({ text: "Categories to research:", font: "Arial", size: 20, bold: true, color: NAVY })] }),
@@ -558,7 +614,7 @@ function researchPromptPage(config) {
               `Insurance professionals relevant to ${niche} clients`
             ].map(t => new Paragraph({ numbering: { reference: "numbers", level: 0 }, children: [new TextRun({ text: t, font: "Arial", size: 20, color: BODY_TEXT })] })),
             spacer(8),
-            body("For each result: business name, website or LinkedIn URL, area served, and one sentence on why they are relevant to this niche."),
+            bodyText("For each result: business name, website or LinkedIn URL, area served, and one sentence on why they are relevant to this niche."),
           ]
         })]
       })]
@@ -581,21 +637,9 @@ function researchPromptPage(config) {
 function buildPhaseSection(phaseNum, _title, subtitle, intro, markdownText) {
   return [
     ...sectionHeader(phaseNum, subtitle),
-    body(intro),
+    bodyText(intro),
     spacer(10),
     ...parseMarkdown(markdownText),
-    new Paragraph({ children: [new PageBreak()] })
-  ];
-}
-
-function buildSearchSection(searchText) {
-  return [
-    ...sectionHeader("Phase 3.5", "Local Partner Research — Live Web Results"),
-    body("The following businesses were identified through live web research based on your market and the Dream 10 partner categories. Verify each before outreach — details change."),
-    spacer(10),
-    infoBox("Confidence levels: High = verified active via website/LinkedIn. Medium = appears active. Low = verify before outreach."),
-    spacer(10),
-    ...parseMarkdown(searchText),
     new Paragraph({ children: [new PageBreak()] })
   ];
 }
@@ -626,7 +670,6 @@ function assembleDocument(config, phaseResults) {
     ...(p["1"]   ? buildPhaseSection("Phase 1",  "", "Lifecycle Trigger Mapping",                        phaseIntros["1"],  p["1"])  : []),
     ...(p["2"]   ? buildPhaseSection("Phase 2",  "", "Upstream & Side-stream Partner Mapping",            phaseIntros["2"],  p["2"])  : []),
     ...(p["3"]   ? buildPhaseSection("Phase 3",  "", "Dream 10 Tier Ranking & Shortlist",                 phaseIntros["3"],  p["3"])  : []),
-    ...(p["3.5"] ? buildSearchSection(p["3.5"]) : []),
     ...(p["4a"]  ? buildPhaseSection("Phase 4a", "", "Value Strategy Cards — Partners 1–3",               phaseIntros["4a"], p["4a"]) : []),
     ...(p["4b"]  ? buildPhaseSection("Phase 4b", "", "Value Strategy Cards — Partners 4–6 + Manifesto",   phaseIntros["4b"], p["4b"]) : []),
     ...(p["5"]   ? buildPhaseSection("Phase 5",  "", "Objection Anticipation & Response Prep",            phaseIntros["5"],  p["5"])  : []),
@@ -720,14 +763,24 @@ function buildDocumentShell(config, children) {
 // SECTION 8 — PUBLIC API
 // ═════════════════════════════════════════════════════════════════════════
 
-export async function buildReport(config, phaseResults) {
-  const toTitleCase = (str) => str ? str.replace(/\b\w/g, c => c.toUpperCase()) : "";
+// Smart title case — doesn't capitalize small words like "in", "of", "and"
+function smartTitleCase(str) {
+  if (!str) return "";
+  const smallWords = new Set(["a", "an", "and", "as", "at", "but", "by", "for", "in", "is", "nor", "of", "on", "or", "so", "the", "to", "up", "yet"]);
+  return str.replace(/\b\w+/g, (word, index) => {
+    if (index === 0 || !smallWords.has(word.toLowerCase())) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+    return word.toLowerCase();
+  });
+}
 
+export async function buildReport(config, phaseResults) {
   const resolvedConfig = {
-    agentName:   config.agentName   ? toTitleCase(config.agentName)  : "Agent",
-    niche:       config.niche       ? toTitleCase(config.niche)       : "Real Estate Specialist",
-    subniche:    config.subniche    ? toTitleCase(config.subniche)    : "",
-    market:      config.market      ? toTitleCase(config.market)      : "Your Market",
+    agentName:   config.agentName   ? smartTitleCase(config.agentName)  : "Agent",
+    niche:       config.niche       ? smartTitleCase(config.niche)       : "Real Estate Specialist",
+    subniche:    config.subniche    ? smartTitleCase(config.subniche)    : "",
+    market:      config.market      ? smartTitleCase(config.market)      : "Your Market",
     idealClient: config.idealClient || "High Net Worth Investors",
   };
 
