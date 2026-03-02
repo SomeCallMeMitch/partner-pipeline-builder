@@ -68,7 +68,6 @@ export default function Landing() {
       client: formData.client,
       challenge: formData.challenge,
       years: formData.years,
-      llm: formData.llm,
     };
 
     setTimeout(() => {
@@ -82,7 +81,7 @@ export default function Landing() {
   const handleRestart = () => {
     setFormData({
       nicheBase: '', customNiche: '', geo: '', client: '',
-      challenge: '', name: '', years: '', llm: 'ChatGPT',
+      challenge: '', name: '', years: '',
     });
     setPrompts([]);
     setView('hero');
