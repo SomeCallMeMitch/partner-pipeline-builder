@@ -1,7 +1,27 @@
-// Dream 100 Prompt Builder — Claude-Optimized
+// Dream 100 Prompt Builder — Claude-Optimized, Industry-Enriched
 // All prompts are built for Claude API execution.
+// Uses INDUSTRY_DATA for richer, more specific prompts.
 
 const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described.';
+
+// ── Industry-Specific Context ─────────────────────────────────────────────
+// This data enriches every prompt with specific partner types, trigger events,
+// and objection categories instead of making Claude guess from scratch.
+
+const INDUSTRY_DATA = {
+  "Real Estate": {
+    triggerEvents: "home purchase, home sale, refinance, investment property acquisition, relocation, lease signing, portfolio expansion",
+    upstreamPartners: "mortgage brokers, financial advisors, estate attorneys, CPAs, divorce attorneys, relocation specialists, property managers",
+    sideStreamPartners: "home inspectors, title companies, interior designers, contractors, insurance agents, moving companies, stagers",
+    lifecycleMoments: "pre-listing, active search, under contract, closing, post-close 30/60/90 days, first anniversary, refinance trigger",
+    partnerValueAdd: "priority referrals, client pre-qualification support, co-marketing materials, market report sharing, closing gift coordination",
+    objectionContext: "existing referral relationships, territory overlap concerns, reciprocity expectations, compliance considerations",
+    scriptTone: "consultative, confidence-based, neighborhood-authority positioning",
+  },
+};
+
+// Always use Real Estate since this is a realtor-focused tool
+const IND = INDUSTRY_DATA["Real Estate"];
 
 export function buildPrompts(formData) {
   const n = formData.name || 'I';
@@ -29,6 +49,10 @@ TASK — Lifecycle Trigger Mapping
 
 Map the complete lifecycle of my ideal real estate client. Identify every major life event, financial trigger, and transition point that causes someone in the ${niche} segment to buy or sell in ${geo}.
 
+Common trigger events in real estate include: ${IND.triggerEvents}. Use these as a starting point, then add triggers SPECIFIC to ${niche} in ${geo}.
+
+Key lifecycle moments to consider: ${IND.lifecycleMoments}
+
 For each trigger provide:
 1. The specific trigger event
 2. Months before a real estate transaction this typically occurs
@@ -38,7 +62,7 @@ For each trigger provide:
 DELIVERABLE: Markdown table with columns:
 | Trigger Event | Months Before Transaction | Upstream Professional | Why They Have High Trust |
 
-Include at least 12 distinct trigger events. Mark top 3 with ★ and explain in 2-3 sentences each why they are the priority.
+Include at least 12 distinct trigger events. Mark top 3 with ★ and explain in 2-3 sentences each why they are the priority for the ${niche} niche specifically.
 
 ${CLAUDE_NOTE}`
     },
@@ -50,17 +74,21 @@ ${CLAUDE_NOTE}`
 TASK — Upstream & Side-stream Partner Mapping
 
 UPSTREAM PARTNERS (see client 3–12 months before a transaction):
-List 8–10 partner types. For each:
+Known upstream partner types for real estate: ${IND.upstreamPartners}
+
+List 8–10 partner types relevant to ${niche} in ${geo}. For each:
 — Why they see my ${niche} client early
 — The specific problem they're solving at that moment
 — What a ${niche} specialist in ${geo} can offer them in return (specific value exchange)
 — Estimated monthly referral frequency
 
 SIDE-STREAM PARTNERS (see client during the transaction):
+Known side-stream partner types: ${IND.sideStreamPartners}
+
 List 4–6 partner types. Same format.
 
 UNDERUTILIZED PARTNERS:
-Identify the top 3 underutilized partner types most agents overlook. Explain why they are high-value and underserved.
+Identify the top 3 underutilized partner types that most ${niche} agents overlook. Explain why they are high-value and underserved in ${geo} specifically.
 
 ${CLAUDE_NOTE}`
     },
@@ -81,7 +109,7 @@ Build the Dream 10 table:
 
 Then answer: What 3 personal characteristics should ${n} look for when identifying WHICH INDIVIDUAL at each company to target (beyond just finding the business)?
 
-IMPORTANT: The Dream 10 list you create here will be used as the foundation for all remaining phases. Be specific and deliberate with your rankings.
+IMPORTANT: The Dream 10 list you create here will be used as the foundation for ALL remaining phases. Be specific and deliberate with your rankings. Phases 4, 5, 6, and 7 will all reference this exact list.
 
 ${CLAUDE_NOTE}`
     },
@@ -97,6 +125,8 @@ For each of the top 3 referral partner types from the Dream 10 ranking, create a
 **1. THE GAP:** What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
 
 **2. THE VALUE GIFT:** What specific, tangible asset can ${n} create or offer to start the relationship — with no ask? Be extremely specific (not "a market report" but "a quarterly ${niche}-specific absorption rate report for ${geo} with their branding included").
+
+Known value-add categories in real estate: ${IND.partnerValueAdd}. Go beyond these — what would make this specific partner type think "I need to keep this agent close"?
 
 **3. THE RECURRING TOUCHPOINT:** What ongoing value can ${n} deliver monthly or quarterly to keep the relationship warm?
 
@@ -123,6 +153,8 @@ For each of the next 3 referral partner types (partners ranked 4–6 from the Dr
 
 Then write ${n}'s **Value Manifesto** — a 3-paragraph positioning statement ${n} would use when meeting new referral partners in person. It should focus entirely on how ${n} serves the partner's clients, not on promoting ${n}'s own production. Warm, peer-to-peer tone. No buzzwords.
 
+The manifesto should feel like something ${n} would actually say at a coffee meeting — not a marketing page.
+
 ${CLAUDE_NOTE}`
     },
     {
@@ -131,6 +163,8 @@ ${CLAUDE_NOTE}`
       prompt: `${ctx}
 
 TASK — Objection Anticipation & Response Prep
+
+Known objection categories in real estate referral partnerships: ${IND.objectionContext}
 
 For each objection provide:
 — WHY this objection comes up (the real fear underneath it)
@@ -144,12 +178,12 @@ OBJECTIONS:
 4. "I don't encounter that many clients who need a realtor."
 5. "I'm too busy to meet — can you just send me your card?"
 6. "Can I think about it and get back to you?"
-7. One objection specific to ${niche} partnerships
+7. One objection specific to ${niche} partnerships in ${geo}
 8. One more objection specific to ${niche} partnerships that most agents don't think of
 
 BONUS: Write a "trust reset" script for: (a) a relationship that went cold after initial contact, and (b) a past referral relationship that ended badly.
 
-TONE: Confident, low-pressure, peer-to-peer. Not salesy.
+TONE: ${IND.scriptTone}. Not salesy.
 
 ${CLAUDE_NOTE}`
     },
@@ -162,8 +196,10 @@ TASK — Complete Outreach Script Suite
 
 Write all 6 scripts below. Each script should reference the specific partner types and value gifts established in earlier phases.
 
+Tone for all scripts: ${IND.scriptTone}
+
 **SCRIPT 1 — Cold Intro Email**
-3 subject line options. Body under 150 words. Focus on partner's business, not ${n}'s needs. Mention a specific value gift. End with a low-commitment ask.
+3 subject line options. Body under 150 words. Focus on partner's business, not ${n}'s needs. Mention a specific value gift from the Value Strategy Cards. End with a low-commitment ask.
 
 **SCRIPT 2 — LinkedIn Connection Message**
 Under 300 characters. Reference something real about their work. Do not mention referrals.
@@ -172,15 +208,15 @@ Under 300 characters. Reference something real about their work. Do not mention 
 4–6 sentences. Frame around their business growth. Include a curiosity hook specific to ${niche} in ${geo}.
 
 **SCRIPT 4 — Handwritten Note Introduction**
-3–4 sentences. Sent BEFORE any other outreach. Completely personal. Zero sales language. This is the first impression that opens every door. This is the most important script in the entire suite.
+3–4 sentences. Sent BEFORE any other outreach. Completely personal. Zero sales language. This is the first impression that opens every door. This is the most important script in the entire suite — it's what separates ${n} from every other agent who sends an email.
 
 **SCRIPT 5 — Value-First Follow-Up**
 Brief message after delivering the value gift. Conversational. Plant a seed without making an ask.
 
 **SCRIPT 6 — Referral Thank-You Note**
-Warm, personal, non-templated. Sent immediately after receiving a referral.
+Warm, personal, non-templated. Sent immediately after receiving a referral. Handwritten if possible.
 
-All scripts sound like ${n} — warm, credible, peer-to-peer. No buzzwords.
+All scripts sound like ${n} — warm, credible, peer-to-peer. No buzzwords or corporate-speak.
 
 ${CLAUDE_NOTE}`
     },
@@ -198,7 +234,7 @@ For a new Tier 1 referral partner, provide a week-by-week action plan for the fi
 — Goal of the touchpoint
 — Time investment estimate
 
-The handwritten note should always be the first touchpoint (Week 1). Emphasize this as the foundation of the entire sequence.
+The handwritten note should always be the first touchpoint (Week 1). This is non-negotiable — it's the foundation of the entire sequence and what makes this system different from generic networking.
 
 **PART B — Relationship Tracker Template**
 Design a simple tracker structure for managing all 10 Dream Partners. Include columns for:
@@ -218,7 +254,7 @@ TASK — 12-Month Quarterly Calendar + Production Math
 **PART C — 12-Month Quarterly Calendar**
 After a partner becomes active, what does ${n} do each quarter to maintain and deepen the relationship? Create a 4-quarter calendar with:
 — Specific touchpoints per quarter
-— Value gifts
+— Value gifts (reference the ones from Phase 4)
 — Personal gestures
 — Exact moments where a handwritten note is the highest-leverage move (quarterly check-in, referral thank-you, partner's business milestone, holiday)
 
@@ -228,6 +264,8 @@ Walk through the math simply and conservatively:
 — Assume average deal size for ${niche} in ${geo}
 — Show 3 scenarios: conservative, moderate, strong
 — What does ${n} need to believe is true for this system to work?
+
+Be honest about the assumptions. Realtors respect straight talk over hype.
 
 Format with markdown headers and tables.
 
