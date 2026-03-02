@@ -397,9 +397,9 @@ function parseMarkdown(text) {
               shading: { fill: "F0F4FA", type: ShadingType.CLEAR },
               margins: { top: 80, bottom: 80, left: 200, right: 200 },
               width: { size: 9360, type: WidthType.DXA },
-              children: quoteLines.map(ql => new Paragraph({
+              children: quoteLines.map((ql, idx) => new Paragraph({
                 children: [new TextRun({ text: ql, font: "Arial", size: 20, color: BODY_TEXT, italics: true })],
-                spacing: { before: 40, after: 40 }
+                spacing: { before: idx === 0 ? 0 : 10, after: idx === quoteLines.length - 1 ? 0 : 10 }
               }))
             })]
           })]
