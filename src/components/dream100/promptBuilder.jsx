@@ -2,7 +2,7 @@
 // All prompts are built for Claude API execution.
 // Uses INDUSTRY_DATA for richer, more specific prompts.
 
-const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described. Do NOT use emoji as section headers or labels — use plain text headers only (e.g., "THE GAP" not "🕳️ THE GAP"). Emoji render inconsistently in Word documents.';
+const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described. Do NOT use emoji anywhere in your output — not in headers, labels, bullet points, or section markers. Use plain text only (e.g., "THE GAP" not "🕳️ THE GAP", "Handwritten Note Moments" not "✍️ Handwritten Note Moments"). This is a hard requirement.';
 
 // ── Industry-Specific Context ─────────────────────────────────────────────
 // This data enriches every prompt with specific partner types, trigger events,
@@ -76,7 +76,7 @@ TASK — Upstream & Side-stream Partner Mapping
 UPSTREAM PARTNERS (see client 3–12 months before a transaction):
 Known upstream partner types for real estate: ${IND.upstreamPartners}
 
-List 8–10 partner types relevant to ${niche} in ${geo}. For each:
+List 8–10 partner types relevant to ${niche} in ${geo}. Every partner type must be realistically able to make referrals without violating their professional code of ethics. Do not include partner types (e.g., therapists, counselors) where referral behavior would conflict with confidentiality obligations or professional ethical constraints. For each:
 — Why they see my ${niche} client early
 — The specific problem they're solving at that moment
 — What a ${niche} specialist in ${geo} can offer them in return (specific value exchange)
@@ -255,10 +255,10 @@ ${CLAUDE_NOTE}`
     },
     {
       id: "7b",
-      title: 'Phase 7b: 12-Month Calendar + Production Math',
+      title: 'Phase 7b: 12-Month Calendar + Referral Math',
       prompt: `${ctx}
 
-TASK — 12-Month Quarterly Calendar + Production Math
+TASK — 12-Month Quarterly Calendar + Referral Math
 
 **PART C — 12-Month Quarterly Calendar**
 After a partner becomes active, what does ${n} do each quarter to maintain and deepen the relationship? Create a 4-quarter calendar with:
@@ -267,15 +267,17 @@ After a partner becomes active, what does ${n} do each quarter to maintain and d
 — Personal gestures
 — Exact moments where a handwritten note is the highest-leverage move (quarterly check-in, referral thank-you, partner's business milestone, holiday)
 
-**PART D — 12-Month Production Math**
-Walk through the math simply and conservatively:
-— How many Dream 10 partnerships at what referral frequency = what level of closed volume?
-— Assume average deal size for ${niche} in ${geo}
-— Show 3 scenarios: conservative, moderate, strong
-— For each scenario, NAME which specific Dream 10 partner types (by rank from Phase 3) are active. For example, the conservative scenario might assume partners #1, #2, #3, #5, and #9 are active. This makes the math feel concrete and tied to the actual Dream 10 list, not abstract.
-— What does ${n} need to believe is true for this system to work?
+**PART D — Referral Math**
+Walk through the referral math simply and conservatively. The goal is to show how the system produces closed deals — NOT to project income or commission. Never include dollar amounts, commission calculations, or income projections. The agent knows their own average deal size and split — they can do that math themselves.
 
-Be honest about the assumptions. Realtors respect straight talk over hype.
+Show 3 scenarios: conservative, moderate, strong. For each scenario:
+— NAME which specific Dream 10 partner types (by rank from Phase 3) are active. For example, the conservative scenario might assume partners #1, #2, and #4 are active.
+— How many referrals per partner per quarter at that tier
+— Total referrals per year
+— Realistic close rate (be honest — 35-45% for warm referrals)
+— **Total closed deals from referrals** ← stop here. No dollar amounts.
+
+End with a "What ${n} needs to believe is true for this system to work" section — the honest gut-check on patience, reciprocity, and consistency. Realtors respect straight talk over hype.
 
 Format with markdown headers and tables.
 
