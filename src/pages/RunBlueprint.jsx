@@ -167,46 +167,21 @@ function extractSection(text, keyword, maxLines = 5) {
 function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, retrying, usage }) {
   const [expanded, setExpanded] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-  const [finalElapsed, setFinalElapsed] = useState(null); // Change 1: retain elapsed when done
-  const [copied, setCopied] = useState(false); // Change 5: copy button state
   const intervalRef = useRef(null);
 
   useEffect(() => {
     if (isActive) {
       setElapsed(0);
-      setFinalElapsed(null);
       intervalRef.current = setInterval(() => setElapsed(s => s + 1), 1000);
     } else {
       clearInterval(intervalRef.current);
-      // Change 1: save final elapsed time when phase completes
-      if (status === "done" || status === "error") {
-        setFinalElapsed(prev => prev === null ? elapsed : prev);
-      }
     }
     return () => clearInterval(intervalRef.current);
   }, [isActive]);
 
-  // Capture elapsed when status becomes done/error
-  useEffect(() => {
-    if ((status === "done" || status === "error") && finalElapsed === null && elapsed > 0) {
-      setFinalElapsed(elapsed);
-    }
-  }, [status]);
-
   const fmt = s => {
     const m = Math.floor(s / 60), sec = s % 60;
     return `${m}:${String(sec).padStart(2, "0")}`;
-  };
-
-  // Change 5: copy to clipboard handler
-  const handleCopy = (e) => {
-    e.stopPropagation();
-    if (result) {
-      navigator.clipboard.writeText(result).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      });
-    }
   };
 
   const isDone    = status === "done";
@@ -264,12 +239,9 @@ function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, ret
             {fmt(elapsed)}
           </span>
         )}
-        {/* Change 1: show time taken + word count when done */}
         {isDone && (
           <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>
-            Complete
-            {finalElapsed ? ` · ${fmt(finalElapsed)}` : ''}
-            {usage?.wordCount ? ` · ${usage.wordCount.toLocaleString()} words` : ''}
+            Complete{usage?.wordCount ? ` · ${usage.wordCount.toLocaleString()} words` : ''}
           </span>
         )}
         {isError && !retrying && (
@@ -311,27 +283,15 @@ function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, ret
         }}>Click to expand result</div>
       )}
 
-      {/* Result content — Change 5: Copy button in expanded view */}
+      {/* Result content */}
       {isDone && expanded && (
-        <div style={{ borderTop: `1px solid ${C.border}`, background: C.cream }}>
-          <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 18px 0" }}>
-            <button
-              onClick={handleCopy}
-              style={{
-                background: copied ? C.success : C.navy, color: C.white,
-                border: "none", borderRadius: 6, padding: "5px 14px",
-                fontSize: 12, fontWeight: 700, fontFamily: font, cursor: "pointer",
-                transition: "background 0.2s",
-              }}
-            >{copied ? "✓ Copied!" : "Copy"}</button>
-          </div>
-          <div style={{
-            padding: "12px 18px 16px",
-            fontSize: 13, lineHeight: 1.75, color: C.text, fontFamily: font,
-            maxHeight: 400, overflowY: "auto",
-            whiteSpace: "pre-wrap",
-          }}>{result}</div>
-        </div>
+        <div style={{
+          borderTop: `1px solid ${C.border}`,
+          padding: "16px 18px", background: C.cream,
+          fontSize: 13, lineHeight: 1.75, color: C.text, fontFamily: font,
+          maxHeight: 400, overflowY: "auto",
+          whiteSpace: "pre-wrap",
+        }}>{result}</div>
       )}
     </div>
   );
@@ -556,8 +516,7 @@ Your output style:
     <div style={{ minHeight: "100vh", background: C.cream, fontFamily: font }}>
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        /* Change 7: sidebar 30% wider = 390px */
-        .bp-grid { display: grid; grid-template-columns: 1fr 390px; gap: 32px; align-items: start; }
+        .bp-grid { display: grid; grid-template-columns: 1fr 300px; gap: 32px; align-items: start; }
         .bp-sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px; }
         .bp-nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
         .bp-main { max-width: 1100px; margin: 0 auto; padding: 36px 40px 80px; }
@@ -581,17 +540,15 @@ Your output style:
               style={{ background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", color: "white", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}
             >←</button>
             <div>
-              {/* Change 5: removed redundant subtitle, kept displayName only */}
               <div style={{ color: C.white, fontWeight: 700, fontSize: 15, fontFamily: font }}>AI Blueprint Runner</div>
-              <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 11, fontFamily: font }}>{displayName}</div>
+              <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11, fontFamily: font }}>{displayName}</div>
             </div>
           </div>
 
           {/* Nav actions */}
           <div className="bp-nav-actions" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-            {/* Change 8: 20% larger, white */}
             {(running || allDone) && (
-              <span style={{ fontSize: 14.4, color: C.white, fontFamily: font, marginRight: 4, fontWeight: 600 }}>
+              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontFamily: font, marginRight: 4 }}>
                 {completedCount} of {phases.length} phases
                 {errorCount > 0 && ` · ${errorCount} failed`}
               </span>
@@ -612,14 +569,14 @@ Your output style:
               style={{
                 background: running ? "rgba(201,151,58,0.5)" : C.gold,
                 color: C.navy, border: "none", borderRadius: 8,
-                padding: "10px 22px", fontFamily: font, fontWeight: 900, fontSize: 16,
+                padding: "8px 18px", fontFamily: font, fontWeight: 800, fontSize: 14,
                 cursor: running ? "not-allowed" : "pointer",
                 display: "flex", alignItems: "center", gap: 6,
               }}
             >
               {running ? (
                 <><div style={{ width: 14, height: 14, border: "2px solid rgba(27,42,74,0.4)", borderTopColor: C.navy, borderRadius: "50%", animation: "spin 0.8s linear infinite" }} /> Running Phase {activePhase}...</>
-              ) : allDone ? "↺ Run Again" : `▶ Click Here to Start!`}
+              ) : allDone ? "↺ Run Again" : `▶ Run All ${phases.length} Phases`}
             </button>
           </div>
         </div>
@@ -644,15 +601,14 @@ Your output style:
               <div style={{ position: "absolute", top: -30, right: -30, width: 160, height: 160, background: "radial-gradient(circle, rgba(201,151,58,0.12), transparent 65%)", pointerEvents: "none" }} />
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 6, fontFamily: font }}>NurturInk · Dream 100 Blueprint</div>
               <div style={{ color: C.white, fontWeight: 800, fontSize: 17, fontFamily: font, marginBottom: 4 }}>{displayName}</div>
-              {/* Change 4: 20% larger text, white */}
-              <div style={{ color: C.white, fontSize: 15.6, fontFamily: font }}>
-                Each phase builds on the last to create one cohesive strategy. <strong>Each phase takes 1–4 minutes.</strong>
+              <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: font }}>
+                Each phase builds on the last to create one cohesive strategy. <strong style={{ color: "rgba(255,255,255,0.8)" }}>Each phase takes 1–4 minutes.</strong>
               </div>
             </div>
 
-            {/* Warning — Change 2: larger text, black color */}
+            {/* Warning */}
             {running && (
-              <div style={{ background: C.goldPale, border: `1.5px solid ${C.gold}`, borderLeft: `4px solid ${C.gold}`, borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 15.6, color: "#000000", fontFamily: font }}>
+              <div style={{ background: C.goldPale, border: `1.5px solid ${C.gold}`, borderLeft: `4px solid ${C.gold}`, borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 13, color: "#7A5800", fontFamily: font }}>
                 ⏳ <strong>Don't navigate away while running.</strong> Each phase builds on the last. If interrupted, use Run Again to restart.
               </div>
             )}
@@ -694,8 +650,7 @@ Your output style:
 
             {/* Progress card */}
             <div style={{ background: C.white, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px", boxShadow: "0 2px 12px rgba(27,42,74,0.06)" }}>
-              {/* Change 7: sidebar text 20% larger */}
-              <div style={{ fontSize: 13.2, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 14, fontFamily: font }}>Run Progress</div>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 14, fontFamily: font }}>Run Progress</div>
 
               {/* Circular progress */}
               <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -718,11 +673,11 @@ Your output style:
                     </span>
                   </div>
                 </div>
-                <div style={{ fontSize: 15.6, fontWeight: 700, color: allDone ? C.success : running ? C.gold : C.muted, fontFamily: font, marginTop: 8 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: allDone ? C.success : running ? C.gold : C.muted, fontFamily: font, marginTop: 8 }}>
                   {allDone ? (errorCount > 0 ? `${completedCount} complete, ${errorCount} failed` : "All phases complete") : running ? `Running phase ${activePhase}...` : "Ready to Run"}
                 </div>
                 {!running && !allDone && (
-                  <div style={{ fontSize: 13.2, color: C.muted, fontFamily: font, marginTop: 2 }}>Click Run to begin all phases.</div>
+                  <div style={{ fontSize: 11, color: C.muted, fontFamily: font, marginTop: 2 }}>Click Run to begin all phases.</div>
                 )}
               </div>
 
@@ -738,7 +693,7 @@ Your output style:
                     {status[phase.id] === "done" ? "✓" : status[phase.id] === "error" ? "✗" : activePhase === phase.id ? "…" : ""}
                   </div>
                   <span style={{
-                    fontSize: 13.2, fontFamily: font, lineHeight: 1.3,
+                    fontSize: 11, fontFamily: font, lineHeight: 1.3,
                     color: !status[phase.id] && activePhase !== phase.id ? C.muted : C.text,
                     fontWeight: activePhase === phase.id ? 700 : 400,
                   }}>{phase.title}</span>
@@ -749,15 +704,14 @@ Your output style:
             {/* While you wait CTA */}
             <div style={{ background: C.navy, borderRadius: 14, padding: "18px 20px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "radial-gradient(circle, rgba(201,151,58,0.2), transparent 65%)" }} />
-              {/* Change 6: 20% larger text throughout */}
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 8, fontFamily: font, position: "relative" }}>While you wait...</div>
-              <p style={{ fontSize: 14.4, color: "rgba(255,255,255,0.7)", fontFamily: font, lineHeight: 1.6, margin: "0 0 12px", position: "relative" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 8, fontFamily: font, position: "relative" }}>While you wait...</div>
+              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", fontFamily: font, lineHeight: 1.6, margin: "0 0 12px", position: "relative" }}>
                 When your blueprint is ready, send a handwritten card to your top 3 partners <em style={{ color: C.white }}>before</em> you email or call. It's the move that gets you remembered.
               </p>
               <a href="https://nurturink.com" target="_blank" rel="noreferrer" style={{
                 display: "block", textAlign: "center",
                 background: C.gold, color: C.navy, textDecoration: "none",
-                fontWeight: 800, fontSize: 15.6, padding: "10px 14px", borderRadius: 8,
+                fontWeight: 800, fontSize: 13, padding: "10px 14px", borderRadius: 8,
                 fontFamily: font, position: "relative",
               }}>See How NurturInk Works →</a>
             </div>

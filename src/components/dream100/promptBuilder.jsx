@@ -2,7 +2,7 @@
 // All prompts are built for Claude API execution.
 // Uses INDUSTRY_DATA for richer, more specific prompts.
 
-const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described. Do NOT use emoji anywhere in your output — not in headers, labels, bullet points, or section markers. Use plain text only (e.g., "THE GAP" not "🕳️ THE GAP", "Handwritten Note Moments" not "✍️ Handwritten Note Moments"). This is a hard requirement.';
+const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described.';
 
 // ── Industry-Specific Context ─────────────────────────────────────────────
 // This data enriches every prompt with specific partner types, trigger events,
@@ -76,7 +76,7 @@ TASK — Upstream & Side-stream Partner Mapping
 UPSTREAM PARTNERS (see client 3–12 months before a transaction):
 Known upstream partner types for real estate: ${IND.upstreamPartners}
 
-List 8–10 partner types relevant to ${niche} in ${geo}. Every partner type must be realistically able to make referrals without violating their professional code of ethics. Do not include partner types (e.g., therapists, counselors) where referral behavior would conflict with confidentiality obligations or professional ethical constraints. For each:
+List 8–10 partner types relevant to ${niche} in ${geo}. For each:
 — Why they see my ${niche} client early
 — The specific problem they're solving at that moment
 — What a ${niche} specialist in ${geo} can offer them in return (specific value exchange)
@@ -153,9 +153,7 @@ For each of the next 3 referral partner types (partners ranked 4–6 from the Dr
 
 Then write ${n}'s **Value Manifesto** — a 3-paragraph positioning statement ${n} would use when meeting new referral partners in person. It should focus entirely on how ${n} serves the partner's clients, not on promoting ${n}'s own production. Warm, peer-to-peer tone. No buzzwords.
 
-Start with a **"Cocktail Party Version"** — 2-3 sentences that ${n} could deliver in 30 seconds when someone asks "what do you do?" This is the quick version for casual introductions.
-
-Then write the full 3-paragraph version — what ${n} would say in a sit-down coffee meeting. The manifesto should feel like something ${n} would actually say — not a marketing page.
+The manifesto should feel like something ${n} would actually say at a coffee meeting — not a marketing page.
 
 ${CLAUDE_NOTE}`
     },
@@ -168,10 +166,7 @@ TASK — Objection Anticipation & Response Prep
 
 Known objection categories in real estate referral partnerships: ${IND.objectionContext}
 
-For each objection, frame it around a SPECIFIC Dream 10 partner type from Phase 3 — name the partner type in the header (e.g., "When a Wealth Manager says..." or "When a CPA says..."). Choose the partner type where that objection is most likely to surface.
-
 For each objection provide:
-— The specific Dream 10 partner type most likely to say this
 — WHY this objection comes up (the real fear underneath it)
 — A non-defensive, conversational response that reframes without being pushy
 — A follow-up question that keeps the door open
@@ -241,13 +236,9 @@ For a new Tier 1 referral partner, provide a week-by-week action plan for the fi
 
 The handwritten note should always be the first touchpoint (Week 1). This is non-negotiable — it's the foundation of the entire sequence and what makes this system different from generic networking.
 
-**End Part A with a "Quick Reference Grid"** — a compact summary table showing all 13 weeks in one view:
-| Week | Channel | Action (5 words max) |
-This should fit on one printed page and serve as a desk reference ${n} can print and check off.
-
 **PART B — Relationship Tracker Template**
 Design a simple tracker structure for managing all 10 Dream Partners. Include columns for:
-partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, inbound referral count, outbound referrals sent TO this partner. The outbound column is critical — it makes referral reciprocity visible and trackable, not just aspirational.
+partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, referral count.
 
 Format both parts clearly with markdown headers and tables where appropriate.
 
@@ -255,10 +246,10 @@ ${CLAUDE_NOTE}`
     },
     {
       id: "7b",
-      title: 'Phase 7b: 12-Month Calendar + Referral Math',
+      title: 'Phase 7b: 12-Month Calendar + Production Math',
       prompt: `${ctx}
 
-TASK — 12-Month Quarterly Calendar + Referral Math
+TASK — 12-Month Quarterly Calendar + Production Math
 
 **PART C — 12-Month Quarterly Calendar**
 After a partner becomes active, what does ${n} do each quarter to maintain and deepen the relationship? Create a 4-quarter calendar with:
@@ -267,17 +258,14 @@ After a partner becomes active, what does ${n} do each quarter to maintain and d
 — Personal gestures
 — Exact moments where a handwritten note is the highest-leverage move (quarterly check-in, referral thank-you, partner's business milestone, holiday)
 
-**PART D — Referral Math**
-Walk through the referral math simply and conservatively. The goal is to show how the system produces closed deals — NOT to project income or commission. Never include dollar amounts, commission calculations, or income projections. The agent knows their own average deal size and split — they can do that math themselves.
+**PART D — 12-Month Production Math**
+Walk through the math simply and conservatively:
+— How many Dream 10 partnerships at what referral frequency = what level of closed volume?
+— Assume average deal size for ${niche} in ${geo}
+— Show 3 scenarios: conservative, moderate, strong
+— What does ${n} need to believe is true for this system to work?
 
-Show 3 scenarios: conservative, moderate, strong. For each scenario:
-— NAME which specific Dream 10 partner types (by rank from Phase 3) are active. For example, the conservative scenario might assume partners #1, #2, and #4 are active.
-— How many referrals per partner per quarter at that tier
-— Total referrals per year
-— Realistic close rate (be honest — 35-45% for warm referrals)
-— **Total closed deals from referrals** ← stop here. No dollar amounts.
-
-End with a "What ${n} needs to believe is true for this system to work" section — the honest gut-check on patience, reciprocity, and consistency. Realtors respect straight talk over hype.
+Be honest about the assumptions. Realtors respect straight talk over hype.
 
 Format with markdown headers and tables.
 
