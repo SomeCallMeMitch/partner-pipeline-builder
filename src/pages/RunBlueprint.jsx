@@ -581,8 +581,9 @@ Your output style:
               style={{ background: "rgba(255,255,255,0.1)", border: "none", borderRadius: 8, width: 32, height: 32, cursor: "pointer", color: "white", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}
             >←</button>
             <div>
+              {/* Change 5: removed redundant subtitle, kept displayName only */}
               <div style={{ color: C.white, fontWeight: 700, fontSize: 15, fontFamily: font }}>AI Blueprint Runner</div>
-              <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11, fontFamily: font }}>{displayName}</div>
+              <div style={{ color: "rgba(255,255,255,0.7)", fontSize: 11, fontFamily: font }}>{displayName}</div>
             </div>
           </div>
 
@@ -693,7 +694,8 @@ Your output style:
 
             {/* Progress card */}
             <div style={{ background: C.white, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px", boxShadow: "0 2px 12px rgba(27,42,74,0.06)" }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 14, fontFamily: font }}>Run Progress</div>
+              {/* Change 7: sidebar text 20% larger */}
+              <div style={{ fontSize: 13.2, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 14, fontFamily: font }}>Run Progress</div>
 
               {/* Circular progress */}
               <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -716,11 +718,11 @@ Your output style:
                     </span>
                   </div>
                 </div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: allDone ? C.success : running ? C.gold : C.muted, fontFamily: font, marginTop: 8 }}>
+                <div style={{ fontSize: 15.6, fontWeight: 700, color: allDone ? C.success : running ? C.gold : C.muted, fontFamily: font, marginTop: 8 }}>
                   {allDone ? (errorCount > 0 ? `${completedCount} complete, ${errorCount} failed` : "All phases complete") : running ? `Running phase ${activePhase}...` : "Ready to Run"}
                 </div>
                 {!running && !allDone && (
-                  <div style={{ fontSize: 11, color: C.muted, fontFamily: font, marginTop: 2 }}>Click Run to begin all phases.</div>
+                  <div style={{ fontSize: 13.2, color: C.muted, fontFamily: font, marginTop: 2 }}>Click Run to begin all phases.</div>
                 )}
               </div>
 
@@ -736,7 +738,7 @@ Your output style:
                     {status[phase.id] === "done" ? "✓" : status[phase.id] === "error" ? "✗" : activePhase === phase.id ? "…" : ""}
                   </div>
                   <span style={{
-                    fontSize: 11, fontFamily: font, lineHeight: 1.3,
+                    fontSize: 13.2, fontFamily: font, lineHeight: 1.3,
                     color: !status[phase.id] && activePhase !== phase.id ? C.muted : C.text,
                     fontWeight: activePhase === phase.id ? 700 : 400,
                   }}>{phase.title}</span>
