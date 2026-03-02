@@ -556,7 +556,8 @@ Your output style:
     <div style={{ minHeight: "100vh", background: C.cream, fontFamily: font }}>
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        .bp-grid { display: grid; grid-template-columns: 1fr 300px; gap: 32px; align-items: start; }
+        /* Change 7: sidebar 30% wider = 390px */
+        .bp-grid { display: grid; grid-template-columns: 1fr 390px; gap: 32px; align-items: start; }
         .bp-sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px; }
         .bp-nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
         .bp-main { max-width: 1100px; margin: 0 auto; padding: 36px 40px 80px; }
@@ -587,8 +588,9 @@ Your output style:
 
           {/* Nav actions */}
           <div className="bp-nav-actions" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            {/* Change 8: 20% larger, white */}
             {(running || allDone) && (
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontFamily: font, marginRight: 4 }}>
+              <span style={{ fontSize: 14.4, color: C.white, fontFamily: font, marginRight: 4, fontWeight: 600 }}>
                 {completedCount} of {phases.length} phases
                 {errorCount > 0 && ` · ${errorCount} failed`}
               </span>
@@ -609,7 +611,7 @@ Your output style:
               style={{
                 background: running ? "rgba(201,151,58,0.5)" : C.gold,
                 color: C.navy, border: "none", borderRadius: 8,
-                padding: "8px 18px", fontFamily: font, fontWeight: 800, fontSize: 14,
+                padding: "10px 22px", fontFamily: font, fontWeight: 900, fontSize: 16,
                 cursor: running ? "not-allowed" : "pointer",
                 display: "flex", alignItems: "center", gap: 6,
               }}
