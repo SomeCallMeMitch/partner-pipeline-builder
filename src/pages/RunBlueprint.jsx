@@ -616,7 +616,7 @@ Your output style:
             >
               {running ? (
                 <><div style={{ width: 14, height: 14, border: "2px solid rgba(27,42,74,0.4)", borderTopColor: C.navy, borderRadius: "50%", animation: "spin 0.8s linear infinite" }} /> Running Phase {activePhase}...</>
-              ) : allDone ? "↺ Run Again" : `▶ Run All ${phases.length} Phases`}
+              ) : allDone ? "↺ Run Again" : `▶ Click Here to Start!`}
             </button>
           </div>
         </div>
@@ -641,14 +641,15 @@ Your output style:
               <div style={{ position: "absolute", top: -30, right: -30, width: 160, height: 160, background: "radial-gradient(circle, rgba(201,151,58,0.12), transparent 65%)", pointerEvents: "none" }} />
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 6, fontFamily: font }}>NurturInk · Dream 100 Blueprint</div>
               <div style={{ color: C.white, fontWeight: 800, fontSize: 17, fontFamily: font, marginBottom: 4 }}>{displayName}</div>
-              <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: font }}>
-                Each phase builds on the last to create one cohesive strategy. <strong style={{ color: "rgba(255,255,255,0.8)" }}>Each phase takes 1–4 minutes.</strong>
+              {/* Change 4: 20% larger text, white */}
+              <div style={{ color: C.white, fontSize: 15.6, fontFamily: font }}>
+                Each phase builds on the last to create one cohesive strategy. <strong>Each phase takes 1–4 minutes.</strong>
               </div>
             </div>
 
-            {/* Warning */}
+            {/* Warning — Change 2: larger text, black color */}
             {running && (
-              <div style={{ background: C.goldPale, border: `1.5px solid ${C.gold}`, borderLeft: `4px solid ${C.gold}`, borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 13, color: "#7A5800", fontFamily: font }}>
+              <div style={{ background: C.goldPale, border: `1.5px solid ${C.gold}`, borderLeft: `4px solid ${C.gold}`, borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 15.6, color: "#000000", fontFamily: font }}>
                 ⏳ <strong>Don't navigate away while running.</strong> Each phase builds on the last. If interrupted, use Run Again to restart.
               </div>
             )}
@@ -744,14 +745,15 @@ Your output style:
             {/* While you wait CTA */}
             <div style={{ background: C.navy, borderRadius: 14, padding: "18px 20px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "radial-gradient(circle, rgba(201,151,58,0.2), transparent 65%)" }} />
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 8, fontFamily: font, position: "relative" }}>While you wait...</div>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", fontFamily: font, lineHeight: 1.6, margin: "0 0 12px", position: "relative" }}>
+              {/* Change 6: 20% larger text throughout */}
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 8, fontFamily: font, position: "relative" }}>While you wait...</div>
+              <p style={{ fontSize: 14.4, color: "rgba(255,255,255,0.7)", fontFamily: font, lineHeight: 1.6, margin: "0 0 12px", position: "relative" }}>
                 When your blueprint is ready, send a handwritten card to your top 3 partners <em style={{ color: C.white }}>before</em> you email or call. It's the move that gets you remembered.
               </p>
               <a href="https://nurturink.com" target="_blank" rel="noreferrer" style={{
                 display: "block", textAlign: "center",
                 background: C.gold, color: C.navy, textDecoration: "none",
-                fontWeight: 800, fontSize: 13, padding: "10px 14px", borderRadius: 8,
+                fontWeight: 800, fontSize: 15.6, padding: "10px 14px", borderRadius: 8,
                 fontFamily: font, position: "relative",
               }}>See How NurturInk Works →</a>
             </div>
