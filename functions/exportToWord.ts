@@ -845,6 +845,130 @@ function quickStartPage(config) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
+// SECTION 5C — NURTURINK CTA PAGE
+// ═════════════════════════════════════════════════════════════════════════
+
+function nurturInkCTAPage(config) {
+  const { agentName } = config;
+  return [
+    new Paragraph({ children: [], spacing: { before: 600, after: 0 } }),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({ text: "THE HANDWRITTEN ADVANTAGE", font: "Arial", size: 32, bold: true, color: NAVY, allCaps: true, characterSpacing: 60 })]
+    }),
+    spacer(8),
+    new Paragraph({
+      border: { bottom: { style: BorderStyle.SINGLE, size: 8, color: GOLD, space: 1 } },
+      children: [], spacing: { before: 0, after: 200 }
+    }),
+    spacer(8),
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      children: [new TextRun({
+        text: "Throughout this blueprint, you saw the same strategy appear again and again:",
+        font: "Arial", size: 22, color: BODY_TEXT,
+      })],
+      spacing: { before: 0, after: 80 }
+    }),
+    spacer(4),
+
+    // Repeating touchpoints callout
+    new Table({
+      width: { size: 9360, type: WidthType.DXA },
+      columnWidths: [9360],
+      rows: [new TableRow({
+        children: [new TableCell({
+          borders: {
+            top:    { style: BorderStyle.SINGLE, size: 4, color: GOLD },
+            bottom: { style: BorderStyle.SINGLE, size: 4, color: GOLD },
+            left:   { style: BorderStyle.SINGLE, size: 12, color: GOLD },
+            right:  { style: BorderStyle.SINGLE, size: 4, color: GOLD },
+          },
+          shading: { fill: "FFFDF0", type: ShadingType.CLEAR },
+          margins: { top: 200, bottom: 200, left: 300, right: 300 },
+          width: { size: 9360, type: WidthType.DXA },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 0, after: 100 },
+              children: [new TextRun({ text: "Where Handwritten Notes Appear in Your Blueprint", font: "Arial", size: 22, bold: true, color: DARK_GOLD })]
+            }),
+            ...[
+              "Week 1 of your 90-day plan — the first touchpoint with every new partner",
+              "Script 4 — the most important script in your entire outreach suite",
+              "Referral thank-you notes — sent within 24 hours of every referral",
+              "Quarterly check-ins — the gesture that keeps relationships warm",
+              "Partner milestones — birthdays, business anniversaries, achievements",
+            ].map(t => new Paragraph({
+              numbering: { reference: "bullets", level: 0 },
+              spacing: { before: 40, after: 40 },
+              children: [new TextRun({ text: t, font: "Arial", size: 21, color: BODY_TEXT })]
+            })),
+          ]
+        })]
+      })]
+    }),
+    spacer(12),
+
+    new Paragraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 0, after: 120 },
+      children: [new TextRun({
+        text: "The handwritten note is the single highest-leverage touchpoint at every stage of the referral relationship. It's what makes your outreach feel personal in a world of automated drip campaigns.",
+        font: "Arial", size: 22, color: BODY_TEXT, italics: true,
+      })]
+    }),
+    spacer(8),
+
+    // NurturInk pitch
+    new Table({
+      width: { size: 9360, type: WidthType.DXA },
+      columnWidths: [9360],
+      rows: [new TableRow({
+        children: [new TableCell({
+          borders: {
+            top:    { style: BorderStyle.SINGLE, size: 6, color: NAVY },
+            bottom: { style: BorderStyle.SINGLE, size: 6, color: NAVY },
+            left:   { style: BorderStyle.SINGLE, size: 6, color: NAVY },
+            right:  { style: BorderStyle.SINGLE, size: 6, color: NAVY },
+          },
+          shading: { fill: NAVY, type: ShadingType.CLEAR },
+          margins: { top: 240, bottom: 240, left: 360, right: 360 },
+          width: { size: 9360, type: WidthType.DXA },
+          children: [
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 0, after: 80 },
+              children: [new TextRun({ text: "NurturInk", font: "Arial", size: 28, bold: true, color: GOLD })]
+            }),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 0, after: 120 },
+              children: [new TextRun({ text: "Handwritten notes. Real pen. Your signature. Mailed for you.", font: "Arial", size: 22, color: WHITE, italics: true })]
+            }),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 0, after: 100 },
+              children: [new TextRun({
+                text: `${agentName}, this blueprint calls for dozens of handwritten touchpoints over the next 12 months. NurturInk makes that effortless — write your message once, and we handle the handwriting, envelopes, stamps, and mailing. Your partners receive a real card in a real envelope, written in real ink.`,
+                font: "Arial", size: 21, color: WHITE,
+              })]
+            }),
+            spacer(8),
+            new Paragraph({
+              alignment: AlignmentType.CENTER,
+              spacing: { before: 0, after: 0 },
+              children: [new TextRun({ text: "nurturink.com", font: "Arial", size: 24, bold: true, color: GOLD })]
+            }),
+          ]
+        })]
+      })]
+    }),
+    new Paragraph({ children: [new PageBreak()] })
+  ];
+}
+
+// ═════════════════════════════════════════════════════════════════════════
 // SECTION 6 — DOCUMENT ASSEMBLY
 // ═════════════════════════════════════════════════════════════════════════
 
@@ -879,6 +1003,7 @@ function assembleDocument(config, phaseResults) {
     ...(p["7a"]  ? buildPhaseSection("Phase 7a", "", "90-Day Plan + Relationship Tracker",                phaseIntros["7a"], p["7a"]) : []),
     ...(p["7b"]  ? buildPhaseSection("Phase 7b", "", "12-Month Calendar + Production Math",               phaseIntros["7b"], p["7b"]) : []),
     ...researchPromptPage(config),
+    ...nurturInkCTAPage(config),
     spacer(16),
     new Paragraph({
       alignment: AlignmentType.CENTER,
