@@ -164,9 +164,10 @@ function extractSection(text, keyword, maxLines = 5) {
 }
 
 // ─── PHASE CARD ───────────────────────────────────────────────────────────────
-function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, retrying, usage }) {
+function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, retrying, usage, finalTime }) {
   const [expanded, setExpanded] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [copied, setCopied] = useState(false);
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -241,7 +242,7 @@ function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, ret
         )}
         {isDone && (
           <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>
-            Complete{usage?.wordCount ? ` · ${usage.wordCount.toLocaleString()} words` : ''}
+            Complete{finalTime ? ` · ${Math.floor(finalTime/60)}:${String(finalTime%60).padStart(2,'0')}` : ''}{usage?.wordCount ? ` · ${usage.wordCount.toLocaleString()} words` : ''}
           </span>
         )}
         {isError && !retrying && (
@@ -285,13 +286,31 @@ function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, ret
 
       {/* Result content */}
       {isDone && expanded && (
-        <div style={{
-          borderTop: `1px solid ${C.border}`,
-          padding: "16px 18px", background: C.cream,
-          fontSize: 13, lineHeight: 1.75, color: C.text, fontFamily: font,
-          maxHeight: 400, overflowY: "auto",
-          whiteSpace: "pre-wrap",
-        }}>{result}</div>
+        <div style={{ borderTop: `1px solid ${C.border}`, background: C.cream }}>
+          <div style={{ display: "flex", justifyContent: "flex-end", padding: "8px 18px 0" }}>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(result || "").then(() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                });
+              }}
+              style={{
+                background: copied ? C.successBg : C.white,
+                border: `1px solid ${copied ? C.success : C.border}`,
+                borderRadius: 6, padding: "4px 12px", fontSize: 11,
+                color: copied ? C.success : C.text, fontWeight: 600,
+                fontFamily: font, cursor: "pointer",
+              }}
+            >{copied ? "✓ Copied" : "Copy"}</button>
+          </div>
+          <div style={{
+            padding: "8px 18px 16px",
+            fontSize: 13, lineHeight: 1.75, color: C.text, fontFamily: font,
+            maxHeight: 400, overflowY: "auto",
+            whiteSpace: "pre-wrap",
+          }}>{result}</div>
+        </div>
       )}
     </div>
   );
@@ -312,7 +331,13 @@ export default function RunBlueprint() {
   const [exportingWord, setExportingWord] = useState(false);
   const [retryingPhase, setRetryingPhase] = useState(null);
   const [usageData, setUsageData]       = useState({});
+  const [finalTimes, setFinalTimes]     = useState({});
   const resultsRef = useRef({});
+  const phaseStartRef = useRef({});
+  const phasesTopRef = useRef(null);
+
+  // Scroll to top on page load
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("d100_run_formData");
@@ -400,11 +425,18 @@ Your output style:
 
   async function runAll() {
     setRunning(true); setResults({}); setStatus({}); setErrors({});
-    setAllDone(false); setUsageData({}); resultsRef.current = {};
+    setAllDone(false); setUsageData({}); setFinalTimes({}); resultsRef.current = {};
+    // On mobile, scroll to the phase cards so user sees progress
+    setTimeout(() => {
+      if (phasesTopRef.current && window.innerWidth <= 768) {
+        phasesTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 300);
 
     for (const phase of phases) {
       setActivePhase(phase.id);
       setStatus(s => ({ ...s, [phase.id]: "running" }));
+      phaseStartRef.current[phase.id] = Date.now();
 
       try {
         // Build the prompt WITH context from completed phases
@@ -412,11 +444,15 @@ Your output style:
         const fullPrompt = phase.prompt + context;
 
         const { result, usage, wordCount } = await callClaude(fullPrompt);
+        const elapsedSec = Math.round((Date.now() - phaseStartRef.current[phase.id]) / 1000);
+        setFinalTimes(ft => ({ ...ft, [phase.id]: elapsedSec }));
         resultsRef.current[phase.id] = result;
         setResults(r => ({ ...r, [phase.id]: result }));
         setUsageData(u => ({ ...u, [phase.id]: { usage, wordCount } }));
         setStatus(s => ({ ...s, [phase.id]: "done" }));
       } catch (e) {
+        const elapsedSec = Math.round((Date.now() - phaseStartRef.current[phase.id]) / 1000);
+        setFinalTimes(ft => ({ ...ft, [phase.id]: elapsedSec }));
         const msg = e?.response?.data?.error || e?.message || String(e);
         setErrors(err => ({ ...err, [phase.id]: msg }));
         setStatus(s => ({ ...s, [phase.id]: "error" }));
@@ -435,12 +471,15 @@ Your output style:
 
     const phase = phases.find(p => p.id === phaseId);
     if (!phase) { setRetryingPhase(null); return; }
+    phaseStartRef.current[phaseId] = Date.now();
 
     try {
       const context = buildContextForPhase(phase.id, resultsRef.current);
       const fullPrompt = phase.prompt + context;
 
       const { result, usage, wordCount } = await callClaude(fullPrompt, 2); // Extra retries for manual retry
+      const elapsedSec = Math.round((Date.now() - phaseStartRef.current[phaseId]) / 1000);
+      setFinalTimes(ft => ({ ...ft, [phaseId]: elapsedSec }));
       resultsRef.current[phase.id] = result;
       setResults(r => ({ ...r, [phase.id]: result }));
       setUsageData(u => ({ ...u, [phase.id]: { usage, wordCount } }));
@@ -516,10 +555,10 @@ Your output style:
     <div style={{ minHeight: "100vh", background: C.cream, fontFamily: font }}>
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        .bp-grid { display: grid; grid-template-columns: 1fr 300px; gap: 32px; align-items: start; }
+        .bp-grid { display: grid; grid-template-columns: 1fr 420px; gap: 36px; align-items: start; }
         .bp-sidebar { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px; }
-        .bp-nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 40px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
-        .bp-main { max-width: 1100px; margin: 0 auto; padding: 36px 40px 80px; }
+        .bp-nav-inner { max-width: 1400px; margin: 0 auto; padding: 0 40px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+        .bp-main { max-width: 1400px; margin: 0 auto; padding: 36px 40px 80px; }
         @media (max-width: 768px) {
           .bp-grid { grid-template-columns: 1fr !important; }
           .bp-sidebar { position: static !important; order: -1; }
@@ -533,7 +572,7 @@ Your output style:
 
       {/* ── TOP NAV ── */}
       <div style={{ background: C.navy, boxShadow: "0 2px 20px rgba(0,0,0,0.25)", position: "sticky", top: 0, zIndex: 100 }}>
-        <div className="bp-nav-inner" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 40px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div className="bp-nav-inner" style={{ maxWidth: 1400, margin: "0 auto", padding: "0 40px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <button
               onClick={() => navigate(-1)}
@@ -541,14 +580,13 @@ Your output style:
             >←</button>
             <div>
               <div style={{ color: C.white, fontWeight: 700, fontSize: 15, fontFamily: font }}>AI Blueprint Runner</div>
-              <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11, fontFamily: font }}>{displayName}</div>
             </div>
           </div>
 
           {/* Nav actions */}
           <div className="bp-nav-actions" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
             {(running || allDone) && (
-              <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", fontFamily: font, marginRight: 4 }}>
+              <span style={{ fontSize: 15, color: C.white, fontWeight: 600, fontFamily: font, marginRight: 4 }}>
                 {completedCount} of {phases.length} phases
                 {errorCount > 0 && ` · ${errorCount} failed`}
               </span>
@@ -569,14 +607,14 @@ Your output style:
               style={{
                 background: running ? "rgba(201,151,58,0.5)" : C.gold,
                 color: C.navy, border: "none", borderRadius: 8,
-                padding: "8px 18px", fontFamily: font, fontWeight: 800, fontSize: 14,
+                padding: "8px 18px", fontFamily: font, fontWeight: 900, fontSize: 15,
                 cursor: running ? "not-allowed" : "pointer",
                 display: "flex", alignItems: "center", gap: 6,
               }}
             >
               {running ? (
                 <><div style={{ width: 14, height: 14, border: "2px solid rgba(27,42,74,0.4)", borderTopColor: C.navy, borderRadius: "50%", animation: "spin 0.8s linear infinite" }} /> Running Phase {activePhase}...</>
-              ) : allDone ? "↺ Run Again" : `▶ Run All ${phases.length} Phases`}
+              ) : allDone ? "↺ Run Again" : "▶ Click Here to Start!"}
             </button>
           </div>
         </div>
@@ -588,8 +626,16 @@ Your output style:
       </div>
 
       {/* ── MAIN CONTENT ── */}
-      <div className="bp-main" style={{ maxWidth: 1100, margin: "0 auto", padding: "36px 40px 80px" }}>
-        <div className="bp-grid" style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 32, alignItems: "start" }}>
+      <div className="bp-main" style={{ maxWidth: 1400, margin: "0 auto", padding: "36px 40px 80px" }}>
+
+        {/* Warning — above grid so it's always visible at top on mobile */}
+        {running && (
+          <div className="bp-warning" style={{ background: C.goldPale, border: `1.5px solid ${C.gold}`, borderLeft: `4px solid ${C.gold}`, borderRadius: 10, padding: "14px 18px", marginBottom: 16, fontSize: 16, color: "#000000", fontWeight: 600, fontFamily: font }}>
+            ⏳ <strong>Don't navigate away while running.</strong> Each phase builds on the last. Keep this tab open and active. If interrupted, use Run Again to restart.
+          </div>
+        )}
+
+        <div className="bp-grid" style={{ display: "grid", gridTemplateColumns: "1fr 420px", gap: 36, alignItems: "start" }}>
 
           {/* ── LEFT: Phase cards ── */}
           <div>
@@ -601,20 +647,13 @@ Your output style:
               <div style={{ position: "absolute", top: -30, right: -30, width: 160, height: 160, background: "radial-gradient(circle, rgba(201,151,58,0.12), transparent 65%)", pointerEvents: "none" }} />
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 6, fontFamily: font }}>NurturInk · Dream 100 Blueprint</div>
               <div style={{ color: C.white, fontWeight: 800, fontSize: 17, fontFamily: font, marginBottom: 4 }}>{displayName}</div>
-              <div style={{ color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: font }}>
-                Each phase builds on the last to create one cohesive strategy. <strong style={{ color: "rgba(255,255,255,0.8)" }}>Each phase takes 1–4 minutes.</strong>
+              <div style={{ color: C.white, fontSize: 16, fontFamily: font }}>
+                Each phase builds on the last to create one cohesive strategy. <strong>Each phase takes 1–4 minutes.</strong>
               </div>
             </div>
 
-            {/* Warning */}
-            {running && (
-              <div style={{ background: C.goldPale, border: `1.5px solid ${C.gold}`, borderLeft: `4px solid ${C.gold}`, borderRadius: 10, padding: "12px 16px", marginBottom: 16, fontSize: 13, color: "#7A5800", fontFamily: font }}>
-                ⏳ <strong>Don't navigate away while running.</strong> Each phase builds on the last. If interrupted, use Run Again to restart.
-              </div>
-            )}
-
             {/* Phase cards */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div ref={phasesTopRef} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {phases.map(phase => (
                 <PhaseCard
                   key={phase.id}
@@ -626,6 +665,7 @@ Your output style:
                   onRetry={retryPhase}
                   retrying={retryingPhase === phase.id}
                   usage={usageData[phase.id]}
+                  finalTime={finalTimes[phase.id]}
                 />
               ))}
             </div>
@@ -650,7 +690,7 @@ Your output style:
 
             {/* Progress card */}
             <div style={{ background: C.white, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px", boxShadow: "0 2px 12px rgba(27,42,74,0.06)" }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 14, fontFamily: font }}>Run Progress</div>
+              <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 14, fontFamily: font }}>Run Progress</div>
 
               {/* Circular progress */}
               <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -673,27 +713,27 @@ Your output style:
                     </span>
                   </div>
                 </div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: allDone ? C.success : running ? C.gold : C.muted, fontFamily: font, marginTop: 8 }}>
+                <div style={{ fontSize: 17, fontWeight: 700, color: allDone ? C.success : running ? C.gold : C.muted, fontFamily: font, marginTop: 8 }}>
                   {allDone ? (errorCount > 0 ? `${completedCount} complete, ${errorCount} failed` : "All phases complete") : running ? `Running phase ${activePhase}...` : "Ready to Run"}
                 </div>
                 {!running && !allDone && (
-                  <div style={{ fontSize: 11, color: C.muted, fontFamily: font, marginTop: 2 }}>Click Run to begin all phases.</div>
+                  <div style={{ fontSize: 14, color: C.muted, fontFamily: font, marginTop: 2 }}>Click Run to begin all phases.</div>
                 )}
               </div>
 
               {/* Phase checklist */}
               {phases.map((phase, i) => (
-                <div key={phase.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0", borderBottom: i < phases.length - 1 ? `1px solid ${C.border}` : "none" }}>
+                <div key={phase.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: i < phases.length - 1 ? `1px solid ${C.border}` : "none" }}>
                   <div style={{
-                    width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+                    width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
                     background: status[phase.id] === "done" ? C.success : status[phase.id] === "error" ? C.error : activePhase === phase.id ? C.gold : C.creamDark,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 9, color: (status[phase.id] || activePhase === phase.id) ? C.white : C.muted, fontWeight: 700,
+                    fontSize: 10, color: (status[phase.id] || activePhase === phase.id) ? C.white : C.muted, fontWeight: 700,
                   }}>
                     {status[phase.id] === "done" ? "✓" : status[phase.id] === "error" ? "✗" : activePhase === phase.id ? "…" : ""}
                   </div>
                   <span style={{
-                    fontSize: 11, fontFamily: font, lineHeight: 1.3,
+                    fontSize: 14, fontFamily: font, lineHeight: 1.4,
                     color: !status[phase.id] && activePhase !== phase.id ? C.muted : C.text,
                     fontWeight: activePhase === phase.id ? 700 : 400,
                   }}>{phase.title}</span>
@@ -704,14 +744,14 @@ Your output style:
             {/* While you wait CTA */}
             <div style={{ background: C.navy, borderRadius: 14, padding: "18px 20px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "radial-gradient(circle, rgba(201,151,58,0.2), transparent 65%)" }} />
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 8, fontFamily: font, position: "relative" }}>While you wait...</div>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", fontFamily: font, lineHeight: 1.6, margin: "0 0 12px", position: "relative" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 8, fontFamily: font, position: "relative" }}>While you wait...</div>
+              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", fontFamily: font, lineHeight: 1.6, margin: "0 0 12px", position: "relative" }}>
                 When your blueprint is ready, send a handwritten card to your top 3 partners <em style={{ color: C.white }}>before</em> you email or call. It's the move that gets you remembered.
               </p>
               <a href="https://nurturink.com" target="_blank" rel="noreferrer" style={{
                 display: "block", textAlign: "center",
                 background: C.gold, color: C.navy, textDecoration: "none",
-                fontWeight: 800, fontSize: 13, padding: "10px 14px", borderRadius: 8,
+                fontWeight: 800, fontSize: 15, padding: "10px 14px", borderRadius: 8,
                 fontFamily: font, position: "relative",
               }}>See How NurturInk Works →</a>
             </div>
