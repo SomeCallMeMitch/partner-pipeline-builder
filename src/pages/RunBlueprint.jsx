@@ -208,7 +208,7 @@ function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, ret
         }}>{phase.title}</span>
 
         {isActive && (
-          <span style={{ fontSize: 12, color: C.gold, fontWeight: 700, fontFamily: "monospace" }}>
+          <span style={{ fontSize: 14, color: "#000000", fontWeight: 700, fontFamily: "monospace" }}>
             {fmt(elapsed)}
           </span>
         )}
