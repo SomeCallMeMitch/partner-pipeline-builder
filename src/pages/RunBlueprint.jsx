@@ -29,12 +29,13 @@ const font = "'Sora', -apple-system, sans-serif";
 // ─── CONTEXT CHAINING ────────────────────────────────────────────────────────
 // Extracts key outputs from completed phases so later phases can build on them.
 // This is what makes the final document read as ONE cohesive strategy.
+// 7-phase structure: IDs are 1, 2, 3, 4, 5, 6, 7
 
 function buildContextForPhase(phaseId, completedResults) {
   const parts = [];
 
   // Phase 2+ benefits from knowing the top lifecycle triggers
-  if (completedResults["1"] && [2, 3, "4a", "4b", 5, 6, "7a", "7b"].includes(phaseId)) {
+  if (completedResults["1"] && [2, 3, 4, 5, 6, 7].includes(phaseId)) {
     const triggers = extractSection(completedResults["1"], "trigger", 5);
     if (triggers) {
       parts.push(`TOP LIFECYCLE TRIGGERS IDENTIFIED (from Phase 1):\n${triggers}`);
@@ -42,34 +43,26 @@ function buildContextForPhase(phaseId, completedResults) {
   }
 
   // Phase 3+ benefits from knowing the upstream/side-stream partners
-  if (completedResults["2"] && [3, "4a", "4b", 5, 6, "7a", "7b"].includes(phaseId)) {
+  if (completedResults["2"] && [3, 4, 5, 6, 7].includes(phaseId)) {
     const partners = extractSection(completedResults["2"], "upstream", 8);
     if (partners) {
       parts.push(`KEY PARTNER TYPES IDENTIFIED (from Phase 2):\n${partners}`);
     }
   }
 
-  // Phase 4+ MUST know the Dream 10 list — this is the critical chain
-  if (completedResults["3"] && ["4a", "4b", 5, 6, "7a", "7b"].includes(phaseId)) {
-    const dream10 = extractDream10(completedResults["3"]);
-    if (dream10) {
-      parts.push(`THE DREAM 10 PARTNER LIST (from Phase 3 — use these exact partner types):\n${dream10}`);
+  // Phase 4+ MUST know the Dream 5 list — this is the critical chain
+  if (completedResults["3"] && [4, 5, 6, 7].includes(phaseId)) {
+    const dream5 = extractDream5(completedResults["3"]);
+    if (dream5) {
+      parts.push(`THE DREAM 5 PARTNER LIST (from Phase 3 — use these exact partner types):\n${dream5}`);
     }
   }
 
-  // Phase 4b should know what 4a already covered
-  if (completedResults["4a"] && phaseId === "4b") {
-    const covered = extractPartnerNames(completedResults["4a"]);
-    if (covered) {
-      parts.push(`PARTNERS ALREADY COVERED IN PHASE 4a (do NOT repeat these — cover the NEXT 3):\n${covered}`);
-    }
-  }
-
-  // Phase 5-6 benefit from the value strategy approach
-  if (completedResults["4a"] && [5, 6].includes(phaseId)) {
-    const valueApproach = extractSection(completedResults["4a"], "value gift", 3);
+  // Phase 5-7 benefit from the value strategy approach
+  if (completedResults["4"] && [5, 6, 7].includes(phaseId)) {
+    const valueApproach = extractSection(completedResults["4"], "value gift", 3);
     if (valueApproach) {
-      parts.push(`VALUE GIFTS IDENTIFIED (from Phase 4a — reference these in scripts):\n${valueApproach}`);
+      parts.push(`VALUE GIFTS IDENTIFIED (from Phase 4 — reference these in scripts):\n${valueApproach}`);
     }
   }
 
@@ -85,8 +78,8 @@ function buildContextForPhase(phaseId, completedResults) {
     "=".repeat(50);
 }
 
-// Helper: extract the Dream 10 table or list from Phase 3 output
-function extractDream10(text) {
+// Helper: extract the Dream 5 table or list from Phase 3 output
+function extractDream5(text) {
   if (!text) return null;
   const lines = text.split('\n');
   const tableLines = [];
@@ -96,50 +89,29 @@ function extractDream10(text) {
     const trimmed = line.trim();
     if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
       inTable = true;
-      // Skip separator rows like |---|---|
       if (!/^\|[\s-:|]+\|$/.test(trimmed)) {
         tableLines.push(trimmed);
       }
     } else if (inTable && tableLines.length >= 2) {
-      break; // Found the end of the first substantial table
+      break;
     }
   }
 
   if (tableLines.length >= 3) {
-    return tableLines.slice(0, 12).join('\n'); // Header + up to 10 data rows
+    return tableLines.slice(0, 7).join('\n'); // Header + up to 5 data rows
   }
 
-  // Fallback: look for numbered list of partner types
-  const numbered = lines.filter(l => /^\s*\d+[\.\)]\s+/.test(l)).slice(0, 10);
+  const numbered = lines.filter(l => /^\s*\d+[\.\)]\s+/.test(l)).slice(0, 5);
   if (numbered.length >= 3) {
     return numbered.join('\n');
   }
 
-  // Last fallback: grab first 500 chars of the section with "Dream 10" or "Rank"
-  const idx = text.toLowerCase().indexOf('dream 10');
+  const idx = text.toLowerCase().indexOf('dream 5');
   if (idx >= 0) {
-    return text.slice(idx, idx + 600).split('\n').slice(0, 12).join('\n');
+    return text.slice(idx, idx + 400).split('\n').slice(0, 8).join('\n');
   }
 
-  return text.slice(0, 500); // absolute fallback
-}
-
-// Helper: extract partner names/types from value strategy cards
-function extractPartnerNames(text) {
-  if (!text) return null;
-  const lines = text.split('\n');
-  const headers = lines.filter(l =>
-    /^#{1,3}\s+/.test(l.trim()) ||
-    /^(Partner|Card)\s*\d/i.test(l.trim()) ||
-    /^\*\*\d+[\.\)]\s+/.test(l.trim())
-  ).slice(0, 4);
-
-  if (headers.length > 0) {
-    return headers.map(h => h.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim()).join('\n');
-  }
-
-  // Fallback: grab first 200 chars
-  return text.slice(0, 200);
+  return text.slice(0, 500);
 }
 
 // Helper: extract key lines matching a keyword from a phase result
@@ -607,13 +579,13 @@ Your output style:
             <div style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: C.gold, marginBottom: 12 }}>Heads Up</div>
             <div style={{ fontSize: 20, fontWeight: 800, color: C.navy, marginBottom: 12, lineHeight: 1.3 }}>This works best on a computer</div>
             <p style={{ fontSize: 15, color: C.text, lineHeight: 1.6, marginBottom: 8 }}>
-              Your blueprint takes <strong>9–15 minutes</strong> to build. During that time, your phone's browser must stay open — you can't switch to other apps or it may stop.
+              Your blueprint takes <strong>7–12 minutes</strong> to build. During that time, your phone's browser must stay open — you can't switch to other apps or it may stop.
             </p>
             <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 20 }}>
               For the best experience, try this on your laptop or desktop. You can email yourself the link right now.
             </p>
             <a
-              href={`mailto:?subject=My%20Dream%20100%20Blueprint&body=Here%E2%80%99s%20the%20link%20to%20build%20my%20Dream%20100%20Blueprint%20on%20my%20computer%3A%0A%0Ahttps%3A%2F%2Fpipeline.nurturink.com%0A%0A(Runs%20best%20on%20desktop%20%E2%80%94%20takes%209-15%20minutes)`}
+              href={`mailto:?subject=My%20Dream%20100%20Blueprint&body=Here%E2%80%99s%20the%20link%20to%20build%20my%20Dream%20100%20Blueprint%20on%20my%20computer%3A%0A%0Ahttps%3A%2F%2Fpipeline.nurturink.com%0A%0A(Runs%20best%20on%20desktop%20%E2%80%94%20takes%207-12%20minutes)`}
               style={{
                 display: "block", textAlign: "center", textDecoration: "none",
                 background: C.navy, color: C.white, borderRadius: 10,
@@ -755,7 +727,7 @@ Your output style:
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 6, fontFamily: font }}>NurturInk · Dream 100 Blueprint</div>
               <div style={{ color: C.white, fontWeight: 800, fontSize: 17, fontFamily: font, marginBottom: 4 }}>{displayName}</div>
               <div style={{ color: C.white, fontSize: 16, fontFamily: font }}>
-                9 phases, each building on the last. <strong>Total time: approximately 9–15 minutes.</strong>
+                7 phases, each building on the last. <strong>Total time: approximately 7–12 minutes.</strong>
               </div>
             </div>
 
