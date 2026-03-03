@@ -1,12 +1,7 @@
 // Dream 100 Prompt Builder — Claude-Optimized, Industry-Enriched
-// All prompts are built for Claude API execution.
-// Uses INDUSTRY_DATA for richer, more specific prompts.
+// 7-phase structure (consolidated from 9). See CHANGELOG-7phase-consolidation.md.
 
-const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described.';
-
-// ── Industry-Specific Context ─────────────────────────────────────────────
-// This data enriches every prompt with specific partner types, trigger events,
-// and objection categories instead of making Claude guess from scratch.
+const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described. Do NOT use emoji anywhere in your output — not in headers, labels, bullet points, or section markers. Use plain text only (e.g., "THE GAP" not "🕳️ THE GAP", "Handwritten Note Moments" not "✍️ Handwritten Note Moments"). This is a hard requirement.';
 
 const INDUSTRY_DATA = {
   "Real Estate": {
@@ -20,7 +15,6 @@ const INDUSTRY_DATA = {
   },
 };
 
-// Always use Real Estate since this is a realtor-focused tool
 const IND = INDUSTRY_DATA["Real Estate"];
 
 export function buildPrompts(formData) {
@@ -76,7 +70,7 @@ TASK — Upstream & Side-stream Partner Mapping
 UPSTREAM PARTNERS (see client 3–12 months before a transaction):
 Known upstream partner types for real estate: ${IND.upstreamPartners}
 
-List 8–10 partner types relevant to ${niche} in ${geo}. For each:
+List 5–6 partner types most relevant to ${niche} in ${geo}. Focus on the highest-value partner types — quality over quantity. Every partner type must be realistically able to make referrals without violating their professional code of ethics. Do not include partner types (e.g., therapists, counselors) where referral behavior would conflict with confidentiality obligations or professional ethical constraints. For each:
 — Why they see my ${niche} client early
 — The specific problem they're solving at that moment
 — What a ${niche} specialist in ${geo} can offer them in return (specific value exchange)
@@ -85,42 +79,41 @@ List 8–10 partner types relevant to ${niche} in ${geo}. For each:
 SIDE-STREAM PARTNERS (see client during the transaction):
 Known side-stream partner types: ${IND.sideStreamPartners}
 
-List 4–6 partner types. Same format.
-
-UNDERUTILIZED PARTNERS:
-Identify the top 3 underutilized partner types that most ${niche} agents overlook. Explain why they are high-value and underserved in ${geo} specifically.
+List 3 partner types most relevant to ${niche} transactions. Same format.
 
 ${CLAUDE_NOTE}`
     },
     {
       id: 3,
-      title: 'Phase 3: Dream 10 Tier Ranking & Shortlist',
+      title: 'Phase 3: Dream 5 Tier Ranking & Shortlist',
       prompt: `${ctx}
 
-TASK — Dream 10 Tier Ranking & Shortlist
+TASK — Dream 5 Tier Ranking & Shortlist
+
+From the upstream and side-stream partners identified in Phase 2, select and rank the TOP 5 partner types — these are the relationships that will drive the most referral volume for ${niche} in ${geo}.
 
 TIER STRUCTURE:
 — Tier 1 (Direct Upstream): Partners who see clients immediately before a transaction trigger
 — Tier 2 (Lifestyle & Transition): Partners who see clients during a life phase shift
 — Tier 3 (Community & Maintenance): Partners with consistent long-term client contact
 
-Build the Dream 10 table:
+Build the Dream 5 table:
 | Rank | Partner Type | Tier | Est. Monthly Referral Potential | Why Top Priority for ${niche} | First Contact Strategy |
 
 Then answer: What 3 personal characteristics should ${n} look for when identifying WHICH INDIVIDUAL at each company to target (beyond just finding the business)?
 
-IMPORTANT: The Dream 10 list you create here will be used as the foundation for ALL remaining phases. Be specific and deliberate with your rankings. Phases 4, 5, 6, and 7 will all reference this exact list.
+IMPORTANT: The Dream 5 list you create here will be used as the foundation for ALL remaining phases. Be specific and deliberate with your rankings. Phases 4, 5, 6, and 7 will all reference this exact list.
 
 ${CLAUDE_NOTE}`
     },
     {
-      id: "4a",
-      title: 'Phase 4a: Value Strategy Cards (Partners 1–3)',
+      id: 4,
+      title: 'Phase 4: Value Strategy Cards + Value Manifesto',
       prompt: `${ctx}
 
-TASK — Value Strategy Cards for Top 3 Partner Types
+TASK — Value Strategy Cards for All 5 Dream Partners + Value Manifesto
 
-For each of the top 3 referral partner types from the Dream 10 ranking, create a Value Strategy Card:
+For EACH of the 5 referral partner types from the Dream 5 ranking, create a Value Strategy Card:
 
 **1. THE GAP:** What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
 
@@ -132,28 +125,13 @@ Known value-add categories in real estate: ${IND.partnerValueAdd}. Go beyond the
 
 Format each card clearly with the partner type as a header.
 
-${CLAUDE_NOTE}`
-    },
-    {
-      id: "4b",
-      title: 'Phase 4b: Value Strategy Cards (Partners 4–6) + Value Manifesto',
-      prompt: `${ctx}
-
-TASK — Value Strategy Cards for Partners 4–6 + Value Manifesto
-
-For each of the next 3 referral partner types (partners ranked 4–6 from the Dream 10), create a Value Strategy Card:
-
-**1. THE GAP:** What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
-
-**2. THE VALUE GIFT:** What specific, tangible asset can ${n} create or offer to start the relationship — with no ask?
-
-**3. THE RECURRING TOUCHPOINT:** What ongoing value can ${n} deliver monthly or quarterly?
-
 ---
 
-Then write ${n}'s **Value Manifesto** — a 3-paragraph positioning statement ${n} would use when meeting new referral partners in person. It should focus entirely on how ${n} serves the partner's clients, not on promoting ${n}'s own production. Warm, peer-to-peer tone. No buzzwords.
+Then write ${n}'s **Value Manifesto** — a positioning statement ${n} would use when meeting new referral partners in person. It should focus entirely on how ${n} serves the partner's clients, not on promoting ${n}'s own production. Warm, peer-to-peer tone. No buzzwords.
 
-The manifesto should feel like something ${n} would actually say at a coffee meeting — not a marketing page.
+Start with a **"Cocktail Party Version"** — 2-3 sentences that ${n} could deliver in 30 seconds when someone asks "what do you do?"
+
+Then write a longer **"Coffee Meeting Version"** — 2-3 paragraphs for a sit-down conversation. It should feel like something ${n} would actually say — not a marketing page.
 
 ${CLAUDE_NOTE}`
     },
@@ -166,7 +144,10 @@ TASK — Objection Anticipation & Response Prep
 
 Known objection categories in real estate referral partnerships: ${IND.objectionContext}
 
+For each objection, frame it around a SPECIFIC Dream 5 partner type from Phase 3 — name the partner type in the header (e.g., "When a Mortgage Broker says..." or "When a CPA says..."). Choose the partner type where that objection is most likely to surface.
+
 For each objection provide:
+— The specific Dream 5 partner type most likely to say this
 — WHY this objection comes up (the real fear underneath it)
 — A non-defensive, conversational response that reframes without being pushy
 — A follow-up question that keeps the door open
@@ -221,11 +202,11 @@ All scripts sound like ${n} — warm, credible, peer-to-peer. No buzzwords or co
 ${CLAUDE_NOTE}`
     },
     {
-      id: "7a",
-      title: 'Phase 7a: 90-Day Week-by-Week Plan + Relationship Tracker',
+      id: 7,
+      title: 'Phase 7: 90-Day Plan, Tracker & 12-Month System',
       prompt: `${ctx}
 
-TASK — 90-Day Launch Plan + Relationship Tracker
+TASK — 90-Day Launch Plan, Relationship Tracker, 12-Month Calendar & Referral Math
 
 **PART A — Week-by-Week 90-Day Sequence**
 For a new Tier 1 referral partner, provide a week-by-week action plan for the first 90 days (13 weeks). For each week:
@@ -234,40 +215,32 @@ For a new Tier 1 referral partner, provide a week-by-week action plan for the fi
 — Goal of the touchpoint
 — Time investment estimate
 
-The handwritten note should always be the first touchpoint (Week 1). This is non-negotiable — it's the foundation of the entire sequence and what makes this system different from generic networking.
+The handwritten note should always be the first touchpoint (Week 1). This is non-negotiable — it's the foundation of the entire sequence.
 
-**PART B — Relationship Tracker Template**
-Design a simple tracker structure for managing all 10 Dream Partners. Include columns for:
-partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, referral count.
+End Part A with a compact **"Quick Reference Grid"** — a summary table:
+| Week | Channel | Action (5 words max) |
 
-Format both parts clearly with markdown headers and tables where appropriate.
-
-${CLAUDE_NOTE}`
-    },
-    {
-      id: "7b",
-      title: 'Phase 7b: 12-Month Calendar + Production Math',
-      prompt: `${ctx}
-
-TASK — 12-Month Quarterly Calendar + Production Math
+**PART B — Relationship Tracker**
+Design a simple tracker for managing all 5 Dream Partners. Columns:
+partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, inbound referral count, outbound referrals sent.
 
 **PART C — 12-Month Quarterly Calendar**
-After a partner becomes active, what does ${n} do each quarter to maintain and deepen the relationship? Create a 4-quarter calendar with:
-— Specific touchpoints per quarter
-— Value gifts (reference the ones from Phase 4)
-— Personal gestures
-— Exact moments where a handwritten note is the highest-leverage move (quarterly check-in, referral thank-you, partner's business milestone, holiday)
+After a partner becomes active, what does ${n} do each quarter? Create a 4-quarter calendar as a SINGLE SUMMARY TABLE with columns:
+| Quarter | Touchpoints | Value Gift | Personal Gesture | Handwritten Note Moment |
 
-**PART D — 12-Month Production Math**
-Walk through the math simply and conservatively:
-— How many Dream 10 partnerships at what referral frequency = what level of closed volume?
-— Assume average deal size for ${niche} in ${geo}
-— Show 3 scenarios: conservative, moderate, strong
-— What does ${n} need to believe is true for this system to work?
+Keep it to one table — not a separate section per quarter.
 
-Be honest about the assumptions. Realtors respect straight talk over hype.
+**PART D — Referral Math**
+Show how the Dream 5 system produces closed deals. Do NOT project income or commissions — agents know their own numbers.
 
-Format with markdown headers and tables.
+Show 3 scenarios in a table: conservative (2 active partners), moderate (4 active), strong (all 5). For each:
+— Which Dream 5 partners are active (by name from Phase 3)
+— Referrals per partner per quarter
+— Total annual referrals
+— Close rate (35-45% for warm referrals)
+— Total closed deals from referrals
+
+End with "What ${n} needs to believe" — the honest gut-check on patience and consistency.
 
 ${CLAUDE_NOTE}`
     }
