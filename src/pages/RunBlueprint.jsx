@@ -401,15 +401,6 @@ export default function RunBlueprint() {
     }
   }, [allDone]);
 
-  // Always use Claude-optimized prompts when running via API
-  const phases = landingData
-    ? buildPrompts(landingData).map(p => ({ id: p.id, title: p.title, prompt: p.prompt }))
-    : build ? buildPhasePrompts(build) : [];
-
-  const displayName = landingData
-    ? `${landingData.niche || landingData.nicheBase} — ${landingData.geo}`
-    : build ? build.name : "";
-
   // System prompt — sent as a separate system message for better Claude behavior
   const SYSTEM_PROMPT = `You are a Strategic Alliances Director specializing in referral partner systems for high-performing real estate professionals. You use the Dream 100 methodology to build systematic referral networks.
 
