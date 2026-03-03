@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useRef } from "react";
 import { NICHES, NICHE_HELPERS } from "./nicheData";
 
 export default function WizardStep1({ formData, onChange, onNext }) {
   const selectedNiche = formData.nicheBase || '';
   const helperData = NICHE_HELPERS[selectedNiche];
   const [nicheError, setNicheError] = React.useState(false);
+  const helperRef = useRef(null);
 
   const handleSelectNiche = (value) => {
     onChange({ nicheBase: value });
     setNicheError(false);
+    // Auto-scroll to detail area on mobile so user sees the selection result
+    setTimeout(() => {
+      if (helperRef.current && window.innerWidth <= 768) {
+        helperRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   const handleChip = (text) => {
@@ -50,7 +57,7 @@ export default function WizardStep1({ formData, onChange, onNext }) {
       </div>
 
       {helperData && (
-        <div className="d100-niche-helper">
+        <div ref={helperRef} className="d100-niche-helper">
           <p>{helperData.hint}</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px', marginTop: '4px' }}>
             {helperData.chips.map((c) => (
