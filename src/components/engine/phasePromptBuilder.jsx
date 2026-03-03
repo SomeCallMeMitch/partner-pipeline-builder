@@ -1,6 +1,6 @@
 /**
- * Extracts the 10 individual phase prompts from a Build record.
- * Phases split to keep each prompt focused and avoid timeouts.
+ * Extracts the 7 individual phase prompts from a Build record.
+ * 7-phase structure (consolidated from 9). See CHANGELOG-7phase-consolidation.md.
  */
 
 import { INDUSTRY_DATA } from "./promptEngine";
@@ -69,7 +69,7 @@ TASK — Upstream & Side-stream Partner Mapping
 
 UPSTREAM PARTNERS (see the client 3–12 months before a transaction):
 Known upstream categories for ${p.industry}: ${p.upstreamPartners}
-For each type provide:
+List 5–6 partner types most relevant to ${p.niche} in ${p.geography}. Focus on the highest-value types — quality over quantity. For each:
 — Why they see my ideal client early
 — The specific problem they're solving at that moment
 — What a ${p.niche} specialist in ${p.geography} can offer them in return (value exchange)
@@ -77,47 +77,47 @@ For each type provide:
 
 SIDE-STREAM PARTNERS (see the client during the transaction):
 Known side-stream categories: ${p.sideStreamPartners}
-Same format as above.
+List 3 partner types most relevant. Same format as above.
 
-Then identify the top 3 UNDERUTILIZED partner types for ${p.niche} in ${p.geography} that most professionals overlook, and explain why they are high-value and underserved.
-
-DELIVERABLE: Organized lists with clear headers. Include 8–10 upstream types and 4–6 side-stream types.
+DELIVERABLE: Organized lists with clear headers.
 
 Use markdown formatting with clear headers.`
     },
     {
       id: 3,
-      title: "Phase 3: Dream 10 Tier Ranking & Shortlist",
+      title: "Phase 3: Dream 5 Tier Ranking & Shortlist",
       prompt: `${PERSONA}
 
 ${ctx}
 
-TASK — Dream 10 Tier Ranking & Shortlist
+TASK — Dream 5 Tier Ranking & Shortlist
+
+From the partners identified in Phase 2, select and rank the TOP 5 partner types that will drive the most referral volume for ${p.niche} in ${p.geography}.
 
 TIER STRUCTURE:
 — Tier 1 (Direct Upstream): Partners who see clients immediately before a transaction trigger
 — Tier 2 (Lifestyle & Transition): Partners who see clients during a life phase shift
 — Tier 3 (Community & Maintenance): Partners with consistent long-term client contact
 
-Build the Dream 10 table:
+Build the Dream 5 table:
 | Rank | Partner Type | Tier | Est. Monthly Referral Potential | Why Top Priority for ${p.niche} | First Contact Strategy |
 
 Then answer: What 3 personal characteristics should I look for when identifying which individual at each company to target?
 
-DELIVERABLE: The complete Dream 10 table plus the 3 individual selection criteria.
+DELIVERABLE: The complete Dream 5 table plus the 3 individual selection criteria.
 
 Use markdown formatting with clear headers.`
     },
     {
-      id: "4a",
-      title: "Phase 4a: Value Strategy Cards (Partners 1–3)",
+      id: 4,
+      title: "Phase 4: Value Strategy Cards + Value Manifesto",
       prompt: `${PERSONA}
 
 ${ctx}
 
-TASK — Value Strategy Cards for Top 3 Partner Types
+TASK — Value Strategy Cards for All 5 Dream Partners + Value Manifesto
 
-For each of the top 3 referral partner types for ${p.niche} in ${p.geography}, create a Value Strategy Card:
+For EACH of the 5 referral partner types from the Dream 5 ranking, create a Value Strategy Card:
 
 **1. THE GAP:** What is currently missing from this partner's client service that a ${p.niche} specialist in ${p.geography} can fill?
 
@@ -125,28 +125,13 @@ For each of the top 3 referral partner types for ${p.niche} in ${p.geography}, c
 
 **3. THE RECURRING TOUCHPOINT:** What ongoing value can I deliver monthly or quarterly to keep the relationship warm?
 
-Format each card clearly with the partner name as a header. Use markdown.`
-    },
-    {
-      id: "4b",
-      title: "Phase 4b: Value Strategy Cards (Partners 4–6) + Value Manifesto",
-      prompt: `${PERSONA}
-
-${ctx}
-
-TASK — Value Strategy Cards for Partners 4–6 + Value Manifesto
-
-For each of the next 3 referral partner types (partners ranked 4–6 from the Dream 10 for ${p.niche} in ${p.geography}), create a Value Strategy Card:
-
-**1. THE GAP:** What is currently missing from this partner's client service that a ${p.niche} specialist in ${p.geography} can fill?
-
-**2. THE VALUE GIFT:** What specific, tangible asset can I create or offer to start the relationship — with no ask?
-
-**3. THE RECURRING TOUCHPOINT:** What ongoing value can I deliver monthly or quarterly?
+Format each card clearly with the partner name as a header.
 
 ---
 
-Then write a **Value Manifesto** — a 3-paragraph positioning statement I would use when meeting new referral partners in person. It should focus entirely on how I serve the partner's clients, not on promoting my own production. Warm, peer-to-peer tone. No buzzwords.
+Then write a **Value Manifesto** — a positioning statement for meeting new referral partners. Focus entirely on how I serve the partner's clients, not promoting my own production. Warm, peer-to-peer tone. No buzzwords.
+
+Start with a "Cocktail Party Version" (2-3 sentences, 30 seconds). Then a longer "Coffee Meeting Version" (2-3 paragraphs).
 
 Use markdown formatting.`
     },
@@ -211,13 +196,13 @@ Warm, personal, non-templated note to send immediately after receiving a referra
 All scripts must sound warm, credible, peer-to-peer. No buzzwords or corporate-speak. Use markdown formatting with clear headers.`
     },
     {
-      id: "7a",
-      title: "Phase 7a: 90-Day Week-by-Week Plan + Relationship Tracker",
+      id: 7,
+      title: "Phase 7: 90-Day Plan, Tracker & 12-Month System",
       prompt: `${PERSONA}
 
 ${ctx}
 
-TASK — 90-Day Launch Plan + Relationship Tracker
+TASK — 90-Day Launch Plan, Relationship Tracker, 12-Month Calendar & Referral Math
 
 **PART A — Week-by-Week 90-Day Sequence**
 For a new Tier 1 referral partner, provide a week-by-week action plan for the first 90 days (13 weeks). For each week:
@@ -227,33 +212,23 @@ For a new Tier 1 referral partner, provide a week-by-week action plan for the fi
 — Time investment estimate
 
 **PART B — Relationship Tracker Template**
-Design a simple tracker structure for managing all 10 Dream Partners. Include columns for:
+Design a simple tracker structure for managing all 5 Dream Partners. Include columns for:
 partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, referral count.
 
-Format both parts clearly with markdown headers and tables where appropriate.`
-    },
-    {
-      id: "7b",
-      title: "Phase 7b: 12-Month Calendar + Production Math",
-      prompt: `${PERSONA}
-
-${ctx}
-
-TASK — 12-Month Quarterly Calendar + Production Math
-
 **PART C — 12-Month Quarterly Calendar**
-After a partner becomes active, what do I do each quarter to maintain and deepen the relationship? Create a 4-quarter calendar with:
-— Specific touchpoints per quarter
-— Value gifts
-— Personal gestures
-— Exact moments where a handwritten note is the highest-leverage move (quarterly check-in, referral thank-you, partner's business milestone, holiday)
+After a partner becomes active, what do I do each quarter? Create a single summary table:
+| Quarter | Touchpoints | Value Gift | Personal Gesture | Handwritten Note Moment |
 
-**PART D — 12-Month Production Math**
-Walk through the math simply and conservatively:
-— How many Dream 10 partnerships at what referral frequency = what level of closed volume?
-— Assume average deal size for ${p.niche} in ${p.geography}
-— Show 3 scenarios: conservative, moderate, strong
-— What do I need to believe is true for this system to work?
+**PART D — Referral Math**
+Show 3 scenarios: conservative (2 active partners), moderate (4 active), strong (all 5). For each:
+— Which Dream 5 partners are active (by name from Phase 3)
+— Referrals per partner per quarter
+— Total annual referrals
+— Close rate (35-45%)
+— Total closed deals from referrals
+Do NOT include dollar amounts, commission, or income projections.
+
+End with "What I need to believe" — the honest gut-check.
 
 Format with markdown headers and tables.`
     }
