@@ -1,6 +1,4 @@
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
 import Dream100Styles from "@/components/dream100/Dream100Styles";
 import HeroSection from "@/components/dream100/HeroSection";
 import StepBar from "@/components/dream100/StepBar";
@@ -15,7 +13,6 @@ import { useTheme } from "@/components/ThemeContext";
 
 export default function Landing() {
   const { theme } = useTheme();
-  const navigate = useNavigate();
   const [view, setView] = useState('hero'); // hero | wizard | generating | output
   const [wizardStep, setWizardStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -26,6 +23,7 @@ export default function Landing() {
     challenge: '',
     name: '',
     years: '',
+    llm: 'ChatGPT',
   });
   const [prompts, setPrompts] = useState([]);
   const mainRef = useRef(null);
@@ -54,26 +52,6 @@ export default function Landing() {
     scrollToMain();
   };
 
-  // Direct path: skip OutputView, go straight to RunBlueprint (auto-runs)
-  const handleRunDirect = () => {
-    const niche = formData.customNiche
-      ? `${formData.nicheBase} — ${formData.customNiche}`
-      : formData.nicheBase;
-
-    sessionStorage.setItem('d100_run_formData', JSON.stringify({
-      name: formData.name,
-      niche: niche,
-      nicheBase: formData.nicheBase,
-      geo: formData.geo,
-      client: formData.client,
-      challenge: formData.challenge,
-      years: formData.years,
-    }));
-
-    navigate(createPageUrl('RunBlueprint'));
-  };
-
-  // Existing path: generate prompts and show OutputView (for DIY users)
   const handleGenerate = () => {
     setView('generating');
     scrollToMain();
@@ -91,6 +69,7 @@ export default function Landing() {
       client: formData.client,
       challenge: formData.challenge,
       years: formData.years,
+      llm: formData.llm,
     };
 
     setTimeout(() => {
@@ -104,7 +83,7 @@ export default function Landing() {
   const handleRestart = () => {
     setFormData({
       nicheBase: '', customNiche: '', geo: '', client: '',
-      challenge: '', name: '', years: '',
+      challenge: '', name: '', years: '', llm: 'ChatGPT',
     });
     setPrompts([]);
     setView('hero');
@@ -165,12 +144,7 @@ export default function Landing() {
             <WizardStep3 formData={formData} onChange={updateForm} onNext={() => goToStep(4)} onBack={() => goToStep(2)} />
           )}
           {view === 'wizard' && wizardStep === 4 && (
-            <WizardStep4
-              formData={formData}
-              onBack={() => goToStep(3)}
-              onGenerate={handleGenerate}
-              onRunDirect={handleRunDirect}
-            />
+            <WizardStep4 formData={formData} onBack={() => goToStep(3)} onGenerate={handleGenerate} />
           )}
           {view === 'generating' && <GeneratingCard />}
         </main>
