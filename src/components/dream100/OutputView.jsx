@@ -69,7 +69,7 @@ ${divider}
 HOW TO USE THIS DOCUMENT
 ${divider}
 
-This document contains 9 AI prompts that will build your complete
+This document contains 7 AI prompts that will build your complete
 Dream 100 referral partner system. Each prompt is designed to be
 copied and pasted into an AI tool like ChatGPT, Claude, or Gemini.
 
@@ -119,32 +119,24 @@ Phase 2  Include your Phase 1 output (lifecycle triggers).
 
 Phase 3  Include your Phase 2 output (partner types).
          The AI uses your partner map to build and rank
-         your Dream 10 list. This is the most important
+         your Dream 5 list. This is the most important
          phase -- everything after this references it.
 
-Phase 4a Include your Phase 3 output (Dream 10 list).
-         The AI builds value strategies for your top 3
-         partners from that list.
+Phase 4  Include your Phase 3 output (Dream 5 list).
+         The AI builds value strategies for all 5 of your
+         Dream partners plus your Value Manifesto.
 
-Phase 4b Include Phase 3 output AND Phase 4a output.
-         The AI covers partners 4-6 and avoids repeating
-         what was already covered in 4a.
-
-Phase 5  Include Phase 3 output and Phase 4a output.
+Phase 5  Include Phase 3 output and Phase 4 output.
          The AI references your specific partner types and
          value gifts when crafting objection responses.
 
-Phase 6  Include Phase 3, 4a, and 4b output.
+Phase 6  Include Phase 3 and Phase 4 output.
          The AI writes scripts that reference the exact
          partner types and value gifts you've established.
 
-Phase 7a Include Phase 3 and Phase 4a output.
-         The AI builds your 90-day plan around your actual
-         Dream 10 partners and the value gifts you'll use.
-
-Phase 7b Include Phase 3 and Phase 7a output.
-         The AI builds your 12-month calendar and production
-         math based on your actual partner list.
+Phase 7  Include Phase 3 and Phase 4 output.
+         The AI builds your 90-day plan, relationship
+         tracker, 12-month calendar, and referral math.
 
 
 HOW TO CHAIN (EXAMPLE)
@@ -192,16 +184,13 @@ READY? Start with Phase 1 below.
       0: 'PASTE THIS PROMPT AS-IS. No previous results needed.',
       1: 'FIRST: Paste your Phase 1 output as context. THEN paste this prompt.',
       2: 'FIRST: Paste your Phase 2 output as context. THEN paste this prompt.',
-      3: 'FIRST: Paste your Phase 3 (Dream 10 list) as context. THEN paste this prompt.',
-      4: 'FIRST: Paste your Phase 3 AND Phase 4a output as context. THEN paste this prompt.',
-      5: 'FIRST: Paste your Phase 3 and Phase 4a output as context. THEN paste this prompt.',
-      6: 'FIRST: Paste your Phase 3, 4a, and 4b output as context. THEN paste this prompt.',
-      7: 'FIRST: Paste your Phase 3 and Phase 4a output as context. THEN paste this prompt.',
-      8: 'FIRST: Paste your Phase 3 and Phase 7a output as context. THEN paste this prompt.',
+      3: 'FIRST: Paste your Phase 3 (Dream 5 list) as context. THEN paste this prompt.',
+      4: 'FIRST: Paste your Phase 3 and Phase 4 output as context. THEN paste this prompt.',
+      5: 'FIRST: Paste your Phase 3 and Phase 4 output as context. THEN paste this prompt.',
+      6: 'FIRST: Paste your Phase 3 and Phase 4 output as context. THEN paste this prompt.',
     };
 
     const body = prompts.map((p, i) => {
-      // Clean up title: remove redundant "Phase X:" prefix since we add our own
       let title = cleanText(p.title).replace(/^Phase \d+[ab]?:\s*/i, '');
       let instruction = phaseInstructions[i] || '';
 
@@ -231,11 +220,11 @@ specifically for ${cleanText(niche)} in ${cleanText(formData.geo)}.
 
 NEXT STEPS:
 1. Review all your outputs and compile them into one reference doc.
-2. Start with your #1 ranked partner from the Dream 10 list.
+2. Start with your #1 ranked partner from the Dream 5 list.
 3. Send that handwritten note FIRST (Phase 6, Script 4).
-4. Follow the 90-day plan from Phase 7a.
+4. Follow the 90-day plan from Phase 7.
 
-Want us to run all 9 phases automatically and deliver a finished
+Want us to run all 7 phases automatically and deliver a finished
 Word document? Go back to ${theme.brandUrl} and click
 "Run All Phases with Claude" on your results page.
 
@@ -382,7 +371,7 @@ ${theme.footerText}
                 border: '1px solid rgba(255,255,255,0.1)', padding: '12px 14px',
                 marginBottom: 18, position: 'relative', fontSize: 13, color: '#fff', lineHeight: 1.5,
               }}>
-                Takes about <strong style={{ color: S.gold }}>9–15 minutes</strong> total. Progress shows live as each phase completes.
+                Takes about <strong style={{ color: S.gold }}>7–12 minutes</strong> total. Progress shows live as each phase completes.
               </div>
               <button onClick={runWithAI} style={{
                 width: '100%', background: S.gold, color: S.navy, border: 'none', borderRadius: 11,
