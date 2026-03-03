@@ -633,6 +633,31 @@ export default function Dream100Styles() {
       }
       .d100-site-footer a { color: rgba(201,151,58,0.8); text-decoration: none; }
 
+      /* Mobile fixes */
+      @media (max-width: 599px) {
+        .d100-nav-top {
+          padding: 10px 12px !important;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .d100-visit-btn {
+          font-size: 11px !important;
+          padding: 5px 10px !important;
+        }
+        .d100-step-bar {
+          padding: 6px 8px !important;
+          width: 100%;
+          justify-content: center;
+          order: 3;
+        }
+        .d100-step-label { display: none; }
+        .d100-modal-box {
+          max-height: 92vh !important;
+          padding: 20px 16px 28px !important;
+        }
+        .d100-modal-sub { font-size: 14px !important; }
+      }
+
       @media (min-width: 600px) {
         .d100-hero { padding: 0 0 56px; }
         .d100-hero-inner { padding: 48px 32px 0; }
