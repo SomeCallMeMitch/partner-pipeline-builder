@@ -332,12 +332,26 @@ export default function RunBlueprint() {
   const [retryingPhase, setRetryingPhase] = useState(null);
   const [usageData, setUsageData]       = useState({});
   const [finalTimes, setFinalTimes]     = useState({});
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
+  const hasAutoRun = useRef(false);
   const resultsRef = useRef({});
   const phaseStartRef = useRef({});
   const phasesTopRef = useRef(null);
 
   // Scroll to top on page load
   useEffect(() => { window.scrollTo(0, 0); }, []);
+
+  // Auto-run: once data is loaded and phases are ready, start automatically
+  useEffect(() => {
+    if (loading || hasAutoRun.current || phases.length === 0) return;
+    hasAutoRun.current = true;
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      setShowMobileWarning(true); // Show warning modal, they choose to continue or email link
+    } else {
+      runAll(); // Desktop: just go
+    }
+  }, [loading, phases.length]);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("d100_run_formData");
@@ -460,6 +474,8 @@ Your output style:
       }
     }
     setActivePhase(null); setRunning(false); setAllDone(true);
+    // Scroll to top so user sees the download banner
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   // Retry a single failed phase
@@ -564,11 +580,95 @@ Your output style:
           .bp-sidebar { position: static !important; order: -1; }
           .bp-nav-inner { padding: 0 16px !important; flex-wrap: wrap; height: auto !important; padding-top: 10px; padding-bottom: 10px; gap: 8px; }
           .bp-main { padding: 20px 16px 60px !important; }
+          .bp-desktop-msg { display: none; }
+          .bp-mobile-msg { display: inline; }
+        }
+        @media (min-width: 769px) {
+          .bp-desktop-msg { display: inline; }
+          .bp-mobile-msg { display: none; }
         }
         @media (max-width: 480px) {
           .bp-nav-actions { flex-wrap: wrap; justify-content: center; }
         }
       `}</style>
+
+      {/* ── MOBILE WARNING MODAL ── */}
+      {showMobileWarning && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 9999,
+          background: "rgba(0,0,0,0.7)", display: "flex", alignItems: "center", justifyContent: "center",
+          padding: 20,
+        }}>
+          <div style={{
+            background: C.white, borderRadius: 16, padding: "28px 24px", maxWidth: 400, width: "100%",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.3)", fontFamily: font,
+          }}>
+            <div style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: C.gold, marginBottom: 12 }}>Heads Up</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: C.navy, marginBottom: 12, lineHeight: 1.3 }}>This works best on a computer</div>
+            <p style={{ fontSize: 15, color: C.text, lineHeight: 1.6, marginBottom: 8 }}>
+              Your blueprint takes <strong>9–15 minutes</strong> to build. During that time, your phone's browser must stay open — you can't switch to other apps or it may stop.
+            </p>
+            <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.6, marginBottom: 20 }}>
+              For the best experience, try this on your laptop or desktop. You can email yourself the link right now.
+            </p>
+            <a
+              href={`mailto:?subject=My%20Dream%20100%20Blueprint&body=Here%E2%80%99s%20the%20link%20to%20build%20my%20Dream%20100%20Blueprint%20on%20my%20computer%3A%0A%0Ahttps%3A%2F%2Fpipeline.nurturink.com%0A%0A(Runs%20best%20on%20desktop%20%E2%80%94%20takes%209-15%20minutes)`}
+              style={{
+                display: "block", textAlign: "center", textDecoration: "none",
+                background: C.navy, color: C.white, borderRadius: 10,
+                padding: "14px 20px", fontWeight: 700, fontSize: 15, fontFamily: font,
+                marginBottom: 10,
+              }}
+            >✉ Email Myself the Link</a>
+            <button
+              onClick={() => { setShowMobileWarning(false); runAll(); }}
+              style={{
+                display: "block", width: "100%", textAlign: "center",
+                background: C.gold, color: C.navy, border: "none", borderRadius: 10,
+                padding: "14px 20px", fontWeight: 700, fontSize: 15, fontFamily: font,
+                cursor: "pointer", marginBottom: 10,
+              }}
+            >Continue on My Phone →</button>
+            <div style={{ fontSize: 11, color: C.muted, textAlign: "center" }}>We don't collect your email or send you anything.</div>
+          </div>
+        </div>
+      )}
+
+      {/* ── COMPLETION DOWNLOAD BANNER ── */}
+      {allDone && !running && (
+        <div style={{
+          background: `linear-gradient(135deg, ${C.navy}, ${C.navyLight})`,
+          padding: "20px 24px", textAlign: "center",
+          borderBottom: `3px solid ${C.gold}`,
+        }}>
+          <div style={{ maxWidth: 600, margin: "0 auto" }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: C.white, fontFamily: font, marginBottom: 6 }}>
+              ✓ Your Blueprint is Ready!
+            </div>
+            <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", fontFamily: font, marginBottom: 16 }}>
+              {errorCount > 0
+                ? `${completedCount} of ${phases.length} phases completed. You can retry failed phases or download what's ready.`
+                : `All ${phases.length} phases complete. Download your personalized Dream 100 strategy below.`}
+            </div>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
+              <button onClick={downloadWord} disabled={exportingWord} style={{
+                background: C.gold, color: C.navy, border: "none", borderRadius: 10,
+                padding: "12px 24px", fontWeight: 800, fontSize: 16, fontFamily: font,
+                cursor: exportingWord ? "not-allowed" : "pointer",
+              }}>
+                {exportingWord ? "Building Document..." : "📄 Download Word Doc"}
+              </button>
+              <button onClick={downloadMarkdown} style={{
+                background: "transparent", border: `1.5px solid rgba(255,255,255,0.3)`, borderRadius: 10,
+                padding: "12px 24px", fontWeight: 600, fontSize: 14, fontFamily: font,
+                color: "rgba(255,255,255,0.8)", cursor: "pointer",
+              }}>
+                ↓ Download Markdown
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── TOP NAV ── */}
       <div style={{ background: C.navy, boxShadow: "0 2px 20px rgba(0,0,0,0.25)", position: "sticky", top: 0, zIndex: 100 }}>
@@ -601,21 +701,25 @@ Your output style:
                 </button>
               </>
             )}
-            <button
-              onClick={allDone ? () => { setAllDone(false); runAll(); } : runAll}
-              disabled={running}
-              style={{
-                background: running ? "rgba(201,151,58,0.5)" : C.gold,
-                color: C.navy, border: "none", borderRadius: 8,
+            {running && (
+              <div style={{
+                background: "rgba(201,151,58,0.5)", color: C.navy, border: "none", borderRadius: 8,
                 padding: "8px 18px", fontFamily: font, fontWeight: 900, fontSize: 15,
-                cursor: running ? "not-allowed" : "pointer",
                 display: "flex", alignItems: "center", gap: 6,
-              }}
-            >
-              {running ? (
-                <><div style={{ width: 14, height: 14, border: "2px solid rgba(27,42,74,0.4)", borderTopColor: C.navy, borderRadius: "50%", animation: "spin 0.8s linear infinite" }} /> Running Phase {activePhase}...</>
-              ) : allDone ? "↺ Run Again" : "▶ Click Here to Start!"}
-            </button>
+              }}>
+                <div style={{ width: 14, height: 14, border: "2px solid rgba(27,42,74,0.4)", borderTopColor: C.navy, borderRadius: "50%", animation: "spin 0.8s linear infinite" }} /> Running Phase {activePhase}...
+              </div>
+            )}
+            {allDone && (
+              <button
+                onClick={() => { setAllDone(false); runAll(); }}
+                style={{
+                  background: C.gold, color: C.navy, border: "none", borderRadius: 8,
+                  padding: "8px 18px", fontFamily: font, fontWeight: 900, fontSize: 15,
+                  cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
+                }}
+              >↺ Run Again</button>
+            )}
           </div>
         </div>
 
@@ -631,7 +735,9 @@ Your output style:
         {/* Warning — above grid so it's always visible at top on mobile */}
         {running && (
           <div className="bp-warning" style={{ background: C.goldPale, border: `1.5px solid ${C.gold}`, borderLeft: `4px solid ${C.gold}`, borderRadius: 10, padding: "14px 18px", marginBottom: 16, fontSize: 16, color: "#000000", fontWeight: 600, fontFamily: font }}>
-            ⏳ <strong>Don't navigate away while running.</strong> Each phase builds on the last. Keep this tab open and active. If interrupted, use Run Again to restart.
+            ⏳ <strong>Your blueprint is building.</strong>{" "}
+            <span className="bp-desktop-msg">You can use other windows and tabs — just don't close or navigate away from this one.</span>
+            <span className="bp-mobile-msg">Keep this browser tab open and active. Don't switch to other apps until complete.</span>
           </div>
         )}
 
@@ -648,7 +754,7 @@ Your output style:
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 6, fontFamily: font }}>NurturInk · Dream 100 Blueprint</div>
               <div style={{ color: C.white, fontWeight: 800, fontSize: 17, fontFamily: font, marginBottom: 4 }}>{displayName}</div>
               <div style={{ color: C.white, fontSize: 16, fontFamily: font }}>
-                Each phase builds on the last to create one cohesive strategy. <strong>Each phase takes 1–4 minutes.</strong>
+                9 phases, each building on the last. <strong>Total time: approximately 9–15 minutes.</strong>
               </div>
             </div>
 
@@ -679,7 +785,7 @@ Your output style:
                 <div style={{ fontSize: 13, color: C.muted, fontFamily: font }}>
                   {errorCount > 0
                     ? `${errorCount} phase${errorCount > 1 ? 's' : ''} failed — click "Retry" on any failed phase, or download what completed.`
-                    : "Download your blueprint using the buttons in the nav bar above."}
+                    : "Scroll up to download your blueprint, or expand any phase above to review."}
                 </div>
               </div>
             )}
@@ -761,7 +867,8 @@ Your output style:
 
       {/* Footer */}
       <footer style={{ background: C.navy, color: "rgba(255,255,255,0.4)", textAlign: "center", padding: "18px 24px", fontSize: 12, fontFamily: font }}>
-        <a href="https://nurturink.com" style={{ color: "rgba(201,151,58,0.75)", textDecoration: "none", fontWeight: 600 }}>NurturInk</a>
+        Sponsored by{" "}
+        <a href="https://nurturink.com" style={{ color: "rgba(201,151,58,0.75)", textDecoration: "none", fontWeight: 600 }}>NurturInk.com</a>
         {" "}· the handwritten follow-up system for relationship-driven sales professionals
       </footer>
     </div>
