@@ -35,7 +35,7 @@ export default function WizardStep4({ formData, onBack, onGenerate }) {
       </div>
 
       <div className="d100-confirm-what">
-        You'll get <strong>7 personalized AI prompts</strong> covering: lifecycle trigger mapping, partner identification, tier ranking, gap analysis, objection prep, outreach scripts including a handwritten note template, and a 90-day follow-up system — all built for <strong>{niche}</strong> in <strong>{formData.geo || 'your market'}</strong>.
+        You'll get <strong>7 personalized AI prompts</strong> covering: lifecycle trigger mapping, partner identification, Dream 5 ranking, value strategy cards, objection prep, outreach scripts including a handwritten note template, and a 90-day launch plan with 12-month calendar — all built for <strong>{niche}</strong> in <strong>{formData.geo || 'your market'}</strong>.
       </div>
 
       <div className="d100-form-nav">
