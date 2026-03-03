@@ -96,7 +96,7 @@ export default function IdealClientModal({ isOpen, onClose, onSelect }) {
               </p>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0, marginLeft: 16 }}>
-              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap", lineHeight: 1.4, textAlign: "right" }}>
+              <div className="icm-tip" style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "nowrap", lineHeight: 1.4, textAlign: "right" }}>
                 Tap any card for<br />inspiration, then<br />write your own.
               </div>
               <button
@@ -113,7 +113,7 @@ export default function IdealClientModal({ isOpen, onClose, onSelect }) {
         </div>
 
         {/* Body — 2-col grid */}
-        <div style={{
+        <div className="icm-grid" style={{
           overflowY: "auto", padding: "18px 24px", flex: 1,
           display: "grid", gridTemplateColumns: "1fr 1fr",
           gap: 10, alignContent: "start",
@@ -170,6 +170,12 @@ export default function IdealClientModal({ isOpen, onClose, onSelect }) {
             }}
           >Got it →</button>
         </div>
+        <style>{`
+          @media (max-width: 600px) {
+            .icm-grid { grid-template-columns: 1fr !important; padding: 12px 16px !important; }
+            .icm-tip { display: none; }
+          }
+        `}</style>
       </div>
     </div>
   );
