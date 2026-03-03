@@ -338,6 +338,16 @@ export default function RunBlueprint() {
   const phaseStartRef = useRef({});
   const phasesTopRef = useRef(null);
 
+  // Always use Claude-optimized prompts when running via API
+  // (MUST be before useEffects that reference phases)
+  const phases = landingData
+    ? buildPrompts(landingData).map(p => ({ id: p.id, title: p.title, prompt: p.prompt }))
+    : build ? buildPhasePrompts(build) : [];
+
+  const displayName = landingData
+    ? `${landingData.niche || landingData.nicheBase} — ${landingData.geo}`
+    : build ? `${build.niche} — ${build.geography}` : "";
+
   // Scroll to top on page load
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
