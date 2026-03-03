@@ -47,7 +47,7 @@ export default function HeroSection({ onStart }) {
       color: '#fff',
     }}>
       {/* NAV */}
-      <nav style={{
+      <nav className="hero-nav" style={{
         padding: '0 48px', height: 54,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         borderBottom: '1px solid rgba(255,255,255,0.08)',
@@ -62,7 +62,7 @@ export default function HeroSection({ onStart }) {
           }}>{theme.logoMark}</div>
           <span style={{ fontWeight: 700, fontSize: 15, color: '#fff' }}>{theme.brandName}</span>
         </a>
-        <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{
+        <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" className="hero-visit-btn" style={{
           color: '#F0A422', fontSize: 13, fontWeight: 600, textDecoration: 'none',
           border: '1px solid rgba(240,164,34,0.4)', padding: '6px 16px', borderRadius: 20,
           whiteSpace: 'nowrap',
@@ -116,7 +116,7 @@ export default function HeroSection({ onStart }) {
             boxShadow: '0 4px 20px rgba(240,164,34,0.38)',
             whiteSpace: 'nowrap',
           }}>
-            Build My Free Blueprint — It's Free ⚡
+            Build My Free Blueprint ⚡
           </button>
 
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginTop: 12 }}>
@@ -195,11 +195,11 @@ export default function HeroSection({ onStart }) {
       </div>
 
       {/* FOOTER */}
-      <footer style={{
+      <footer className="hero-footer" style={{
         borderTop: '1px solid rgba(255,255,255,0.07)',
         padding: '16px 48px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        flexShrink: 0,
+        flexShrink: 0, flexWrap: 'wrap', gap: 8,
       }}>
         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', margin: 0 }}>
           This free tool is brought to you by{' '}
@@ -218,14 +218,36 @@ export default function HeroSection({ onStart }) {
         </div>
       </footer>
 
+      {/* Mobile bottom CTA — visible only on small screens */}
+      <div className="hero-mobile-cta" style={{ display: 'none' }}>
+        <button onClick={onStart} style={{
+          width: '100%', background: '#F0A422', color: '#1B2A4A', border: 'none', borderRadius: 12,
+          padding: '16px 24px', fontFamily: "'Sora', sans-serif",
+          fontWeight: 800, fontSize: 17, cursor: 'pointer',
+          boxShadow: '0 4px 20px rgba(240,164,34,0.38)',
+        }}>
+          Build My Free Blueprint ⚡
+        </button>
+      </div>
+
       <style>{`
         @media (max-width: 768px) {
+          .hero-nav { padding: 0 16px !important; }
+          .hero-visit-btn { font-size: 11px !important; padding: 5px 10px !important; }
+          .hero-footer { padding: 16px !important; flex-direction: column; text-align: center; }
           .hero-grid {
             grid-template-columns: 1fr !important;
             gap: 32px !important;
             padding: 24px 20px 40px !important;
           }
-          .hero-grid h1 { font-size: 34px !important; }
+          .hero-grid h1 { font-size: 30px !important; word-wrap: break-word; }
+          .hero-grid p { font-size: 16px !important; }
+          .hero-grid button { white-space: normal !important; }
+          .hero-mobile-cta {
+            display: block !important;
+            padding: 20px 20px 0;
+            background: #1B2A4A;
+          }
         }
       `}</style>
     </div>
