@@ -4,7 +4,7 @@ import { useTheme } from "@/components/ThemeContext";
 const OUTCOMES = [
   {
     icon: "🎯",
-    title: "A ranked list of your Dream 10 referral partners",
+    title: "A ranked list of your Dream 5 referral partners",
     detail: "Specific professionals in your market, tiered by referral potential for your niche — not generic types, real categories of people in your city"
   },
   {
@@ -105,7 +105,7 @@ export default function HeroSection({ onStart }) {
           </h1>
 
           <p style={{ fontSize: 18, color: '#fff', lineHeight: 1.55, margin: '0 0 28px', maxWidth: 500 }}>
-            Get a complete 10-prompt AI blueprint to build your Dream 100 referral partner system — built for your niche and your market in minutes.
+            Get a complete 7-prompt AI blueprint to build your Dream 100 referral partner system — built for your niche and your market in minutes.
           </p>
 
           <button onClick={onStart} style={{
