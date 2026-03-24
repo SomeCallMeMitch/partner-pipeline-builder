@@ -305,6 +305,7 @@ export default function RunBlueprint() {
   const [usageData, setUsageData]       = useState({});
   const [finalTimes, setFinalTimes]     = useState({});
   const [showMobileWarning, setShowMobileWarning] = useState(false);
+  const [engine, setEngine] = useState("claude"); // "claude" | "agent"
   const hasAutoRun = useRef(false);
   const resultsRef = useRef({});
   const phaseStartRef = useRef({});
@@ -410,6 +411,35 @@ Your output style:
     throw lastError;
   }
 
+  // Superagent API call — same interface as callClaude
+  async function callAgent(prompt, maxRetries = 1) {
+    let lastError = null;
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const response = await base44.functions.invoke("invokeAgent", {
+          prompt,
+          systemPrompt: SYSTEM_PROMPT,
+        });
+        const result = response.data?.result;
+        if (!result) throw new Error("Empty response from Superagent");
+        const usage = response.data?.usage || null;
+        const wordCount = result ? result.split(/\s+/).filter(Boolean).length : 0;
+        return { result, usage, wordCount };
+      } catch (e) {
+        lastError = e;
+        if (attempt < maxRetries) {
+          await new Promise(r => setTimeout(r, 5000));
+        }
+      }
+    }
+    throw lastError;
+  }
+
+  // Unified caller — picks engine based on toggle
+  async function callEngine(prompt, maxRetries = 1) {
+    return engine === "agent" ? callAgent(prompt, maxRetries) : callClaude(prompt, maxRetries);
+  }
+
   async function runAll() {
     setRunning(true); setResults({}); setStatus({}); setErrors({});
     setAllDone(false); setUsageData({}); setFinalTimes({}); resultsRef.current = {};
@@ -430,7 +460,7 @@ Your output style:
         const context = buildContextForPhase(phase.id, resultsRef.current);
         const fullPrompt = phase.prompt + context;
 
-        const { result, usage, wordCount } = await callClaude(fullPrompt);
+        const { result, usage, wordCount } = await callEngine(fullPrompt);
         const elapsedSec = Math.round((Date.now() - phaseStartRef.current[phase.id]) / 1000);
         setFinalTimes(ft => ({ ...ft, [phase.id]: elapsedSec }));
         resultsRef.current[phase.id] = result;
@@ -466,7 +496,7 @@ Your output style:
       const context = buildContextForPhase(phase.id, resultsRef.current);
       const fullPrompt = phase.prompt + context;
 
-      const { result, usage, wordCount } = await callClaude(fullPrompt, 2); // Extra retries for manual retry
+      const { result, usage, wordCount } = await callEngine(fullPrompt, 2); // Extra retries for manual retry
       const elapsedSec = Math.round((Date.now() - phaseStartRef.current[phaseId]) / 1000);
       setFinalTimes(ft => ({ ...ft, [phaseId]: elapsedSec }));
       resultsRef.current[phase.id] = result;
@@ -658,6 +688,41 @@ Your output style:
 
           {/* Nav actions */}
           <div className="bp-nav-actions" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            {/* Engine toggle — only show when not running */}
+            {!running && !allDone && (
+              <div style={{ display: "flex", alignItems: "center", gap: 3, background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "3px" }}>
+                <button
+                  onClick={() => setEngine("claude")}
+                  style={{
+                    padding: "5px 11px", borderRadius: 6, border: "none", cursor: "pointer",
+                    fontSize: 12, fontWeight: 700, fontFamily: font,
+                    background: engine === "claude" ? C.gold : "transparent",
+                    color: engine === "claude" ? C.navy : "rgba(255,255,255,0.5)",
+                    transition: "all 0.2s",
+                  }}
+                >Claude</button>
+                <button
+                  onClick={() => setEngine("agent")}
+                  style={{
+                    padding: "5px 11px", borderRadius: 6, border: "none", cursor: "pointer",
+                    fontSize: 12, fontWeight: 700, fontFamily: font,
+                    background: engine === "agent" ? "#4F8EF7" : "transparent",
+                    color: engine === "agent" ? C.white : "rgba(255,255,255,0.5)",
+                    transition: "all 0.2s",
+                  }}
+                >⚡ Superagent</button>
+              </div>
+            )}
+            {/* Engine badge when running/done */}
+            {(running || allDone) && (
+              <div style={{
+                padding: "4px 10px", borderRadius: 6, fontSize: 11, fontWeight: 700, fontFamily: font,
+                background: engine === "agent" ? "rgba(79,142,247,0.25)" : "rgba(201,151,58,0.25)",
+                color: engine === "agent" ? "#7BB3FF" : C.goldLight,
+              }}>
+                {engine === "agent" ? "⚡ Superagent" : "Claude"}
+              </div>
+            )}
             {(running || allDone) && (
               <span style={{ fontSize: 15, color: C.white, fontWeight: 600, fontFamily: font, marginRight: 4 }}>
                 {completedCount} of {phases.length} phases
