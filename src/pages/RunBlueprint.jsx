@@ -25,6 +25,31 @@ const C = {
 };
 const font = "'Sora', -apple-system, sans-serif";
 
+// ─── Per-Phase Model Config ──────────────────────────────────────────────────
+//
+// Phases 1, 2, 3, 5, 7 are table-heavy structured output — Haiku handles
+// these well at ~80% lower cost than Sonnet.
+//
+// Phases 4 and 6 require real writing quality (Value Manifesto and outreach
+// scripts must sound human) — Sonnet stays for those two.
+//
+// max_tokens is set per-phase. You only pay for tokens generated, but a
+// tight ceiling prevents runaway output on phases that don't need it.
+//
+const PHASE_MODEL_CONFIG = {
+  1: { model: "claude-haiku-4-5-20251001", max_tokens: 3500 },  // Trigger mapping table
+  2: { model: "claude-haiku-4-5-20251001", max_tokens: 3500 },  // Partner mapping tables
+  3: { model: "claude-haiku-4-5-20251001", max_tokens: 3000 },  // Dream 5 ranking table
+  4: { model: "claude-sonnet-4-6",         max_tokens: 5000 },  // Value cards + Manifesto (needs real writing)
+  5: { model: "claude-haiku-4-5-20251001", max_tokens: 3500 },  // Objection responses
+  6: { model: "claude-sonnet-4-6",         max_tokens: 5000 },  // Outreach scripts (must sound human)
+  7: { model: "claude-haiku-4-5-20251001", max_tokens: 4000 },  // 90-day plan tables
+};
+
+// Fallback for any phase not in the map
+const DEFAULT_MODEL_CONFIG = { model: "claude-haiku-4-5-20251001", max_tokens: 4000 };
+
+
 function buildContextForPhase(phaseId, completedResults) {
   const parts = [];
   if (completedResults["1"] && [2, 3, 4, 5, 6, 7].includes(phaseId)) {
@@ -91,7 +116,7 @@ function extractSection(text, keyword, maxLines = 5) {
   return keyLines.length > 0 ? keyLines.slice(0, maxLines * 2).join('\n') : null;
 }
 
-function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, retrying, usage, finalTime }) {
+function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, retrying, usage, finalTime, modelUsed }) {
   const [expanded, setExpanded] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -144,7 +169,11 @@ function PhaseCard({ phase, status, result, isActive, errorMessage, onRetry, ret
         </div>
         <span style={{ flex: 1, fontWeight: 600, fontSize: 14, color: isPending ? C.muted : C.text, fontFamily: font }}>{phase.title}</span>
         {isActive && <span style={{ fontSize: 14, color: "#000000", fontWeight: 700, fontFamily: "monospace" }}>{fmt(elapsed)}</span>}
-        {isDone && <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>Complete{finalTime ? ` · ${Math.floor(finalTime/60)}:${String(finalTime%60).padStart(2,'0')}` : ''}{usage?.wordCount ? ` · ${usage.wordCount.toLocaleString()} words` : ''}</span>}
+        {isDone && <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>
+            Complete{finalTime ? ` · ${Math.floor(finalTime/60)}:${String(finalTime%60).padStart(2,'0')}` : ''}
+            {usage?.wordCount ? ` · ${usage.wordCount.toLocaleString()} words` : ''}
+            {modelUsed ? ` · ${modelUsed.includes('haiku') ? 'Haiku' : 'Sonnet'}` : ''}
+          </span>}
         {isError && !retrying && (
           <button onClick={(e) => { e.stopPropagation(); onRetry && onRetry(phase.id); }}
             style={{ background: C.errorBg, border: `1px solid ${C.error}`, borderRadius: 6, padding: "4px 10px", fontSize: 11, color: C.error, fontWeight: 700, fontFamily: font, cursor: "pointer" }}>↺ Retry</button>
@@ -188,6 +217,7 @@ export default function RunBlueprint() {
   const [retryingPhase, setRetryingPhase] = useState(null);
   const [usageData, setUsageData]       = useState({});
   const [finalTimes, setFinalTimes]     = useState({});
+  const [modelsUsed, setModelsUsed]     = useState({});
   const [showMobileWarning, setShowMobileWarning] = useState(false);
   const [engine, setEngine]             = useState("claude");
   const hasAutoRun = useRef(false);
@@ -252,18 +282,23 @@ Your output style:
 - When referencing partner types, use the EXACT types established in earlier phases
 - Deliver exactly the deliverables described in the task`;
 
-  async function callClaude(prompt, maxRetries = 1) {
+  // callClaude now accepts a phaseId so it can look up the right model + token limit
+  async function callClaude(prompt, phaseId, maxRetries = 1) {
+    const config = PHASE_MODEL_CONFIG[phaseId] || DEFAULT_MODEL_CONFIG;
     let lastError = null;
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         const response = await base44.functions.invoke("invokeClaude", {
-          prompt, systemPrompt: SYSTEM_PROMPT, model: "claude-sonnet-4-6", max_tokens: 16000
+          prompt,
+          systemPrompt: SYSTEM_PROMPT,
+          model: config.model,
+          max_tokens: config.max_tokens,
         });
         const result = response.data?.result;
         if (!result) throw new Error("Empty response from Claude");
         const usage = response.data?.usage || null;
         const wordCount = result ? result.split(/\s+/).filter(Boolean).length : 0;
-        return { result, usage, wordCount };
+        return { result, usage, wordCount, modelUsed: config.model };
       } catch (e) {
         lastError = e;
         if (attempt < maxRetries) await new Promise(r => setTimeout(r, 5000));
@@ -283,7 +318,7 @@ Your output style:
         if (!result) throw new Error("Empty response from Superagent");
         const usage = response.data?.usage || null;
         const wordCount = result ? result.split(/\s+/).filter(Boolean).length : 0;
-        return { result, usage, wordCount };
+        return { result, usage, wordCount, modelUsed: "agent" };
       } catch (e) {
         lastError = e;
         if (attempt < maxRetries) await new Promise(r => setTimeout(r, 5000));
@@ -292,13 +327,15 @@ Your output style:
     throw lastError;
   }
 
-  async function callEngine(prompt, maxRetries = 1) {
-    return engine === "agent" ? callAgent(prompt, maxRetries) : callClaude(prompt, maxRetries);
+  async function callEngine(prompt, phaseId, maxRetries = 1) {
+    return engine === "agent"
+      ? callAgent(prompt, phaseId, maxRetries)
+      : callClaude(prompt, phaseId, maxRetries);
   }
 
   async function runAll() {
     setRunning(true); setResults({}); setStatus({}); setErrors({});
-    setAllDone(false); setUsageData({}); setFinalTimes({}); resultsRef.current = {};
+    setAllDone(false); setUsageData({}); setFinalTimes({}); setModelsUsed({}); resultsRef.current = {};
     setTimeout(() => {
       if (phasesTopRef.current && window.innerWidth <= 768)
         phasesTopRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -310,12 +347,13 @@ Your output style:
       try {
         const context = buildContextForPhase(phase.id, resultsRef.current);
         const fullPrompt = phase.prompt + context;
-        const { result, usage, wordCount } = await callEngine(fullPrompt);
+        const { result, usage, wordCount, modelUsed } = await callEngine(fullPrompt, phase.id);
         const elapsedSec = Math.round((Date.now() - phaseStartRef.current[phase.id]) / 1000);
         setFinalTimes(ft => ({ ...ft, [phase.id]: elapsedSec }));
         resultsRef.current[phase.id] = result;
         setResults(r => ({ ...r, [phase.id]: result }));
         setUsageData(u => ({ ...u, [phase.id]: { usage, wordCount } }));
+        setModelsUsed(m => ({ ...m, [phase.id]: modelUsed }));
         setStatus(s => ({ ...s, [phase.id]: "done" }));
       } catch (e) {
         const elapsedSec = Math.round((Date.now() - phaseStartRef.current[phase.id]) / 1000);
@@ -339,12 +377,13 @@ Your output style:
     try {
       const context = buildContextForPhase(phase.id, resultsRef.current);
       const fullPrompt = phase.prompt + context;
-      const { result, usage, wordCount } = await callEngine(fullPrompt, 2);
+      const { result, usage, wordCount, modelUsed } = await callEngine(fullPrompt, phase.id, 2);
       const elapsedSec = Math.round((Date.now() - phaseStartRef.current[phaseId]) / 1000);
       setFinalTimes(ft => ({ ...ft, [phaseId]: elapsedSec }));
       resultsRef.current[phase.id] = result;
       setResults(r => ({ ...r, [phase.id]: result }));
       setUsageData(u => ({ ...u, [phase.id]: { usage, wordCount } }));
+      setModelsUsed(m => ({ ...m, [phaseId]: modelUsed }));
       setStatus(s => ({ ...s, [phase.id]: "done" }));
     } catch (e) {
       const msg = e?.response?.data?.error || e?.message || String(e);
@@ -582,7 +621,8 @@ Your output style:
                 <PhaseCard key={phase.id} phase={phase} status={status[phase.id]} result={results[phase.id]}
                   isActive={activePhase === phase.id} errorMessage={errors[phase.id]}
                   onRetry={retryPhase} retrying={retryingPhase === phase.id}
-                  usage={usageData[phase.id]} finalTime={finalTimes[phase.id]} />
+                  usage={usageData[phase.id]} finalTime={finalTimes[phase.id]}
+                  modelUsed={modelsUsed[phase.id]} />
               ))}
             </div>
 
@@ -632,6 +672,16 @@ Your output style:
                     {status[phase.id] === "done" ? "✓" : status[phase.id] === "error" ? "✗" : activePhase === phase.id ? "…" : ""}
                   </div>
                   <span style={{ fontSize: 14, fontFamily: font, lineHeight: 1.4, color: !status[phase.id] && activePhase !== phase.id ? C.muted : C.text, fontWeight: activePhase === phase.id ? 700 : 400 }}>{phase.title}</span>
+                  {status[phase.id] === "done" && modelsUsed[phase.id] && (
+                    <span style={{
+                      marginLeft: "auto", fontSize: 9, fontWeight: 700, fontFamily: font,
+                      padding: "2px 5px", borderRadius: 4,
+                      background: modelsUsed[phase.id].includes("haiku") ? "rgba(45,106,79,0.12)" : "rgba(201,151,58,0.15)",
+                      color: modelsUsed[phase.id].includes("haiku") ? C.success : C.gold,
+                    }}>
+                      {modelsUsed[phase.id].includes("haiku") ? "Haiku" : "Sonnet"}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>
