@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Dream100Styles from "@/components/dream100/Dream100Styles";
 import HeroSection from "@/components/dream100/HeroSection";
 import StepBar from "@/components/dream100/StepBar";
@@ -7,12 +8,11 @@ import WizardStep2 from "@/components/dream100/WizardStep2";
 import WizardStep3 from "@/components/dream100/WizardStep3";
 import WizardStep4 from "@/components/dream100/WizardStep4";
 import GeneratingCard from "@/components/dream100/GeneratingCard";
-import OutputView from "@/components/dream100/OutputView";
-import { buildPrompts } from "@/components/dream100/promptBuilder";
 import { useTheme } from "@/components/ThemeContext";
 
 export default function Landing() {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   const [view, setView] = useState('hero'); // hero | wizard | generating | output
   const [wizardStep, setWizardStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -25,7 +25,7 @@ export default function Landing() {
     years: '',
     llm: 'ChatGPT',
   });
-  const [prompts, setPrompts] = useState([]);
+
   const mainRef = useRef(null);
 
   const updateForm = (partial) => {
@@ -56,7 +56,6 @@ export default function Landing() {
     setView('generating');
     scrollToMain();
 
-    // Build niche string for prompt builder
     const niche = formData.customNiche
       ? `${formData.nicheBase} — ${formData.customNiche}`
       : formData.nicheBase;
@@ -73,11 +72,9 @@ export default function Landing() {
     };
 
     setTimeout(() => {
-      const generated = buildPrompts(promptFormData);
-      setPrompts(generated);
-      setView('output');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 2000);
+      sessionStorage.setItem("d100_run_formData", JSON.stringify(promptFormData));
+      navigate("/RunBlueprint");
+    }, 1500);
   };
 
   const handleRestart = () => {
@@ -85,7 +82,6 @@ export default function Landing() {
       nicheBase: '', customNiche: '', geo: '', client: '',
       challenge: '', name: '', years: '', llm: 'ChatGPT',
     });
-    setPrompts([]);
     setView('hero');
     setWizardStep(1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -150,13 +146,8 @@ export default function Landing() {
         </main>
       )}
 
-      {/* Output view — full-width, no d100-main wrapper */}
-      {view === 'output' && (
-        <OutputView formData={formData} prompts={prompts} onRestart={handleRestart} />
-      )}
-
-      {/* Footer — only shown outside hero/output */}
-      {view !== 'hero' && view !== 'output' && (
+      {/* Footer — only shown outside hero */}
+      {view !== 'hero' && (
         <footer className="d100-site-footer" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
           <p>This free tool is brought to you by <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>{theme.brandName}</a> — {theme.footerText}.</p>
           <p style={{ marginTop: 5 }}>&copy; 2025 {theme.brandName} &nbsp;&middot;&nbsp; <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>Learn More</a></p>
