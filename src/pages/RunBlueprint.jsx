@@ -40,10 +40,10 @@ const PHASE_MODEL_CONFIG = {
   1: { model: "claude-haiku-4-5-20251001", max_tokens: 3500 },  // Trigger mapping table
   2: { model: "claude-haiku-4-5-20251001", max_tokens: 3500 },  // Partner mapping tables
   3: { model: "claude-haiku-4-5-20251001", max_tokens: 3000 },  // Dream 5 ranking table
-  4: { model: "claude-sonnet-4-6",         max_tokens: 7000 },  // Value cards + Manifesto (needs real writing — bumped from 5000)
+  4: { model: "claude-sonnet-4-6",         max_tokens: 10000 }, // Value cards + Manifesto (needs real writing)
   5: { model: "claude-haiku-4-5-20251001", max_tokens: 3500 },  // Objection responses
   6: { model: "claude-sonnet-4-6",         max_tokens: 5000 },  // Outreach scripts (must sound human)
-  7: { model: "claude-haiku-4-5-20251001", max_tokens: 6000 },  // 90-day plan + tracker + math (bumped from 4000)
+  7: { model: "claude-haiku-4-5-20251001", max_tokens: 10000 }, // 90-day plan + tracker + math
 };
 
 // Fallback for any phase not in the map
