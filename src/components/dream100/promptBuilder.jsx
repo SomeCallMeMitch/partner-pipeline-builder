@@ -1,7 +1,66 @@
-// Dream 100 Prompt Builder — Claude-Optimized, Industry-Enriched
-// 7-phase structure (consolidated from 9). See CHANGELOG-7phase-consolidation.md.
+// Dream 100 Prompt Builder — Haiku-Optimized, Industry-Enriched
+// Updated: tighter decision rules, scoring rubrics, practicality enforcement,
+// strategic context framing, hard consistency across phases.
 
-const CLAUDE_NOTE = 'Use markdown formatting with clear headers. Prioritize strategic depth and specificity. Avoid generic advice. Deliver exactly the deliverables described. Do NOT use emoji anywhere in your output — not in headers, labels, bullet points, or section markers. Use plain text only (e.g., "THE GAP" not "🕳️ THE GAP", "Handwritten Note Moments" not "✍️ Handwritten Note Moments"). This is a hard requirement.';
+// ─── Shared Rule Blocks ───────────────────────────────────────────────────────
+// These are injected into each phase prompt to enforce consistent behavior.
+
+const PRACTICALITY_OVERRIDE = `PRACTICALITY OVERRIDE:
+When choosing between an interesting partner type and a more practical partner type, choose the practical one.
+Prefer partners who:
+- already recommend outside professionals as part of their normal workflow
+- are easy to identify and contact in or near the market area
+- can plausibly produce repeat referrals within 12 months
+- fit the client profile without requiring unusual assumptions
+- are ethically and operationally comfortable making referrals
+
+Avoid over-ranking institutional, government, medical, or community figures unless they are clearly practical, reachable, and likely to refer in a normal solo-agent workflow.`;
+
+const EXCLUSION_RULES = `EXCLUSION RULES:
+Do not rank a partner type in the top 5 if:
+- the person is difficult for a solo agent to reach through normal outreach
+- referral behavior would be unusual, awkward, or institutionally constrained
+- the role depends on speculative or uncommon access rather than repeatable business development
+- the partner would be unlikely to refer more than 1-2 times per year in a normal workflow
+
+If a partner is high-trust but low-practicality, note them as a secondary option — do not make them a top-5 priority.`;
+
+const SCORING_RUBRIC = `WEIGHTED SCORING RUBRIC:
+Score each partner type using this framework:
+- Transaction proximity / timing: 30%
+- Likelihood they already refer outside professionals in normal workflow: 25%
+- Trust transfer strength: 20%
+- Ease of outreach / number of reachable targets near the market area: 15%
+- Niche specificity: 10%
+
+Choose partner types with the highest total score. Do not choose based on novelty, emotional resonance, or creativity.`;
+
+const CONSERVATIVE_ESTIMATES = `CONSERVATIVE ESTIMATE RULE:
+Use real-world conservative referral assumptions. Do not assume more than:
+- 2-4 referrals/month for mortgage brokers or property managers
+- 1-2 referrals/month for financial planners, attorneys, relocation specialists, or lenders
+- 1 referral/quarter for slower relationship-based professionals
+
+If uncertain, choose the lower estimate. Conservative numbers are more credible and more useful to the agent.`;
+
+const CONSISTENCY_RULE = `HARD CONSISTENCY RULE:
+- Do not introduce any new partner types in this phase
+- Do not rename, broaden, or swap the Dream 5 partner types established in Phase 3
+- Reference the exact Dream 5 partner names from Phase 3 only
+- Use only the value gifts created in Phase 4
+- If a better idea appears, do not substitute it — stay with the established system`;
+
+const OUTPUT_RULES = `OUTPUT RULES:
+- Use compact markdown only
+- No introductory paragraphs unless specifically requested below
+- No concluding summaries unless specifically requested below
+- Prefer tables over prose wherever possible
+- Keep all explanations to 1-2 sentences max unless the prompt requests more
+- Do not restate the user context at the top of your response
+- Do not use emoji anywhere — not in headers, labels, bullets, or section markers
+- Plain text only (e.g. "THE GAP" not "🕳️ THE GAP")`;
+
+// ─── Industry Data ────────────────────────────────────────────────────────────
 
 const INDUSTRY_DATA = {
   "Real Estate": {
@@ -16,6 +75,8 @@ const INDUSTRY_DATA = {
 };
 
 const IND = INDUSTRY_DATA["Real Estate"];
+
+// ─── Prompt Builder ───────────────────────────────────────────────────────────
 
 export function buildPrompts(formData) {
   const n = formData.name || 'I';
@@ -34,6 +95,8 @@ ${years ? `- My experience: ${years}` : ''}
 - My name: ${n}`;
 
   return [
+
+    // ── Phase 1 ──────────────────────────────────────────────────────────────
     {
       id: 1,
       title: 'Phase 1: Lifecycle Trigger Mapping',
@@ -41,25 +104,55 @@ ${years ? `- My experience: ${years}` : ''}
 
 TASK — Lifecycle Trigger Mapping
 
-Map the complete lifecycle of my ideal real estate client. Identify every major life event, financial trigger, and transition point that causes someone in the ${niche} segment to buy or sell in ${geo}.
+STRATEGIC CONTEXT SECTION (write this first):
+Before the table, write 3-4 sentences that explain:
+- The behavioral pattern that drives this client's decision timeline in the ${niche} segment
+- Why mapping upstream professionals (not the client directly) is the right strategy for this niche
+- What this means for ${n}'s approach in ${geo}
+Keep this section tight. No headers, no bullets — plain prose only. This is the only narrative section in this phase.
 
-Common trigger events in real estate include: ${IND.triggerEvents}. Use these as a starting point, then add triggers SPECIFIC to ${niche} in ${geo}.
+---
 
-Key lifecycle moments to consider: ${IND.lifecycleMoments}
+MAP THE TRIGGERS:
+Identify the 8 most practical lifecycle trigger events that cause someone in the ${niche} segment to buy or sell in ${geo}.
+
+Common trigger events in real estate: ${IND.triggerEvents}
+Key lifecycle moments: ${IND.lifecycleMoments}
 
 For each trigger provide:
 1. The specific trigger event
 2. Months before a real estate transaction this typically occurs
-3. Which professional type sees the client at this trigger BEFORE they contact a realtor
-4. Why that professional has high trust at that exact moment
+3. Which professional type sees the client before a realtor does
+4. Why that professional has high trust at that moment
+5. Referral Practicality: High / Medium / Low
 
-DELIVERABLE: Markdown table with columns:
-| Trigger Event | Months Before Transaction | Upstream Professional | Why They Have High Trust |
+DELIVERABLE — one markdown table:
+| Trigger Event | Months Before Transaction | Upstream Professional | Why They Have High Trust | Referral Practicality |
 
-Include at least 12 distinct trigger events. Mark top 3 with ★ and explain in 2-3 sentences each why they are the priority for the ${niche} niche specifically.
+Include exactly 8 triggers. Mark top 3 with ★.
 
-${CLAUDE_NOTE}`
+TOP 3 PRIORITIES:
+After the table, add a short section. For each starred trigger, write 1-2 sentences explaining:
+- Why it matters specifically for ${niche} in ${geo}
+- Why the associated professional is practical to target for a solo agent
+
+TOP 3 SELECTION RULES:
+Select the top 3 based on:
+1. How often the trigger occurs in ${geo}
+2. How likely the upstream professional is to refer in their normal workflow
+3. How reachable that professional is for outreach by a solo agent
+4. Whether the referral behavior is natural and ethical
+
+Do NOT mark a trigger as top 3 if the associated professional is hard to reach, institutionally constrained, or unlikely to refer a realtor in their normal workflow.
+
+${PRACTICALITY_OVERRIDE}
+
+${EXCLUSION_RULES}
+
+${OUTPUT_RULES}`
     },
+
+    // ── Phase 2 ──────────────────────────────────────────────────────────────
     {
       id: 2,
       title: 'Phase 2: Upstream & Side-stream Partner Mapping',
@@ -67,22 +160,59 @@ ${CLAUDE_NOTE}`
 
 TASK — Upstream & Side-stream Partner Mapping
 
-UPSTREAM PARTNERS (see client 3–12 months before a transaction):
-Known upstream partner types for real estate: ${IND.upstreamPartners}
+STRATEGIC CONTEXT SECTION (write this first):
+Before the tables, write 2-3 sentences explaining:
+- Which category of upstream partner is most likely to produce referrals for the ${niche} segment specifically
+- Why that category wins over alternatives for this client profile
+Keep it to 2-3 sentences. No headers, plain prose. This is the only narrative section in this phase.
 
-List 5–6 partner types most relevant to ${niche} in ${geo}. Focus on the highest-value partner types — quality over quantity. Every partner type must be realistically able to make referrals without violating their professional code of ethics. Do not include partner types (e.g., therapists, counselors) where referral behavior would conflict with confidentiality obligations or professional ethical constraints. For each:
-— Why they see my ${niche} client early
-— The specific problem they're solving at that moment
-— What a ${niche} specialist in ${geo} can offer them in return (specific value exchange)
-— Estimated monthly referral frequency
+---
+
+UPSTREAM PARTNERS (see client 3-12 months before a transaction):
+Known upstream partner types: ${IND.upstreamPartners}
+
+List exactly 5 upstream partner types for ${niche} in ${geo}.
+
+UPSTREAM SELECTION RULES:
+- At least 3 of the 5 must be financially, legally, mortgage, relocation, or housing adjacent
+- Do not include partner types where referral behavior is ethically awkward, institutionally constrained, or unlikely in normal workflow
+- Prefer partner types with at least 10 reachable individuals within or near ${geo}
+- For each partner, score them using the weighted rubric below before ranking
+
+${SCORING_RUBRIC}
+
+For each upstream partner include:
+- Why they see the ${niche} client early
+- The specific problem they are solving at that moment
+- What ${n} can offer in return (specific value exchange)
+- Estimated monthly referral frequency
+- Outreach accessibility: Easy / Moderate / Hard
+- Why this partner beats the next-best alternative (1 sentence)
+
+DELIVERABLE — Table 1:
+| Upstream Partner Type | Why They See Client Early | Problem They Solve | Value Exchange | Est. Monthly Referrals | Outreach Accessibility | Why They Beat Next-Best |
+
+---
 
 SIDE-STREAM PARTNERS (see client during the transaction):
 Known side-stream partner types: ${IND.sideStreamPartners}
 
-List 3 partner types most relevant to ${niche} transactions. Same format.
+List exactly 2 side-stream partner types most relevant to ${niche} transactions.
+Same format as upstream, same columns.
 
-${CLAUDE_NOTE}`
+DELIVERABLE — Table 2:
+| Side-Stream Partner Type | Why They Appear During Transaction | Problem They Solve | Value Exchange | Est. Monthly Referrals | Outreach Accessibility | Why They Beat Next-Best |
+
+${PRACTICALITY_OVERRIDE}
+
+${EXCLUSION_RULES}
+
+${CONSERVATIVE_ESTIMATES}
+
+${OUTPUT_RULES}`
     },
+
+    // ── Phase 3 ──────────────────────────────────────────────────────────────
     {
       id: 3,
       title: 'Phase 3: Dream 5 Tier Ranking & Shortlist',
@@ -90,22 +220,53 @@ ${CLAUDE_NOTE}`
 
 TASK — Dream 5 Tier Ranking & Shortlist
 
-From the upstream and side-stream partners identified in Phase 2, select and rank the TOP 5 partner types — these are the relationships that will drive the most referral volume for ${niche} in ${geo}.
+STRATEGIC CONTEXT SECTION (write this first):
+Write 2-3 sentences explaining the ranking logic for this specific niche:
+- Which tier of partner is most valuable for ${niche} in ${geo} and why
+- What makes this Dream 5 different from a generic real estate referral list
+Plain prose, no headers. This is the only narrative section in this phase.
+
+---
+
+RANKING TASK:
+From the Phase 2 partner list, rank the top 5 partner types by expected referral ROI for a solo agent over the next 12 months in ${geo}.
 
 TIER STRUCTURE:
-— Tier 1 (Direct Upstream): Partners who see clients immediately before a transaction trigger
-— Tier 2 (Lifestyle & Transition): Partners who see clients during a life phase shift
-— Tier 3 (Community & Maintenance): Partners with consistent long-term client contact
+- Tier 1 (Direct Upstream): sees client immediately before a transaction trigger
+- Tier 2 (Lifestyle & Transition): sees client during a life phase shift
+- Tier 3 (Community & Maintenance): longer-term contact, slower conversion
 
-Build the Dream 5 table:
-| Rank | Partner Type | Tier | Est. Monthly Referral Potential | Why Top Priority for ${niche} | First Contact Strategy |
+RANKING RULES:
+- Rank by practical referral value — not novelty, not trust level alone
+- At least 2 of the top 3 must be Tier 1 direct upstream partners
+- No more than 1 Tier 3 partner in the Dream 5 unless clearly justified with referral volume evidence
+- Use the weighted scoring rubric to justify rankings
 
-Then answer: What 3 personal characteristics should ${n} look for when identifying WHICH INDIVIDUAL at each company to target (beyond just finding the business)?
+${SCORING_RUBRIC}
 
-IMPORTANT: The Dream 5 list you create here will be used as the foundation for ALL remaining phases. Be specific and deliberate with your rankings. Phases 4, 5, 6, and 7 will all reference this exact list.
+DELIVERABLE — one markdown table:
+| Rank | Partner Type | Tier | Est. Monthly Referral Potential | Why Top Priority for ${niche} | First Contact Strategy | Practicality Score (1-10) |
 
-${CLAUDE_NOTE}`
+Then answer: What 3 personal characteristics should ${n} look for when identifying WHICH INDIVIDUAL at each company to target?
+
+Format as:
+| Characteristic | Why It Matters for ${niche} in ${geo} |
+
+IMPORTANT — FOUNDATION FOR PHASES 4-7:
+The Dream 5 selected here are locked. Phases 4, 5, 6, and 7 will all use these exact partner types and exact names. Do not add a section explaining how these will be used in later phases — just make sure the rankings are deliberate and defensible.
+
+${PRACTICALITY_OVERRIDE}
+
+${EXCLUSION_RULES}
+
+${CONSERVATIVE_ESTIMATES}
+
+${CONSISTENCY_RULE}
+
+${OUTPUT_RULES}`
     },
+
+    // ── Phase 4 ──────────────────────────────────────────────────────────────
     {
       id: 4,
       title: 'Phase 4: Value Strategy Cards + Value Manifesto',
@@ -113,28 +274,50 @@ ${CLAUDE_NOTE}`
 
 TASK — Value Strategy Cards for All 5 Dream Partners + Value Manifesto
 
-For EACH of the 5 referral partner types from the Dream 5 ranking, create a Value Strategy Card:
+Using ONLY the exact Dream 5 partner types from Phase 3, create one Value Strategy Card for each of the 5 partners.
 
-**1. THE GAP:** What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
+For each partner type use this exact format:
 
-**2. THE VALUE GIFT:** What specific, tangible asset can ${n} create or offer to start the relationship — with no ask? Be extremely specific (not "a market report" but "a quarterly ${niche}-specific absorption rate report for ${geo} with their branding included").
+### [Partner Type — use exact name from Phase 3]
+- THE GAP: What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
+- THE VALUE GIFT: One specific, low-lift asset ${n} can create or offer — with no ask.
+- THE RECURRING TOUCHPOINT: One realistic quarterly action to keep the relationship warm.
 
-Known value-add categories in real estate: ${IND.partnerValueAdd}. Go beyond these — what would make this specific partner type think "I need to keep this agent close"?
+PRACTICAL VALUE GIFT RULES — every value gift must:
+- Be creatable by one agent in under 2 hours
+- Cost under $100 initially
+- Be reusable across multiple partners with light customization
+- Be useful to the partner even if they never meet with ${n}
+- Solve a specific client conversation the partner is already having
 
-**3. THE RECURRING TOUCHPOINT:** What ongoing value can ${n} deliver monthly or quarterly to keep the relationship warm?
+Known value-add categories: ${IND.partnerValueAdd}. Go beyond these — what would make this specific partner think "I need to keep this agent close"?
 
-Format each card clearly with the partner type as a header.
+Prefer: one-page tools, checklists, comparison sheets, neighborhood summaries, intake guides, scenario handouts, or market snapshots.
+Avoid: co-hosted events, webinars, co-branded campaigns, or any gift that requires a commitment before the relationship is established.
+
+RECURRING TOUCHPOINT RULES:
+- Must be realistic for one agent to maintain across all 5 partners simultaneously
+- Prefer quarterly over monthly unless monthly is clearly justified
+- Must be low-friction — no events, no presentations
 
 ---
 
-Then write ${n}'s **Value Manifesto** — a positioning statement ${n} would use when meeting new referral partners in person. It should focus entirely on how ${n} serves the partner's clients, not on promoting ${n}'s own production. Warm, peer-to-peer tone. No buzzwords.
+VALUE MANIFESTO:
+Then write ${n}'s Value Manifesto — how ${n} describes their work to referral partners.
+Focus entirely on how ${n} serves the partner's clients, not on production or credentials.
 
-Start with a **"Cocktail Party Version"** — 2-3 sentences that ${n} could deliver in 30 seconds when someone asks "what do you do?"
+1. Cocktail Party Version
+2 sentences max. Something ${n} can say in 30 seconds.
 
-Then write a longer **"Coffee Meeting Version"** — 2-3 paragraphs for a sit-down conversation. It should feel like something ${n} would actually say — not a marketing page.
+2. Coffee Meeting Version
+120 words max. Peer-to-peer tone. Warm and specific to the ${niche} segment and ${geo}. Should sound like something ${n} would actually say — not a marketing page.
 
-${CLAUDE_NOTE}`
+${CONSISTENCY_RULE}
+
+${OUTPUT_RULES}`
     },
+
+    // ── Phase 5 ──────────────────────────────────────────────────────────────
     {
       id: 5,
       title: 'Phase 5: Objection Anticipation & Response Prep',
@@ -142,15 +325,19 @@ ${CLAUDE_NOTE}`
 
 TASK — Objection Anticipation & Response Prep
 
-Known objection categories in real estate referral partnerships: ${IND.objectionContext}
+Using ONLY the Dream 5 partner types from Phase 3, assign each objection to the most likely partner type.
 
-For each objection, frame it around a SPECIFIC Dream 5 partner type from Phase 3 — name the partner type in the header (e.g., "When a Mortgage Broker says..." or "When a CPA says..."). Choose the partner type where that objection is most likely to surface.
+Known objection categories: ${IND.objectionContext}
 
-For each objection provide:
-— The specific Dream 5 partner type most likely to say this
-— WHY this objection comes up (the real fear underneath it)
-— A non-defensive, conversational response that reframes without being pushy
-— A follow-up question that keeps the door open
+ASSIGNMENT RULE: At least 5 of the 8 objections must be assigned to the top 3 Dream 5 partner types.
+
+For each objection use this exact format:
+
+### Objection [#]
+- Partner Type: [exact Dream 5 name from Phase 3]
+- Real Fear: [2 sentences max — what is the actual fear underneath this objection]
+- Response: [under 100 words — non-defensive, conversational, reframes without being pushy]
+- Follow-Up Question: [1 sentence — diagnostic, not persuasive. Opens the door, doesn't push through it.]
 
 OBJECTIONS:
 1. "I already have a realtor I work with."
@@ -160,14 +347,28 @@ OBJECTIONS:
 5. "I'm too busy to meet — can you just send me your card?"
 6. "Can I think about it and get back to you?"
 7. One objection specific to ${niche} partnerships in ${geo}
-8. One more objection specific to ${niche} partnerships that most agents don't think of
+8. One objection specific to ${niche} that most agents don't anticipate
 
-BONUS: Write a "trust reset" script for: (a) a relationship that went cold after initial contact, and (b) a past referral relationship that ended badly.
+TONE: ${IND.scriptTone}. Not salesy. Responses must sound like spoken language.
 
-TONE: ${IND.scriptTone}. Not salesy.
+BONUS — Trust Reset Scripts:
+Add two short scripts after the objections:
 
-${CLAUDE_NOTE}`
+Trust Reset A: A relationship that went cold after initial contact.
+Trust Reset B: A past referral relationship that ended badly.
+
+Each reset script:
+- 120 words max
+- Plain spoken
+- No over-apologizing
+- Acknowledges the gap without making it awkward
+
+${CONSISTENCY_RULE}
+
+${OUTPUT_RULES}`
     },
+
+    // ── Phase 6 ──────────────────────────────────────────────────────────────
     {
       id: 6,
       title: 'Phase 6: Complete Outreach Script Suite',
@@ -175,32 +376,66 @@ ${CLAUDE_NOTE}`
 
 TASK — Complete Outreach Script Suite
 
-Write all 6 scripts below. Each script should reference the specific partner types and value gifts established in earlier phases.
+Write all 6 scripts below. Use ONLY the Dream 5 partner types from Phase 3 and ONLY the value gifts from Phase 4.
 
-Tone for all scripts: ${IND.scriptTone}
+Write each script as a universal template lightly customizable for any Dream 5 partner. Where partner-specific detail is needed, write one version per partner type (labeled clearly).
 
-**SCRIPT 1 — Cold Intro Email**
-3 subject line options. Body under 150 words. Focus on partner's business, not ${n}'s needs. Mention a specific value gift from the Value Strategy Cards. End with a low-commitment ask.
+Tone for all scripts: ${IND.scriptTone}. Plain spoken, peer-to-peer. No corporate language, no hype.
 
-**SCRIPT 2 — LinkedIn Connection Message**
-Under 300 characters. Reference something real about their work. Do not mention referrals.
+SCRIPT REALISM RULES:
+- Every script must include one concrete local detail specific to ${geo} or one concrete client scenario specific to ${niche}
+- Do not invent new assets, offers, or positioning angles in this phase — use only what was established in Phase 4
+- Simpler language is better than elegant language when both convey the same meaning
+- The handwritten note must sound like something a real agent would actually write in under 2 minutes
 
-**SCRIPT 3 — Coffee/Zoom Invitation**
-4–6 sentences. Frame around their business growth. Include a curiosity hook specific to ${niche} in ${geo}.
+---
 
-**SCRIPT 4 — Handwritten Note Introduction**
-3–4 sentences. Sent BEFORE any other outreach. Completely personal. Zero sales language. This is the first impression that opens every door. This is the most important script in the entire suite — it's what separates ${n} from every other agent who sends an email.
+SCRIPT 1 — Cold Intro Email
+- 3 subject line options
+- Body under 120 words
+- Focus on the partner's business, not ${n}'s needs
+- Mention one specific value gift from Phase 4
+- End with a low-commitment ask
 
-**SCRIPT 5 — Value-First Follow-Up**
-Brief message after delivering the value gift. Conversational. Plant a seed without making an ask.
+SCRIPT 2 — LinkedIn Connection Message
+- Under 220 characters
+- Reference something real and specific about their work or location
+- No mention of referrals
 
-**SCRIPT 6 — Referral Thank-You Note**
-Warm, personal, non-templated. Sent immediately after receiving a referral. Handwritten if possible.
+SCRIPT 3 — Coffee/Zoom Invitation
+- 4 sentences max
+- Frame around their business, not ${n}'s
+- Include one curiosity hook tied to ${niche} in ${geo}
 
-All scripts sound like ${n} — warm, credible, peer-to-peer. No buzzwords or corporate-speak.
+SCRIPT 4 — Handwritten Note Introduction
+Write one version per Dream 5 partner type (5 versions total), each labeled clearly.
+- 3 sentences max per version
+- Zero sales language
+- Completely personal — sounds like a real person, not a template
+- Must pass the 2-minute test: could ${n} write this by hand in under 2 minutes?
+- This note is sent BEFORE any other outreach. It is the most important script in the suite.
 
-${CLAUDE_NOTE}`
+After the 5 versions, add a short Handwritten Note Protocol table:
+| Step | Action |
+(Cover: write by hand, use quality card stock, address envelope by hand, real stamp, mail 5-7 days before follow-up, do not reference the note in the follow-up email.)
+
+SCRIPT 5 — Value-First Follow-Up
+- 60 words max
+- Sent after delivering the value gift
+- Conversational, no ask
+- Reference the specific value gift delivered
+
+SCRIPT 6 — Referral Thank-You Note
+- 90 words max
+- Handwritten tone
+- Warm and specific — references the actual client or situation, not a generic thank-you
+
+${CONSISTENCY_RULE}
+
+${OUTPUT_RULES}`
     },
+
+    // ── Phase 7 ──────────────────────────────────────────────────────────────
     {
       id: 7,
       title: 'Phase 7: 90-Day Plan, Tracker & 12-Month System',
@@ -208,41 +443,68 @@ ${CLAUDE_NOTE}`
 
 TASK — 90-Day Launch Plan, Relationship Tracker, 12-Month Calendar & Referral Math
 
-**PART A — Week-by-Week 90-Day Sequence**
-For a new Tier 1 referral partner, provide a week-by-week action plan for the first 90 days (13 weeks). For each week:
-— Specific action
-— Channel (handwritten note, email, phone, in-person, social media)
-— Goal of the touchpoint
-— Time investment estimate
+Use ONLY the Dream 5 partner types from Phase 3 and value gifts from Phase 4.
 
-The handwritten note should always be the first touchpoint (Week 1). This is non-negotiable — it's the foundation of the entire sequence.
+---
 
-End Part A with a compact **"Quick Reference Grid"** — a summary table:
+PART A — Week-by-Week 90-Day Sequence
+Build the 90-day plan specifically for the #1 ranked Dream 5 partner — not a generic Tier 1 partner.
+
+For each of the 13 weeks provide:
+- Specific action (tailored to this partner type)
+- Channel (handwritten note, email, phone, in-person, LinkedIn)
+- Goal of the touchpoint
+- Time estimate
+
+Week 1 must be the handwritten note. This is non-negotiable.
+
+DELIVERABLE — one table:
+| Week | Action | Channel | Goal | Time |
+
+Then add a Quick Reference Grid:
 | Week | Channel | Action (5 words max) |
 
-**PART B — Relationship Tracker**
-Design a simple tracker for managing all 5 Dream Partners. Columns:
-partner name, tier, last contact date, next action, relationship stage (Cold / Warm / Active / Advocate), notes, inbound referral count, outbound referrals sent.
+BRANCH POINTS — add two short sections after the grid:
+If no response by Week 4:
+- 2 specific follow-up actions (1 sentence each)
 
-**PART C — 12-Month Quarterly Calendar**
-After a partner becomes active, what does ${n} do each quarter? Create a 4-quarter calendar as a SINGLE SUMMARY TABLE with columns:
+If no response by Week 8:
+- 2 specific fallback actions (1 sentence each)
+
+---
+
+PART B — Relationship Tracker
+A simple table for managing all 5 Dream Partners. Columns:
+| Partner Name | Tier | Last Contact | Next Action | Stage (Cold/Warm/Active/Advocate) | Notes | Referrals In | Referrals Out |
+
+---
+
+PART C — 12-Month Quarterly Calendar
+After a partner becomes active, what does ${n} do each quarter?
+One summary table only — not a separate section per quarter:
 | Quarter | Touchpoints | Value Gift | Personal Gesture | Handwritten Note Moment |
 
-Keep it to one table — not a separate section per quarter.
+---
 
-**PART D — Referral Math**
-Show how the Dream 5 system produces closed deals. Do NOT project income or commissions — agents know their own numbers.
+PART D — Referral Math
+Show how the Dream 5 system produces closed deals. Do NOT project income or commissions.
 
-Show 3 scenarios in a table: conservative (2 active partners), moderate (4 active), strong (all 5). For each:
-— Which Dream 5 partners are active (by name from Phase 3)
-— Referrals per partner per quarter
-— Total annual referrals
-— Close rate (35-45% for warm referrals)
-— Total closed deals from referrals
+Show 3 scenarios using the exact Dream 5 partner names from Phase 3:
+| Scenario | Active Partners (by name) | Referrals per Partner per Quarter | Annual Referrals | Close Rate | Closed Deals |
 
-End with "What ${n} needs to believe" — the honest gut-check on patience and consistency.
+Scenarios: Conservative (2 active partners), Moderate (4 active), Strong (all 5).
 
-${CLAUDE_NOTE}`
+${CONSERVATIVE_ESTIMATES}
+
+End with: WHAT ${n} NEEDS TO BELIEVE
+3 bullet points. Honest gut-check on patience and consistency. Plain spoken.
+
+${CONSISTENCY_RULE}
+
+${PRACTICALITY_OVERRIDE}
+
+${OUTPUT_RULES}`
     }
+
   ];
 }
