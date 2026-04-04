@@ -295,12 +295,19 @@ Using ONLY the top 3 ranked Dream 5 partner types from Phase 3, create one Value
 
 Note: Cards are created for the top 3 only — not all 5. This keeps the output focused on the highest-ROI relationships.
 
-For each of the top 3 partner types use this exact format:
+For each of the top 3 partner types use this EXACT format — no variations:
 
 ### [Partner Type — use exact name from Phase 3]
-- THE GAP: What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
-- THE VALUE GIFT: One specific, low-lift asset ${n} can create or offer — with no ask.
-- THE RECURRING TOUCHPOINT: One realistic quarterly action to keep the relationship warm.
+
+**THE GAP:** What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill? (2-4 sentences)
+
+**THE VALUE GIFT:** One specific, low-lift asset ${n} can create or offer — with no ask. Be specific about what it is, what it contains, and how the partner uses it.
+
+**THE RECURRING TOUCHPOINT:** One realistic quarterly action to keep the relationship warm. (1-2 sentences)
+
+CRITICAL FORMAT RULE: Do NOT use markdown tables or pipe characters (|) anywhere in the value cards.
+Use only the ### header + bold label + paragraph format shown above.
+Tables will break the document export and the agent will not see the content.
 
 PRACTICAL VALUE GIFT RULES — every value gift must:
 - Be creatable by one agent in under 2 hours
