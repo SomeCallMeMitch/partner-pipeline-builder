@@ -36,10 +36,13 @@ Score each partner type using this framework:
 Choose partner types with the highest total score. Do not choose based on novelty, emotional resonance, or creativity.`;
 
 const CONSERVATIVE_ESTIMATES = `CONSERVATIVE ESTIMATE RULE:
-Use real-world conservative referral assumptions. Do not assume more than:
-- 2-4 referrals/month for mortgage brokers or property managers
-- 1-2 referrals/month for financial planners, attorneys, relocation specialists, or lenders
-- 1 referral/quarter for slower relationship-based professionals
+Use real-world conservative referral assumptions. Hard caps per partner per YEAR (not per month):
+- Mortgage broker or property manager: maximum 8-12 referrals per year
+- Financial planner, attorney, CPA, or lender: maximum 4-8 referrals per year
+- Slower relationship-based or Tier 2 professionals: maximum 2-4 referrals per year
+
+Do not convert monthly estimates into annual totals by multiplication — that produces inflated numbers.
+Use the annual caps above as the ceiling, not a starting point.
 
 CLOSE RATE RULE:
 Use a close rate of 35-45% for warm referrals. Do not exceed 45% in any scenario.
@@ -47,8 +50,15 @@ For luxury, high-consideration, or emotionally complex transactions (right-sizin
 downsizing), use 35-40% — these clients have longer decision timelines and higher fallout rates.
 Do not inflate close rates because the referral source is warm. Warm means more likely, not certain.
 
-If uncertain on any number, choose the lower estimate. Conservative numbers are more credible,
-more honest, and more useful to an agent who needs to plan a real business — not chase a projection.`;
+REFERRAL MATH FRAMING RULE:
+The referral math section is an ILLUSTRATION, not a forecast or income projection.
+Label it clearly as a directional model showing what consistent execution could produce over time.
+Use language like "what this system could generate" or "directional model" — never "you will close" or "expected results."
+Add a disclaimer that actual results depend on market conditions, relationship quality, and execution consistency.
+The purpose is to show the agent that the effort is worth it — not to promise an outcome.
+
+If uncertain on any number, choose the lower estimate. Conservative numbers build credibility.
+An agent who exceeds a conservative projection feels successful. An agent who falls short of an aggressive one loses faith in the system.`;
 
 const CONSISTENCY_RULE = `HARD CONSISTENCY RULE:
 - Do not introduce any new partner types in this phase
@@ -521,12 +531,20 @@ One summary table only — not a separate section per quarter:
 ---
 
 PART D — Referral Math
-Show how the Dream 5 system produces closed deals. Do NOT project income or commissions.
+Frame this section clearly as a DIRECTIONAL ILLUSTRATION — not a forecast, not an income projection, not a guarantee. Open with one sentence explaining that actual results depend on relationship quality, market conditions, and execution consistency.
 
 Show 3 scenarios using the exact Dream 5 partner names from Phase 3:
-| Scenario | Active Partners (by name) | Referrals per Partner per Quarter | Annual Referrals | Close Rate | Closed Deals |
+| Scenario | Active Partners (by name) | Referrals per Partner per Year | Annual Referrals | Close Rate | Closed Deals |
 
 Scenarios: Conservative (2 active partners), Moderate (4 active), Strong (all 5).
+
+Use annual referral figures — not monthly or quarterly multiplied out.
+Use the hard annual caps from the Conservative Estimate Rule.
+
+After the table, add 2-3 sentences in plain language:
+- What the conservative scenario means in practice for a solo agent in year one
+- Why these numbers are intentionally understated ("if you exceed this, the system is working better than modeled")
+- One sentence reminding the agent that in a luxury niche, 3-5 closed deals from referrals can represent significant commission volume even at conservative estimates
 
 ${CONSERVATIVE_ESTIMATES}
 
