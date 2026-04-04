@@ -57,6 +57,12 @@ Use language like "what this system could generate" or "directional model" — n
 Add a disclaimer that actual results depend on market conditions, relationship quality, and execution consistency.
 The purpose is to show the agent that the effort is worth it — not to promise an outcome.
 
+HALVING RULE:
+After calculating your referral estimates using the annual caps, cut all referral volume numbers in half.
+This accounts for: relationship ramp-up time in year one, referral dropout, partners who engage slowly,
+and the reality that most partners take 6-12 months to reach full referral velocity.
+The halved number is the honest year-one expectation. Show only the halved number in the table.
+
 If uncertain on any number, choose the lower estimate. Conservative numbers build credibility.
 An agent who exceeds a conservative projection feels successful. An agent who falls short of an aggressive one loses faith in the system.`;
 
@@ -249,12 +255,13 @@ RANKING TASK:
 From the Phase 2 partner list, rank the top 5 partner types by expected referral ROI for a solo agent over the next 12 months in ${geo}.
 
 PHASE 2 CARRY-FORWARD RULE — this is mandatory:
-Your Dream 5 must be drawn directly from the Phase 2 scoring results.
-- The top-scoring partner types from the Phase 2 weighted rubric must appear in your Dream 5
-- Do not introduce partner types that were not listed in the Phase 2 upstream or side-stream tables
-- Do not substitute or rename a Phase 2 partner with a similar-sounding category
-- If the Phase 2 scoring summary ranked a partner highly, that partner must be reflected in the Dream 5 rankings
-- The only valid reason to exclude a top Phase 2 scorer is if the Exclusion Rules below disqualify them — and if so, state why explicitly
+Your Dream 5 must be drawn directly from the Phase 2 upstream and side-stream tables. No exceptions.
+- Every partner in the Dream 5 must have appeared by name in the Phase 2 tables. If it was not in Phase 2, it cannot be in the Dream 5.
+- The top-scoring partner types from the Phase 2 weighted rubric must appear in your Dream 5 rankings
+- Do not introduce partner types that were not explicitly listed in Phase 2 — not by a new name, not by a similar category, not by a broader label
+- A partner type that scored well in Phase 2 and then disappears from the Dream 5 is a violation of this rule — state explicitly why it was excluded if so
+- A partner type that was not in Phase 2 and appears in the Dream 5 is a violation of this rule — no exceptions
+- The only valid reason to exclude a top Phase 2 scorer is if the Exclusion Rules below disqualify them — and if so, state the specific exclusion reason in writing
 
 TIER STRUCTURE:
 - Tier 1 (Direct Upstream): sees client immediately before a transaction trigger
