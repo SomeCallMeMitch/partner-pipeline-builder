@@ -274,9 +274,11 @@ ${OUTPUT_RULES}`
 
 TASK — Value Strategy Cards for All 5 Dream Partners + Value Manifesto
 
-Using ONLY the exact Dream 5 partner types from Phase 3, create one Value Strategy Card for each of the 5 partners.
+Using ONLY the top 3 ranked Dream 5 partner types from Phase 3, create one Value Strategy Card for each of those 3 partners.
 
-For each partner type use this exact format:
+Note: Cards are created for the top 3 only — not all 5. This keeps the output focused on the highest-ROI relationships.
+
+For each of the top 3 partner types use this exact format:
 
 ### [Partner Type — use exact name from Phase 3]
 - THE GAP: What is currently missing from this partner's client service that a ${niche} specialist in ${geo} can fill?
