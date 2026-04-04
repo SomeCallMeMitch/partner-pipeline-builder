@@ -307,7 +307,7 @@ Your output style:
     throw lastError;
   }
 
-  async function callAgent(prompt, maxRetries = 1) {
+  async function callAgent(prompt, phaseId, maxRetries = 1) {  // phaseId accepted but unused — agent uses its own fixed model
     let lastError = null;
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
