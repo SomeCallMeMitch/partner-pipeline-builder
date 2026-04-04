@@ -41,7 +41,14 @@ Use real-world conservative referral assumptions. Do not assume more than:
 - 1-2 referrals/month for financial planners, attorneys, relocation specialists, or lenders
 - 1 referral/quarter for slower relationship-based professionals
 
-If uncertain, choose the lower estimate. Conservative numbers are more credible and more useful to the agent.`;
+CLOSE RATE RULE:
+Use a close rate of 35-45% for warm referrals. Do not exceed 45% in any scenario.
+For luxury, high-consideration, or emotionally complex transactions (right-sizing, estate sales,
+downsizing), use 35-40% — these clients have longer decision timelines and higher fallout rates.
+Do not inflate close rates because the referral source is warm. Warm means more likely, not certain.
+
+If uncertain on any number, choose the lower estimate. Conservative numbers are more credible,
+more honest, and more useful to an agent who needs to plan a real business — not chase a projection.`;
 
 const CONSISTENCY_RULE = `HARD CONSISTENCY RULE:
 - Do not introduce any new partner types in this phase
@@ -249,6 +256,8 @@ RANKING RULES:
 - At least 2 of the top 3 must be Tier 1 direct upstream partners
 - No more than 1 Tier 3 partner in the Dream 5 unless clearly justified with referral volume evidence
 - Use the weighted scoring rubric to justify rankings
+- Any partner scoring 7/10 or below on practicality requires explicit written justification for inclusion — state why no higher-scoring alternative exists
+- Any Tier 2 or Tier 3 partner in the Dream 5 must clearly outperform a Tier 1 alternative on the weighted rubric — if a Tier 1 partner scores comparably, the Tier 1 partner wins
 
 ${SCORING_RUBRIC}
 
@@ -453,7 +462,15 @@ ${OUTPUT_RULES}`
 
 TASK — 90-Day Launch Plan, Relationship Tracker, 12-Month Calendar & Referral Math
 
-Use ONLY the Dream 5 partner types from Phase 3 and value gifts from Phase 4.
+OUTREACH TARGETING RULE:
+When naming specific firms or practices as outreach examples, prefer:
+- Boutique and independent practices over large institutional firms
+- Practices where a solo agent can realistically reach the decision-maker directly
+- Local or regional firms over national brands with heavy gatekeeping
+
+Large marquee firms (e.g. Goldman Sachs, Orrick, Morrison Foerster) may be named as
+directional category examples only — not as primary outreach targets for a solo agent.
+The agent's realistic first call is to a 2-5 person boutique practice, not a 500-person firm.
 
 ---
 
