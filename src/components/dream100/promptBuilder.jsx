@@ -231,6 +231,14 @@ Plain prose, no headers. This is the only narrative section in this phase.
 RANKING TASK:
 From the Phase 2 partner list, rank the top 5 partner types by expected referral ROI for a solo agent over the next 12 months in ${geo}.
 
+PHASE 2 CARRY-FORWARD RULE — this is mandatory:
+Your Dream 5 must be drawn directly from the Phase 2 scoring results.
+- The top-scoring partner types from the Phase 2 weighted rubric must appear in your Dream 5
+- Do not introduce partner types that were not listed in the Phase 2 upstream or side-stream tables
+- Do not substitute or rename a Phase 2 partner with a similar-sounding category
+- If the Phase 2 scoring summary ranked a partner highly, that partner must be reflected in the Dream 5 rankings
+- The only valid reason to exclude a top Phase 2 scorer is if the Exclusion Rules below disqualify them — and if so, state why explicitly
+
 TIER STRUCTURE:
 - Tier 1 (Direct Upstream): sees client immediately before a transaction trigger
 - Tier 2 (Lifestyle & Transition): sees client during a life phase shift
