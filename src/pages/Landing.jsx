@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
 import Dream100Styles from "@/components/dream100/Dream100Styles";
 import HeroSection from "@/components/dream100/HeroSection";
 import StepBar from "@/components/dream100/StepBar";
@@ -8,13 +9,15 @@ import WizardStep2 from "@/components/dream100/WizardStep2";
 import WizardStep3 from "@/components/dream100/WizardStep3";
 import WizardStep4 from "@/components/dream100/WizardStep4";
 import GeneratingCard from "@/components/dream100/GeneratingCard";
+import { buildPrompts } from "@/components/dream100/promptBuilder";
 import { useTheme } from "@/components/ThemeContext";
 
 export default function Landing() {
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const [view, setView] = useState('hero'); // hero | wizard | generating | output
+  const [view, setView] = useState('hero');
   const [wizardStep, setWizardStep] = useState(1);
+  const [submitError, setSubmitError] = useState(null);
   const [formData, setFormData] = useState({
     nicheBase: '',
     customNiche: '',
@@ -24,6 +27,7 @@ export default function Landing() {
     name: '',
     years: '',
     llm: 'ChatGPT',
+    email: '',  // Workstream 2 adds the capture UI for this
   });
 
   const mainRef = useRef(null);
@@ -52,8 +56,9 @@ export default function Landing() {
     scrollToMain();
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setView('generating');
+    setSubmitError(null);
     scrollToMain();
 
     const niche = formData.customNiche
@@ -71,16 +76,34 @@ export default function Landing() {
       llm: formData.llm,
     };
 
-    setTimeout(() => {
-      sessionStorage.setItem("d100_run_formData", JSON.stringify(promptFormData));
-      navigate("/RunBlueprint");
-    }, 1500);
+    const basePrompts = buildPrompts(promptFormData);
+
+    try {
+      const response = await base44.functions.invoke("startGenerationJob", {
+        formData: promptFormData,
+        basePrompts: basePrompts.map(p => ({ id: p.id, title: p.title, prompt: p.prompt })),
+        userEmail: formData.email,
+      });
+
+      const jobId = response.data?.jobId;
+      if (!jobId) {
+        throw new Error(response.data?.error || 'No jobId returned');
+      }
+
+      navigate(`/RunBlueprint?jobId=${jobId}`);
+
+    } catch (err) {
+      console.error('startGenerationJob failed:', err);
+      setSubmitError(err.message || 'Failed to start blueprint generation. Please try again.');
+      setView('wizard');
+      setWizardStep(4);
+    }
   };
 
   const handleRestart = () => {
     setFormData({
       nicheBase: '', customNiche: '', geo: '', client: '',
-      challenge: '', name: '', years: '', llm: 'ChatGPT',
+      challenge: '', name: '', years: '', llm: 'ChatGPT', email: '',
     });
     setView('hero');
     setWizardStep(1);
@@ -91,7 +114,6 @@ export default function Landing() {
     <div style={{ fontFamily: "'Sora', -apple-system, sans-serif", background: 'var(--cream, #FAF8F4)', minHeight: '100vh' }}>
       <Dream100Styles />
 
-      {/* Nav bar — shown during wizard and output, hidden on hero */}
       {view !== 'hero' && (
         <div className="d100-sticky-nav">
           <div className="d100-nav-top">
@@ -124,10 +146,8 @@ export default function Landing() {
         </div>
       )}
 
-      {/* Hero */}
       {view === 'hero' && <HeroSection onStart={startWizard} />}
 
-      {/* Main Content */}
       {view !== 'hero' && view !== 'output' && (
         <main className="d100-main" ref={mainRef}>
           {view === 'wizard' && wizardStep === 1 && (
@@ -140,16 +160,26 @@ export default function Landing() {
             <WizardStep3 formData={formData} onChange={updateForm} onNext={() => goToStep(4)} onBack={() => goToStep(2)} />
           )}
           {view === 'wizard' && wizardStep === 4 && (
-            <WizardStep4 formData={formData} onBack={() => goToStep(3)} onGenerate={handleGenerate} />
+            <>
+              {submitError && (
+                <div style={{
+                  background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10,
+                  padding: '12px 16px', marginBottom: 16, color: '#B91C1C',
+                  fontSize: 14, fontFamily: "'Sora', sans-serif",
+                }}>
+                  {submitError}
+                </div>
+              )}
+              <WizardStep4 formData={formData} onBack={() => goToStep(3)} onGenerate={handleGenerate} />
+            </>
           )}
           {view === 'generating' && <GeneratingCard />}
         </main>
       )}
 
-      {/* Footer — only shown outside hero */}
       {view !== 'hero' && (
         <footer className="d100-site-footer" style={{ fontSize: '1.05rem', lineHeight: 1.7 }}>
-          <p>This free tool is brought to you by <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>{theme.brandName}</a> — {theme.footerText}.</p>
+          <p>This free tool is brought to you by <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>{theme.brandName}</a> -- {theme.footerText}.</p>
           <p style={{ marginTop: 5 }}>&copy; 2025 {theme.brandName} &nbsp;&middot;&nbsp; <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: '1.15rem', fontWeight: 600 }}>Learn More</a></p>
         </footer>
       )}
