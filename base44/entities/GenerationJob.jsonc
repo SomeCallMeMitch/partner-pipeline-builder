@@ -1,0 +1,69 @@
+{
+  "name": "GenerationJob",
+  "description": "Tracks a server-side Dream Partner Blueprint generation run across all 7 phases",
+  "type": "object",
+  "properties": {
+    "formData": {
+      "type": "object",
+      "description": "All wizard inputs: name, nicheBase, niche, geo, client, challenge, years, email",
+      "required": true
+    },
+    "basePrompts": {
+      "type": "array",
+      "description": "Array of { id, title, prompt } for all 7 phases, built by frontend promptBuilder",
+      "required": true
+    },
+    "phaseResults": {
+      "type": "object",
+      "description": "Phase results keyed by phase ID string: { '1': '...', '2': '...', ... }",
+      "required": true,
+      "default": {}
+    },
+    "currentPhase": {
+      "type": "integer",
+      "description": "Which phase is actively running. 0=not started, 1-7=running, 8=complete",
+      "required": true,
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "complete",
+        "failed"
+      ],
+      "description": "Current job status",
+      "required": true,
+      "default": "queued"
+    },
+    "userEmail": {
+      "type": "string",
+      "description": "Email for Resend delivery. Empty string if user skipped email.",
+      "required": false,
+      "default": ""
+    },
+    "completedAt": {
+      "type": "string",
+      "description": "ISO timestamp when status became complete",
+      "required": false
+    },
+    "errorPhase": {
+      "type": "integer",
+      "description": "Which phase failed, if any",
+      "required": false
+    },
+    "errorMessage": {
+      "type": "string",
+      "description": "Error details, if any",
+      "required": false
+    }
+  },
+  "required": [
+    "formData",
+    "basePrompts",
+    "phaseResults",
+    "currentPhase",
+    "status"
+  ]
+}
