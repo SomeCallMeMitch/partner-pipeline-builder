@@ -13,7 +13,7 @@ const PHASE_MODEL_CONFIG = {
 
 const DEFAULT_MODEL_CONFIG = { model: 'claude-haiku-4-5-20251001', max_tokens: 4000 };
 
-// ── System Prompt (duplicated from RunBlueprint.jsx -- authoritative source) ─
+// ── System Prompt ────────────────────────────────────────────────────────────
 const SYSTEM_PROMPT = `You are a Strategic Alliances Director specializing in referral partner systems for high-performing real estate professionals. You use the Dream 100 methodology to build systematic referral networks.
 
 Your output style:
@@ -24,7 +24,7 @@ Your output style:
 - When referencing partner types, use the EXACT types established in earlier phases
 - Deliver exactly the deliverables described in the task`;
 
-// ── Context builders (duplicated from RunBlueprint.jsx) ─────────────────────
+// ── Context builders ─────────────────────────────────────────────────────────
 
 function extractSection(text, keyword, maxLines) {
   if (!text) return null;
@@ -92,7 +92,7 @@ function buildContextForPhase(phaseId, phaseResults) {
     '='.repeat(50);
 }
 
-// ── Main handler ────────────────────────────────────────────────────────────
+// ── Main handler ─────────────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
   try {
@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const db = base44.asServiceRole.entities.GenerationJob;
 
-    // ── Load job ────────────────────────────────────────────────────────────
+    // ── Load job ─────────────────────────────────────────────────────────────
     const jobs = await db.filter({ id: jobId });
     const job = jobs[0];
 
@@ -120,12 +120,23 @@ Deno.serve(async (req) => {
       return Response.json({ success: true, skipped: true });
     }
 
-    // ── Update status to running ────────────────────────────────────────────
-    await db.update(jobId, { status: 'running', currentPhase: phaseId });
+    // ── Record phase start time and update status ─────────────────────────────
+    const phaseStartedAt = new Date().toISOString();
+    const existingTiming = job.phaseTiming || {};
+    const timingWithStart = {
+      ...existingTiming,
+      [String(phaseId)]: { startedAt: phaseStartedAt },
+    };
+
+    await db.update(jobId, {
+      status: 'running',
+      currentPhase: phaseId,
+      phaseTiming: timingWithStart,
+    });
 
     console.log(`[runGenerationPhase] Job ${jobId} starting phase ${phaseId}`);
 
-    // ── Get the prompt for this phase ───────────────────────────────────────
+    // ── Get the prompt for this phase ────────────────────────────────────────
     const basePrompt = job.basePrompts.find(p => p.id === phaseId);
     if (!basePrompt) {
       await db.update(jobId, {
@@ -136,12 +147,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No base prompt for phase ' + phaseId }, { status: 400 });
     }
 
-    // ── Build context from completed phases ─────────────────────────────────
+    // ── Build context from completed phases ──────────────────────────────────
     const phaseResults = job.phaseResults || {};
     const context = buildContextForPhase(phaseId, phaseResults);
     const fullPrompt = basePrompt.prompt + context;
 
-    // ── Call Anthropic API ──────────────────────────────────────────────────
+    // ── Call Anthropic API ───────────────────────────────────────────────────
     const apiKey = Deno.env.get('CLAUDE_THINGY');
     if (!apiKey) {
       await db.update(jobId, {
@@ -203,23 +214,28 @@ Deno.serve(async (req) => {
       return Response.json({ error: apiError.message }, { status: 500 });
     }
 
-    // ── Save result ─────────────────────────────────────────────────────────
+    // ── Save result and record phase completion time ──────────────────────────
     const updatedPhaseResults = { ...phaseResults, [String(phaseId)]: result };
-    await db.update(jobId, { phaseResults: updatedPhaseResults });
+    const timingWithComplete = {
+      ...timingWithStart,
+      [String(phaseId)]: { startedAt: phaseStartedAt, completedAt: new Date().toISOString() },
+    };
+
+    await db.update(jobId, {
+      phaseResults: updatedPhaseResults,
+      phaseTiming: timingWithComplete,
+    });
 
     // ── Chain to next phase or complete ──────────────────────────────────────
     if (phaseId < 7) {
-      // Trigger next phase via SDK (no await -- fire and forget)
       base44.functions.invoke('runGenerationPhase', { jobId, phaseId: phaseId + 1 })
         .catch(err => console.error(`[runGenerationPhase] Phase ${phaseId + 1} trigger failed:`, err));
 
-      // Brief delay to let the request initiate before isolate shuts down
       await new Promise(r => setTimeout(r, 500));
 
       console.log(`[runGenerationPhase] Triggered phase ${phaseId + 1}`);
 
     } else {
-      // Phase 7 complete -- mark job done
       await db.update(jobId, {
         status: 'complete',
         currentPhase: 8,
@@ -228,12 +244,10 @@ Deno.serve(async (req) => {
 
       console.log(`[runGenerationPhase] Job ${jobId} COMPLETE`);
 
-      // Send delivery email if user provided one
       if (job.userEmail) {
         try {
           await sendDeliveryEmail(job.userEmail, jobId);
         } catch (emailErr) {
-          // Email failure is non-fatal -- job is still marked complete
           console.error('[runGenerationPhase] Delivery email failed:', emailErr.message);
         }
       }
@@ -247,7 +261,7 @@ Deno.serve(async (req) => {
   }
 });
 
-// ── Resend email helper ─────────────────────────────────────────────────────
+// ── Resend email helper ───────────────────────────────────────────────────────
 
 async function sendDeliveryEmail(toEmail, jobId) {
   const resendKey = Deno.env.get('RESEND_API_KEY');
