@@ -33,6 +33,10 @@
       "required": true,
       "default": {}
     },
+    "phaseTiming": {
+      "type": "object",
+      "description": "Timing data keyed by phase ID string: { '1': { startedAt, completedAt, durationMs }, ... }"
+    },
     "currentPhase": {
       "type": "integer",
       "description": "Which phase is actively running. 0=not started, 1-7=running, 8=complete",
