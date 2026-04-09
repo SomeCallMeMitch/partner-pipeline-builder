@@ -24,6 +24,64 @@ Your output style:
 - When referencing partner types, use the EXACT types established in earlier phases
 - Deliver exactly the deliverables described in the task`;
 
+// ── Phase output validation ───────────────────────────────────────────────────
+// Called after each phase saves its result. Returns a warning string if the
+// output looks incomplete or broken, otherwise returns null.
+// Non-fatal -- the run continues regardless. Warnings stored in phaseWarnings.
+
+function validatePhaseOutput(phaseId, text) {
+  if (!text || text.length < 200) {
+    return 'Output is unusually short and may be incomplete.';
+  }
+
+  const lower = text.toLowerCase();
+
+  if (phaseId === 2) {
+    const hasTable = text.includes('|') && (lower.includes('upstream') || lower.includes('partner'));
+    const hasScoring = lower.includes('proximity') || lower.includes('practicality') || lower.includes('score');
+    if (!hasTable || !hasScoring) {
+      return 'Phase 2 output may be missing the full partner scoring table. Phase 3 ranking depends on this data.';
+    }
+  }
+
+  if (phaseId === 3) {
+    const refusedToRank = lower.includes('cannot complete') || lower.includes('missing critical') ||
+      lower.includes('i need from you') || lower.includes('what i need to proceed') ||
+      lower.includes('incomplete phase 2') || lower.includes('please provide');
+    if (refusedToRank) {
+      return 'Phase 3 could not build the Dream 5 ranking -- Phase 2 output was incomplete. Downstream phases may lack partner context.';
+    }
+    const hasRanking = text.includes('|') || lower.includes('rank') || lower.includes('dream 5') || lower.includes('tier 1');
+    if (!hasRanking) {
+      return 'Phase 3 output does not appear to contain a partner ranking table. Review before using.';
+    }
+  }
+
+  if (phaseId === 4) {
+    const hasValueCards = lower.includes('value gift') || lower.includes('value strategy') || lower.includes('the gap');
+    if (!hasValueCards) {
+      return 'Phase 4 output may be missing Value Strategy Cards. Check that value gifts are defined.';
+    }
+  }
+
+  if (phaseId === 6) {
+    const hasScript4 = lower.includes('script 4') || lower.includes('handwritten note introduction');
+    if (!hasScript4) {
+      return 'Phase 6 output may be missing Script 4 (handwritten notes). Check the full output.';
+    }
+  }
+
+  if (phaseId === 7) {
+    const has90Day = lower.includes('90-day') || lower.includes('90 day') || lower.includes('week 1');
+    const hasMath = lower.includes('conservative') || lower.includes('referral math');
+    if (!has90Day || !hasMath) {
+      return 'Phase 7 output may be missing the 90-day plan or referral math. Output may have been truncated.';
+    }
+  }
+
+  return null;
+}
+
 // ── Context builders ─────────────────────────────────────────────────────────
 
 function extractSection(text, keyword, maxLines) {
@@ -214,16 +272,27 @@ Deno.serve(async (req) => {
       return Response.json({ error: apiError.message }, { status: 500 });
     }
 
-    // ── Save result and record phase completion time ──────────────────────────
+    // ── Save result, timing, and validation warning ───────────────────────────
     const updatedPhaseResults = { ...phaseResults, [String(phaseId)]: result };
     const timingWithComplete = {
       ...timingWithStart,
       [String(phaseId)]: { startedAt: phaseStartedAt, completedAt: new Date().toISOString() },
     };
 
+    const warning = validatePhaseOutput(phaseId, result);
+    const existingWarnings = job.phaseWarnings || {};
+    const updatedWarnings = warning
+      ? { ...existingWarnings, [String(phaseId)]: warning }
+      : existingWarnings;
+
+    if (warning) {
+      console.warn(`[runGenerationPhase] Phase ${phaseId} validation warning: ${warning}`);
+    }
+
     await db.update(jobId, {
       phaseResults: updatedPhaseResults,
       phaseTiming: timingWithComplete,
+      phaseWarnings: updatedWarnings,
     });
 
     // ── Chain to next phase or complete ──────────────────────────────────────
