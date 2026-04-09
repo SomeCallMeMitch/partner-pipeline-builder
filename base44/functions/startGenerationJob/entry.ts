@@ -28,15 +28,13 @@ Deno.serve(async (req) => {
     console.log(`[startGenerationJob] Created job ${newJob.id} for ${formData.name || 'unknown'}`);
 
     // ── Fire-and-forget: trigger Phase 1 ──────────────────────────────────────
-    const triggerUrl = Deno.env.get('BASE44_API_URL') + '/functions/runGenerationPhase';
+    // Trigger Phase 1 via SDK (no await -- fire and forget)
+    base44.functions.invoke('runGenerationPhase', { jobId: newJob.id, phaseId: 1 })
+      .catch(err => console.error('[startGenerationJob] Phase 1 trigger failed:', err));
 
-    fetch(triggerUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jobId: newJob.id, phaseId: 1 }),
-    }).catch(err => console.error('[startGenerationJob] Phase 1 trigger failed:', err));
+    // Brief delay to let the request initiate before isolate shuts down
+    await new Promise(r => setTimeout(r, 500));
 
-    // ── Return immediately ────────────────────────────────────────────────────
     return Response.json({ success: true, jobId: newJob.id });
 
   } catch (error) {

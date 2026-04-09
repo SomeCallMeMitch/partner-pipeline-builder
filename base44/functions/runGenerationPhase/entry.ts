@@ -209,14 +209,12 @@ Deno.serve(async (req) => {
 
     // ── Chain to next phase or complete ──────────────────────────────────────
     if (phaseId < 7) {
-      // Trigger next phase via self-chaining fetch
-      const triggerUrl = Deno.env.get('BASE44_API_URL') + '/functions/runGenerationPhase';
+      // Trigger next phase via SDK (no await -- fire and forget)
+      base44.functions.invoke('runGenerationPhase', { jobId, phaseId: phaseId + 1 })
+        .catch(err => console.error(`[runGenerationPhase] Phase ${phaseId + 1} trigger failed:`, err));
 
-      fetch(triggerUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jobId, phaseId: phaseId + 1 }),
-      }).catch(err => console.error(`[runGenerationPhase] Phase ${phaseId + 1} trigger failed:`, err));
+      // Brief delay to let the request initiate before isolate shuts down
+      await new Promise(r => setTimeout(r, 500));
 
       console.log(`[runGenerationPhase] Triggered phase ${phaseId + 1}`);
 
