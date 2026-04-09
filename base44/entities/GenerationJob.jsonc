@@ -10,6 +10,20 @@
     },
     "basePrompts": {
       "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          }
+        }
+      },
       "description": "Array of { id, title, prompt } for all 7 phases, built by frontend promptBuilder",
       "required": true
     },
