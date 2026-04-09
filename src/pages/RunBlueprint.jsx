@@ -31,25 +31,27 @@ const C = {
   cream: "#FAF8F4", creamDark: "#F0EBE1",
   text: "#1A1A2E", muted: "#5A6278", border: "#DDD5C5", white: "#FFFFFF",
   success: "#2D6A4F", successBg: "#EAF4EE",
+  warning: "#92400E", warningBg: "#FFFBEB", warningBorder: "#FCD34D",
   error: "#B91C1C", errorBg: "#FEF2F2",
 };
 const font = "'Sora', -apple-system, sans-serif";
 
 // ── PhaseCard ───────────────────────────────────────────────────────────────
-// serverTiming = { startedAt: ISO string, completedAt: ISO string } | null
-// Elapsed for active phases is seeded from serverTiming.startedAt for accuracy.
-// Final time for done phases is computed from server timestamps, not poll guesses.
+// phaseStatus: "pending" | "running" | "done" | "done_warning" | "error"
+// serverTiming: { startedAt: ISO string, completedAt: ISO string } | null
+// warning: string | null -- set when backend validation flagged incomplete output
 
-function PhaseCard({ phase, phaseStatus, result, serverTiming, modelLabel }) {
+function PhaseCard({ phase, phaseStatus, result, serverTiming, modelLabel, warning }) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const intervalRef = useRef(null);
 
-  const isActive  = phaseStatus === "running";
-  const isDone    = phaseStatus === "done";
-  const isError   = phaseStatus === "error";
-  const isPending = !phaseStatus || phaseStatus === "pending";
+  const isActive   = phaseStatus === "running";
+  const isDone     = phaseStatus === "done" || phaseStatus === "done_warning";
+  const isWarning  = phaseStatus === "done_warning";
+  const isError    = phaseStatus === "error";
+  const isPending  = !phaseStatus || phaseStatus === "pending";
 
   // Accurate duration from server timestamps
   const computedFinalTime = (() => {
@@ -61,7 +63,6 @@ function PhaseCard({ phase, phaseStatus, result, serverTiming, modelLabel }) {
 
   useEffect(() => {
     if (isActive) {
-      // Seed from server's recorded start time so elapsed is accurate even after a poll delay
       const seed = serverTiming?.startedAt
         ? Math.max(0, Math.round((Date.now() - new Date(serverTiming.startedAt).getTime()) / 1000))
         : 0;
@@ -80,22 +81,22 @@ function PhaseCard({ phase, phaseStatus, result, serverTiming, modelLabel }) {
 
   const wordCount = isDone && result ? result.split(/\s+/).filter(Boolean).length : 0;
 
-  const borderLeft = isDone ? C.success : isActive ? C.gold : isError ? C.error : C.border;
-  const dotBg = isDone ? C.success : isActive ? C.gold : isError ? C.error : C.creamDark;
-  const dotColor = (isDone || isActive || isError) ? C.white : C.muted;
+  const borderLeft = isWarning ? C.warningBorder : isDone ? C.success : isActive ? C.gold : isError ? C.error : C.border;
+  const dotBg      = isWarning ? "#F59E0B" : isDone ? C.success : isActive ? C.gold : isError ? C.error : C.creamDark;
+  const dotColor   = (isDone || isActive || isError) ? C.white : C.muted;
 
   return (
     <div style={{
       background: C.white, borderRadius: 12,
-      border: `1px solid ${isActive ? C.gold : isDone ? C.border : isError ? "#FECACA" : C.border}`,
+      border: `1px solid ${isWarning ? C.warningBorder : isActive ? C.gold : isError ? "#FECACA" : C.border}`,
       borderLeft: `4px solid ${borderLeft}`, overflow: "hidden",
-      boxShadow: isActive ? "0 0 0 3px rgba(201,151,58,0.15)" : "0 2px 8px rgba(27,42,74,0.05)",
+      boxShadow: isActive ? "0 0 0 3px rgba(201,151,58,0.15)" : isWarning ? "0 0 0 3px rgba(252,211,77,0.2)" : "0 2px 8px rgba(27,42,74,0.05)",
       transition: "all 0.3s", opacity: isPending ? 0.55 : 1,
     }}>
       <div style={{
         padding: "14px 18px", display: "flex", alignItems: "center", gap: 12,
         cursor: isDone ? "pointer" : "default",
-        background: isActive ? "rgba(201,151,58,0.04)" : C.white,
+        background: isWarning ? "#FFFEF5" : isActive ? "rgba(201,151,58,0.04)" : C.white,
       }} onClick={() => isDone && setExpanded(e => !e)}>
         <div style={{
           width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
@@ -103,7 +104,7 @@ function PhaseCard({ phase, phaseStatus, result, serverTiming, modelLabel }) {
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: isDone ? 12 : 11, fontWeight: 700, fontFamily: font,
         }}>
-          {isDone ? "✓" : isError ? "✗" : isActive ? (
+          {isWarning ? "!" : isDone ? "✓" : isError ? "✗" : isActive ? (
             <div style={{ width: 12, height: 12, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "white", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
           ) : phase.id}
         </div>
@@ -111,16 +112,35 @@ function PhaseCard({ phase, phaseStatus, result, serverTiming, modelLabel }) {
           {phase.title}
         </span>
         {isActive && <span style={{ fontSize: 14, color: "#000", fontWeight: 700, fontFamily: "monospace" }}>{fmt(elapsed)}</span>}
-        {isDone && (
+        {isDone && !isWarning && (
           <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>
             Complete{computedFinalTime ? ` · ${fmt(computedFinalTime)}` : ''}
             {wordCount > 0 ? ` · ${wordCount.toLocaleString()} words` : ''}
             {modelLabel ? ` · ${modelLabel}` : ''}
           </span>
         )}
+        {isWarning && (
+          <span style={{ fontSize: 12, color: "#92400E", fontWeight: 700, fontFamily: font }}>
+            Review needed
+            {computedFinalTime ? ` · ${fmt(computedFinalTime)}` : ''}
+            {wordCount > 0 ? ` · ${wordCount.toLocaleString()} words` : ''}
+          </span>
+        )}
         {isError && <span style={{ fontSize: 12, color: C.error, fontWeight: 600, fontFamily: font }}>Failed</span>}
         {isDone && <span style={{ color: C.muted, fontSize: 16, lineHeight: 1, marginLeft: 4, transform: expanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>⌄</span>}
       </div>
+
+      {/* Warning banner -- shown collapsed and expanded */}
+      {isWarning && warning && (
+        <div style={{
+          background: C.warningBg, borderTop: `1px solid ${C.warningBorder}`,
+          padding: "10px 18px", fontSize: 12, color: C.warning,
+          fontFamily: font, lineHeight: 1.5,
+        }}>
+          {warning}
+        </div>
+      )}
+
       {isDone && !expanded && (
         <div onClick={() => setExpanded(true)} style={{ borderTop: `1px solid ${C.border}`, padding: "7px 18px", fontSize: 11, color: C.muted, fontFamily: font, cursor: "pointer", textAlign: "center", background: C.cream }}>
           Click to expand result
@@ -159,18 +179,20 @@ export default function RunBlueprint() {
   const jobId = params.get('jobId');
 
   // ── Derived state from job ──────────────────────────────────────────────
-  const allDone = job?.status === 'complete';
-  const isFailed = job?.status === 'failed';
+  const allDone      = job?.status === 'complete';
+  const isFailed     = job?.status === 'failed';
   const phaseResults = job?.phaseResults || {};
   const currentPhase = job?.currentPhase || 0;
-  const phaseTiming = job?.phaseTiming || {};
+  const phaseTiming  = job?.phaseTiming || {};
+  const phaseWarnings = job?.phaseWarnings || {};
 
   const phases = job?.formData
     ? buildPrompts(job.formData).map(p => ({ id: p.id, title: p.title }))
     : [];
 
   const completedCount = Object.keys(phaseResults).length;
-  const progress = phases.length ? (completedCount / phases.length) * 100 : 0;
+  const warningCount   = Object.keys(phaseWarnings).length;
+  const progress       = phases.length ? (completedCount / phases.length) * 100 : 0;
 
   const displayName = job?.formData
     ? `${job.formData.niche || job.formData.nicheBase || ''} -- ${job.formData.geo || ''}`
@@ -212,7 +234,9 @@ export default function RunBlueprint() {
 
   // ── Phase status helper ─────────────────────────────────────────────────
   const getPhaseStatus = (phaseId) => {
-    if (phaseResults[String(phaseId)]) return "done";
+    if (phaseResults[String(phaseId)]) {
+      return phaseWarnings[String(phaseId)] ? "done_warning" : "done";
+    }
     if (isFailed && job?.errorPhase === phaseId) return "error";
     if (currentPhase === phaseId && !allDone && !isFailed) return "running";
     return "pending";
@@ -302,7 +326,9 @@ export default function RunBlueprint() {
       {allDone && (
         <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyLight})`, padding: "20px 24px", textAlign: "center", borderBottom: `3px solid ${C.gold}` }}>
           <div style={{ maxWidth: 600, margin: "0 auto" }}>
-            <div style={{ fontSize: 20, fontWeight: 800, color: C.white, fontFamily: font, marginBottom: 6 }}>✓ Your Blueprint is Ready!</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: C.white, fontFamily: font, marginBottom: 6 }}>
+              {warningCount > 0 ? `Blueprint complete -- ${warningCount} phase${warningCount > 1 ? 's' : ''} need review` : "✓ Your Blueprint is Ready!"}
+            </div>
             <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", fontFamily: font, marginBottom: 16 }}>
               All {phases.length} phases complete. Download your personalized Dream Partner strategy below.
             </div>
@@ -374,18 +400,23 @@ export default function RunBlueprint() {
                   phaseStatus={getPhaseStatus(phase.id)}
                   result={phaseResults[String(phase.id)]}
                   serverTiming={phaseTiming[String(phase.id)] || null}
-                  modelLabel={getPhaseStatus(phase.id) === 'done' ? getModelLabel(phase.id) : ''}
+                  modelLabel={getPhaseStatus(phase.id) !== 'pending' && getPhaseStatus(phase.id) !== 'running' ? getModelLabel(phase.id) : ''}
+                  warning={phaseWarnings[String(phase.id)] || null}
                 />
               ))}
             </div>
 
             {allDone && (
-              <div style={{ marginTop: 24, background: C.successBg, border: `1.5px solid ${C.success}`, borderRadius: 12, padding: "16px 20px", textAlign: "center" }}>
-                <div style={{ fontSize: 16, fontWeight: 800, color: C.success, fontFamily: font, marginBottom: 4 }}>
-                  ✓ All {phases.length} Phases Complete
+              <div style={{ marginTop: 24, background: warningCount > 0 ? C.warningBg : C.successBg, border: `1.5px solid ${warningCount > 0 ? C.warningBorder : C.success}`, borderRadius: 12, padding: "16px 20px", textAlign: "center" }}>
+                <div style={{ fontSize: 16, fontWeight: 800, color: warningCount > 0 ? C.warning : C.success, fontFamily: font, marginBottom: 4 }}>
+                  {warningCount > 0
+                    ? `${warningCount} phase${warningCount > 1 ? 's' : ''} flagged for review -- expand them above`
+                    : `✓ All ${phases.length} Phases Complete`}
                 </div>
                 <div style={{ fontSize: 13, color: C.muted, fontFamily: font }}>
-                  Scroll up to download your blueprint, or expand any phase above to review.
+                  {warningCount > 0
+                    ? "The report ran to completion but some phases may have incomplete output. Expand the flagged phases to review before using."
+                    : "Scroll up to download your blueprint, or expand any phase above to review."}
                 </div>
               </div>
             )}
@@ -408,36 +439,37 @@ export default function RunBlueprint() {
                 <div style={{ position: "relative", display: "inline-block" }}>
                   <svg width="100" height="100" style={{ transform: "rotate(-90deg)" }}>
                     <circle cx="50" cy="50" r="40" fill="none" stroke={C.creamDark} strokeWidth="8" />
-                    <circle cx="50" cy="50" r="40" fill="none" stroke={C.gold} strokeWidth="8"
+                    <circle cx="50" cy="50" r="40" fill="none" stroke={warningCount > 0 && allDone ? "#F59E0B" : C.gold} strokeWidth="8"
                       strokeDasharray={`${2 * Math.PI * 40}`}
                       strokeDashoffset={`${2 * Math.PI * 40 * (1 - progress / 100)}`}
                       strokeLinecap="round" style={{ transition: "stroke-dashoffset 0.5s ease" }} />
                   </svg>
                   <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-                    <span style={{ fontSize: 22, fontWeight: 800, color: C.navy, fontFamily: font, lineHeight: 1 }}>{allDone ? "✓" : completedCount}</span>
+                    <span style={{ fontSize: 22, fontWeight: 800, color: C.navy, fontFamily: font, lineHeight: 1 }}>{allDone ? (warningCount > 0 ? "!" : "✓") : completedCount}</span>
                     <span style={{ fontSize: 10, color: C.muted, fontFamily: font }}>{allDone ? "Done" : `of ${phases.length}`}</span>
                   </div>
                 </div>
-                <div style={{ fontSize: 17, fontWeight: 700, color: allDone ? C.success : isFailed ? C.error : C.gold, fontFamily: font, marginTop: 8 }}>
-                  {allDone ? "All phases complete" : isFailed ? "Generation stopped" : `Running phase ${currentPhase}...`}
+                <div style={{ fontSize: 17, fontWeight: 700, color: allDone ? (warningCount > 0 ? "#92400E" : C.success) : isFailed ? C.error : C.gold, fontFamily: font, marginTop: 8 }}>
+                  {allDone ? (warningCount > 0 ? `${warningCount} phase${warningCount > 1 ? 's' : ''} need review` : "All phases complete") : isFailed ? "Generation stopped" : `Running phase ${currentPhase}...`}
                 </div>
               </div>
               {phases.map((phase, i) => {
                 const ps = getPhaseStatus(phase.id);
+                const hasWarning = !!phaseWarnings[String(phase.id)];
                 return (
                   <div key={phase.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: i < phases.length - 1 ? `1px solid ${C.border}` : "none" }}>
                     <div style={{
                       width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
-                      background: ps === "done" ? C.success : ps === "error" ? C.error : ps === "running" ? C.gold : C.creamDark,
+                      background: hasWarning ? "#F59E0B" : ps === "done" ? C.success : ps === "error" ? C.error : ps === "running" ? C.gold : C.creamDark,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       fontSize: 10, color: ps !== "pending" ? C.white : C.muted, fontWeight: 700,
                     }}>
-                      {ps === "done" ? "✓" : ps === "error" ? "✗" : ps === "running" ? "…" : ""}
+                      {hasWarning ? "!" : ps === "done" || ps === "done_warning" ? "✓" : ps === "error" ? "✗" : ps === "running" ? "…" : ""}
                     </div>
                     <span style={{ fontSize: 14, fontFamily: font, lineHeight: 1.4, color: ps === "pending" ? C.muted : C.text, fontWeight: ps === "running" ? 700 : 400 }}>
                       {phase.title}
                     </span>
-                    {ps === "done" && (
+                    {(ps === "done" || ps === "done_warning") && !hasWarning && (
                       <span style={{
                         marginLeft: "auto", fontSize: 9, fontWeight: 700, fontFamily: font,
                         padding: "2px 5px", borderRadius: 4,
@@ -445,6 +477,11 @@ export default function RunBlueprint() {
                         color: getModelLabel(phase.id) === 'Haiku' ? C.success : C.gold,
                       }}>
                         {getModelLabel(phase.id)}
+                      </span>
+                    )}
+                    {hasWarning && (
+                      <span style={{ marginLeft: "auto", fontSize: 9, fontWeight: 700, fontFamily: font, padding: "2px 5px", borderRadius: 4, background: "#FEF3C7", color: "#92400E" }}>
+                        Review
                       </span>
                     )}
                   </div>
@@ -464,7 +501,7 @@ export default function RunBlueprint() {
                 Most agents reach out to referral partners by email or phone. Which means every financial advisor, estate attorney, and mortgage broker in your market already has a pile of agent intros in their inbox.
               </p>
               <p style={{ fontSize: 13, color: C.muted, fontFamily: font, lineHeight: 1.7, margin: "0 0 10px" }}>
-                A handwritten note lands differently. Before you've asked for anything, before you've mentioned referrals, before a single follow-up call — a physical note on their desk signals that you're the kind of person who does things others don't bother to do.
+                A handwritten note lands differently. Before you've asked for anything, before you've mentioned referrals, before a single follow-up call -- a physical note on their desk signals that you're the kind of person who does things others don't bother to do.
               </p>
               <p style={{ fontSize: 13, color: C.text, fontFamily: font, lineHeight: 1.7, margin: 0, fontWeight: 600 }}>
                 Your blueprint gives you exactly what to write. Send the note first. Then follow up.
