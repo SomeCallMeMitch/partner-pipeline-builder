@@ -34,9 +34,12 @@ const C = {
 };
 const font = "'Sora', -apple-system, sans-serif";
 
-// ── PhaseCard with timer and model ──────────────────────────────────────────
+// ── PhaseCard ───────────────────────────────────────────────────────────────
+// serverTiming = { startedAt: ISO string, completedAt: ISO string } | null
+// Elapsed for active phases is seeded from serverTiming.startedAt for accuracy.
+// Final time for done phases is computed from server timestamps, not poll guesses.
 
-function PhaseCard({ phase, phaseStatus, result, finalTime, modelLabel }) {
+function PhaseCard({ phase, phaseStatus, result, serverTiming, modelLabel }) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [elapsed, setElapsed] = useState(0);
@@ -47,9 +50,21 @@ function PhaseCard({ phase, phaseStatus, result, finalTime, modelLabel }) {
   const isError   = phaseStatus === "error";
   const isPending = !phaseStatus || phaseStatus === "pending";
 
+  // Accurate duration from server timestamps
+  const computedFinalTime = (() => {
+    if (!serverTiming?.completedAt || !serverTiming?.startedAt) return null;
+    return Math.round(
+      (new Date(serverTiming.completedAt).getTime() - new Date(serverTiming.startedAt).getTime()) / 1000
+    );
+  })();
+
   useEffect(() => {
     if (isActive) {
-      setElapsed(0);
+      // Seed from server's recorded start time so elapsed is accurate even after a poll delay
+      const seed = serverTiming?.startedAt
+        ? Math.max(0, Math.round((Date.now() - new Date(serverTiming.startedAt).getTime()) / 1000))
+        : 0;
+      setElapsed(seed);
       intervalRef.current = setInterval(() => setElapsed(s => s + 1), 1000);
     } else {
       clearInterval(intervalRef.current);
@@ -97,7 +112,7 @@ function PhaseCard({ phase, phaseStatus, result, finalTime, modelLabel }) {
         {isActive && <span style={{ fontSize: 14, color: "#000", fontWeight: 700, fontFamily: "monospace" }}>{fmt(elapsed)}</span>}
         {isDone && (
           <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>
-            Complete{finalTime ? ` · ${fmt(finalTime)}` : ''}
+            Complete{computedFinalTime ? ` · ${fmt(computedFinalTime)}` : ''}
             {wordCount > 0 ? ` · ${wordCount.toLocaleString()} words` : ''}
             {modelLabel ? ` · ${modelLabel}` : ''}
           </span>
@@ -130,18 +145,13 @@ function PhaseCard({ phase, phaseStatus, result, finalTime, modelLabel }) {
 export default function RunBlueprint() {
   const navigate = useNavigate();
 
-  // ── State ───────────────────────────────────────────────────────────────
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [pollError, setPollError] = useState(null);
   const [exportingWord, setExportingWord] = useState(false);
 
-  // Timer tracking: { phaseId: { startedAt: timestamp, finalTime: seconds } }
-  const [phaseTimes, setPhaseTimes] = useState({});
-
   const pollRef = useRef(null);
   const resultsRef = useRef({});
-  const prevPhaseRef = useRef(null);
 
   // ── Read jobId from URL ─────────────────────────────────────────────────
   const params = new URLSearchParams(window.location.search);
@@ -152,6 +162,7 @@ export default function RunBlueprint() {
   const isFailed = job?.status === 'failed';
   const phaseResults = job?.phaseResults || {};
   const currentPhase = job?.currentPhase || 0;
+  const phaseTiming = job?.phaseTiming || {};
 
   const phases = job?.formData
     ? buildPrompts(job.formData).map(p => ({ id: p.id, title: p.title }))
@@ -164,54 +175,6 @@ export default function RunBlueprint() {
     ? `${job.formData.niche || job.formData.nicheBase || ''} -- ${job.formData.geo || ''}`
     : '';
 
-  // ── Track phase transitions for timing ────────────────────────────────
-  useEffect(() => {
-    if (!currentPhase || currentPhase === prevPhaseRef.current) return;
-
-    const now = Date.now();
-
-    setPhaseTimes(prev => {
-      const updated = { ...prev };
-
-      // If the previous phase was running, finalize its time
-      if (prevPhaseRef.current && updated[prevPhaseRef.current]?.startedAt && !updated[prevPhaseRef.current]?.finalTime) {
-        updated[prevPhaseRef.current] = {
-          ...updated[prevPhaseRef.current],
-          finalTime: Math.round((now - updated[prevPhaseRef.current].startedAt) / 1000),
-        };
-      }
-
-      // Start timing the new phase (if it's 1-7, not 8 which means complete)
-      if (currentPhase >= 1 && currentPhase <= 7) {
-        if (!updated[currentPhase]?.startedAt) {
-          updated[currentPhase] = { startedAt: now };
-        }
-      }
-
-      return updated;
-    });
-
-    prevPhaseRef.current = currentPhase;
-  }, [currentPhase]);
-
-  // When job completes, finalize the last running phase timer
-  useEffect(() => {
-    if (!allDone && !isFailed) return;
-
-    setPhaseTimes(prev => {
-      const updated = { ...prev };
-      for (const key of Object.keys(updated)) {
-        if (updated[key].startedAt && !updated[key].finalTime) {
-          updated[key] = {
-            ...updated[key],
-            finalTime: Math.round((Date.now() - updated[key].startedAt) / 1000),
-          };
-        }
-      }
-      return updated;
-    });
-  }, [allDone, isFailed]);
-
   // ── Polling ─────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!jobId) {
@@ -223,19 +186,14 @@ export default function RunBlueprint() {
       try {
         const response = await base44.functions.invoke("getGenerationJobStatus", { jobId });
         const data = response.data;
-        if (data.error) {
-          setPollError(data.error);
-          return;
-        }
+        if (data.error) { setPollError(data.error); return; }
         setJob(data);
         resultsRef.current = data.phaseResults || {};
         setPollError(null);
-
         if (data.status === 'complete' || data.status === 'failed') {
           clearInterval(pollRef.current);
           pollRef.current = null;
         }
-
         if (loading) setLoading(false);
       } catch (err) {
         console.error('Poll error:', err);
@@ -246,10 +204,7 @@ export default function RunBlueprint() {
 
     poll();
     pollRef.current = setInterval(poll, 5000);
-
-    return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
-    };
+    return () => { if (pollRef.current) clearInterval(pollRef.current); };
   }, [jobId]);
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
@@ -308,7 +263,7 @@ export default function RunBlueprint() {
     a.click(); URL.revokeObjectURL(url);
   }
 
-  // ── Loading state ─────────────────────────────────────────────────────
+  // ── Loading / error states ────────────────────────────────────────────
   if (loading) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: C.cream }}>
       <div style={{ width: 32, height: 32, border: `3px solid ${C.gold}`, borderTopColor: "transparent", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
@@ -342,7 +297,7 @@ export default function RunBlueprint() {
         }
       `}</style>
 
-      {/* COMPLETION DOWNLOAD BANNER */}
+      {/* COMPLETION BANNER */}
       {allDone && (
         <div style={{ background: `linear-gradient(135deg, ${C.navy}, ${C.navyLight})`, padding: "20px 24px", textAlign: "center", borderBottom: `3px solid ${C.gold}` }}>
           <div style={{ maxWidth: 600, margin: "0 auto" }}>
@@ -391,6 +346,7 @@ export default function RunBlueprint() {
       {/* MAIN CONTENT */}
       <div className="bp-main">
         <div className="bp-grid">
+
           {/* LEFT: Phase cards */}
           <div>
             <div style={{ background: C.navy, borderRadius: 14, padding: "20px 24px", marginBottom: 24, position: "relative", overflow: "hidden" }}>
@@ -416,7 +372,7 @@ export default function RunBlueprint() {
                   phase={phase}
                   phaseStatus={getPhaseStatus(phase.id)}
                   result={phaseResults[String(phase.id)]}
-                  finalTime={phaseTimes[phase.id]?.finalTime || null}
+                  serverTiming={phaseTiming[String(phase.id)] || null}
                   modelLabel={getPhaseStatus(phase.id) === 'done' ? getModelLabel(phase.id) : ''}
                 />
               ))}
@@ -436,6 +392,8 @@ export default function RunBlueprint() {
 
           {/* RIGHT: Sidebar */}
           <div className="bp-sidebar">
+
+            {/* Progress tracker */}
             <div style={{ background: C.white, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px", boxShadow: "0 2px 12px rgba(27,42,74,0.06)" }}>
               <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 14, fontFamily: font }}>Run Progress</div>
               <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -486,16 +444,42 @@ export default function RunBlueprint() {
               })}
             </div>
 
-            <div style={{ background: C.navy, borderRadius: 14, padding: "18px 20px", position: "relative", overflow: "hidden" }}>
+            {/* Educational block 1: Why handwritten notes */}
+            <div style={{ background: C.white, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px", boxShadow: "0 2px 12px rgba(27,42,74,0.06)" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.gold, marginBottom: 10, fontFamily: font }}>
+                While you wait
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: C.navy, fontFamily: font, marginBottom: 10, lineHeight: 1.4 }}>
+                The one move that cuts through the noise
+              </div>
+              <p style={{ fontSize: 13, color: C.muted, fontFamily: font, lineHeight: 1.7, margin: "0 0 10px" }}>
+                Most agents reach out to referral partners by email or phone. Which means every financial advisor, estate attorney, and mortgage broker in your market already has a pile of agent intros in their inbox.
+              </p>
+              <p style={{ fontSize: 13, color: C.muted, fontFamily: font, lineHeight: 1.7, margin: "0 0 10px" }}>
+                A handwritten note lands differently. Before you've asked for anything, before you've mentioned referrals, before a single follow-up call — a physical note on their desk signals that you're the kind of person who does things others don't bother to do.
+              </p>
+              <p style={{ fontSize: 13, color: C.text, fontFamily: font, lineHeight: 1.7, margin: 0, fontWeight: 600 }}>
+                Your blueprint gives you exactly what to write. Send the note first. Then follow up.
+              </p>
+            </div>
+
+            {/* Educational block 2: NurturInk soft intro */}
+            <div style={{ background: C.navy, borderRadius: 14, padding: "20px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "radial-gradient(circle, rgba(201,151,58,0.2), transparent 65%)" }} />
-              <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 8, fontFamily: font, position: "relative" }}>While you wait...</div>
-              <p style={{ fontSize: 15, color: "rgba(255,255,255,0.7)", fontFamily: font, lineHeight: 1.6, margin: "0 0 12px", position: "relative" }}>
-                When your blueprint is ready, send a handwritten card to your top 3 partners <em style={{ color: C.white }}>before</em> you email or call. It's the move that gets you remembered.
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 10, fontFamily: font, position: "relative" }}>
+                The tedious part
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: C.white, fontFamily: font, marginBottom: 10, lineHeight: 1.4, position: "relative" }}>
+                Writing 20-30 individual notes by hand takes more time than most agents stick with
+              </div>
+              <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", fontFamily: font, lineHeight: 1.7, margin: "0 0 16px", position: "relative" }}>
+                NurturInk automates it. Real handwritten notes, real pen on paper, mailed to your list. From $2.50 a card including postage.
               </p>
               <a href="https://nurturink.com" target="_blank" rel="noreferrer" style={{ display: "block", textAlign: "center", background: C.gold, color: C.navy, textDecoration: "none", fontWeight: 800, fontSize: 15, padding: "10px 14px", borderRadius: 8, fontFamily: font, position: "relative" }}>
                 See How NurturInk Works →
               </a>
             </div>
+
           </div>
         </div>
       </div>
