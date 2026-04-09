@@ -6,6 +6,7 @@
 // the RE Clone receiver endpoint will be wired in when that side is built.
 
 import React, { useState, useMemo } from "react";
+import { Mail } from "lucide-react";
 import { parsePhase6Notes } from "@/utils/parsePhase6";
 
 const C = {
@@ -111,7 +112,7 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
   if (submitted) {
     return (
       <div style={ctaWrapStyle}>
-        <div style={{ fontSize: 28, marginBottom: 10 }}>✉️</div>
+        <Mail size={28} color="#2D6A4F" style={{ marginBottom: 10 }} />
         <div style={{ ...headlineStyle, color: C.success }}>You're on the list</div>
         <p style={bodyStyle}>
           We're building the direct import feature now. When it's ready, we'll send a note to <strong>{email}</strong> so you can load these templates straight into NurturInk with one click.
