@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 // ── Per-Phase Model Config ──────────────────────────────────────────────────
 const PHASE_MODEL_CONFIG = {
   1: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
-  2: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
+  2: { model: 'claude-haiku-4-5-20251001', max_tokens: 5000 },
   3: { model: 'claude-haiku-4-5-20251001', max_tokens: 3000 },
   4: { model: 'claude-sonnet-4-6',         max_tokens: 10000 },
   5: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
