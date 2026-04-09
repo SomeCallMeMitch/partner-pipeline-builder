@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { buildPrompts } from "@/components/dream100/promptBuilder";
+import PartnerNotesCTA from "@/components/dream100/PartnerNotesCTA";
 
 // ── NurturInk RE Clone URL (Workstream 3 uses this for the CTA redirect) ────
 const NURTURINK_RE_URL = 'https://nurturink-for-real-estate-mortgage.base44.app';
@@ -387,6 +388,13 @@ export default function RunBlueprint() {
                   Scroll up to download your blueprint, or expand any phase above to review.
                 </div>
               </div>
+            )}
+
+            {allDone && (
+              <PartnerNotesCTA
+                phase6Text={phaseResults['6'] || null}
+                formData={job?.formData || null}
+              />
             )}
           </div>
 
