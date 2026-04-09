@@ -52,26 +52,6 @@ export const CHALLENGES = [
   { value: "I don't know which partner types are most valuable for my specific niche", label: "Don't know which partners to prioritize" },
 ];
 
-export function detectContradiction(nicheBase, client) {
-  if (!nicheBase || !client) return null;
-  const c = client.toLowerCase();
-  const n = nicheBase.toLowerCase();
-
-  if (n.includes('luxury') && (c.includes('first-time') || c.includes('fha') || c.includes('down payment'))) {
-    return "Your niche is Luxury & High-End but your ideal client sounds like a first-time or FHA buyer. These are very different markets — your referral partner strategy will be built around your niche selection.";
-  }
-  if (n.includes('first-time') && (c.includes('$1m') || c.includes('luxury') || c.includes('estate') || c.includes('high-end'))) {
-    return "Your niche is First-Time Homebuyers but your ideal client description mentions luxury or high-end buyers. These markets typically need different referral partners.";
-  }
-  if (n.includes('investor') && (c.includes('first-time') || c.includes('starter home') || c.includes('fha'))) {
-    return "Your niche is Investors & Fix-and-Flip but your client description sounds more like a first-time buyer. These need very different partner strategies.";
-  }
-  if (n.includes('military') && !c.includes('military') && !c.includes('va') && !c.includes('pcs') && !c.includes('veteran') && c.length > 40) {
-    return "Your niche is Military Relocation but your ideal client description doesn't mention military, VA loans, or PCS. Consider whether your client profile matches your niche.";
-  }
-  return null;
-}
-
 export const YEARS_OPTIONS = [
   { value: "", label: "Prefer not to say" },
   { value: "I'm in my first 2 years and building my referral base from scratch", label: "Under 2 years" },
@@ -79,3 +59,33 @@ export const YEARS_OPTIONS = [
   { value: "I have 6–10 years of experience and am refining my referral approach", label: "6–10 years" },
   { value: "I have over 10 years of experience and want to systematize what I've been doing informally", label: "10+ years" },
 ];
+
+// Detects an obvious mismatch between the selected niche and the ideal client description.
+// Returns a warning string if a contradiction is found, otherwise null.
+export function detectContradiction(nicheBase, clientText) {
+  if (!nicheBase || !clientText || clientText.trim().length < 20) return null;
+  const text = clientText.toLowerCase();
+
+  if (nicheBase === 'First-Time Homebuyers') {
+    const luxurySignals = ['luxury', '$1m', '$2m', '$3m', 'million', 'high-net', 'estate', 'empty nester', 'downsiz', 'wealthy', 'affluent', 'gated'];
+    if (luxurySignals.some(k => text.includes(k))) {
+      return "Your niche is set to First-Time Homebuyers, but your ideal client description sounds more like a luxury or downsizing buyer. The blueprint will try to serve both audiences, which can dilute your partner recommendations. You may want to go back and select the Luxury or Empty Nesters niche instead.";
+    }
+  }
+
+  if (nicheBase === 'Luxury & High-End Residential') {
+    const firstTimeSignals = ['first-time', 'first time', 'fha', 'down payment assistance', 'starter home'];
+    if (firstTimeSignals.some(k => text.includes(k))) {
+      return "Your niche is set to Luxury & High-End Residential, but your ideal client description sounds more like first-time buyers. This may produce mismatched partner recommendations.";
+    }
+  }
+
+  if (nicheBase === 'Empty Nesters & Downsizing') {
+    const firstTimeSignals = ['first-time', 'first time', 'fha', 'young professional', 'starter home'];
+    if (firstTimeSignals.some(k => text.includes(k))) {
+      return "Your niche is set to Empty Nesters & Downsizing, but your ideal client description sounds more like a first-time or younger buyer. Consider switching to the First-Time Homebuyers niche.";
+    }
+  }
+
+  return null;
+}
