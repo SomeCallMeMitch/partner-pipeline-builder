@@ -6,6 +6,23 @@ import { buildPrompts } from "@/components/dream100/promptBuilder";
 // ── NurturInk RE Clone URL (Workstream 3 uses this for the CTA redirect) ────
 const NURTURINK_RE_URL = 'https://nurturink-for-real-estate-mortgage.base44.app';
 
+// ── Known model config (matches backend -- used for display only) ────────────
+const PHASE_MODEL_CONFIG = {
+  1: { model: 'claude-haiku-4-5-20251001' },
+  2: { model: 'claude-haiku-4-5-20251001' },
+  3: { model: 'claude-haiku-4-5-20251001' },
+  4: { model: 'claude-sonnet-4-6' },
+  5: { model: 'claude-haiku-4-5-20251001' },
+  6: { model: 'claude-sonnet-4-6' },
+  7: { model: 'claude-haiku-4-5-20251001' },
+};
+
+const getModelLabel = (phaseId) => {
+  const config = PHASE_MODEL_CONFIG[phaseId];
+  if (!config) return '';
+  return config.model.includes('haiku') ? 'Haiku' : 'Sonnet';
+};
+
 // ── Design tokens ───────────────────────────────────────────────────────────
 const C = {
   navy: "#1B2A4A", navyLight: "#243659", navyDeep: "#111D33",
@@ -17,9 +34,9 @@ const C = {
 };
 const font = "'Sora', -apple-system, sans-serif";
 
-// ── PhaseCard ───────────────────────────────────────────────────────────────
+// ── PhaseCard with timer and model ──────────────────────────────────────────
 
-function PhaseCard({ phase, phaseStatus, result }) {
+function PhaseCard({ phase, phaseStatus, result, finalTime, modelLabel }) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [elapsed, setElapsed] = useState(0);
@@ -44,6 +61,8 @@ function PhaseCard({ phase, phaseStatus, result }) {
     const m = Math.floor(s / 60), sec = s % 60;
     return `${m}:${String(sec).padStart(2, "0")}`;
   };
+
+  const wordCount = isDone && result ? result.split(/\s+/).filter(Boolean).length : 0;
 
   const borderLeft = isDone ? C.success : isActive ? C.gold : isError ? C.error : C.border;
   const dotBg = isDone ? C.success : isActive ? C.gold : isError ? C.error : C.creamDark;
@@ -76,7 +95,13 @@ function PhaseCard({ phase, phaseStatus, result }) {
           {phase.title}
         </span>
         {isActive && <span style={{ fontSize: 14, color: "#000", fontWeight: 700, fontFamily: "monospace" }}>{fmt(elapsed)}</span>}
-        {isDone && <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>Complete</span>}
+        {isDone && (
+          <span style={{ fontSize: 12, color: C.success, fontWeight: 600, fontFamily: font }}>
+            Complete{finalTime ? ` · ${fmt(finalTime)}` : ''}
+            {wordCount > 0 ? ` · ${wordCount.toLocaleString()} words` : ''}
+            {modelLabel ? ` · ${modelLabel}` : ''}
+          </span>
+        )}
         {isError && <span style={{ fontSize: 12, color: C.error, fontWeight: 600, fontFamily: font }}>Failed</span>}
         {isDone && <span style={{ color: C.muted, fontSize: 16, lineHeight: 1, marginLeft: 4, transform: expanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>⌄</span>}
       </div>
@@ -111,8 +136,12 @@ export default function RunBlueprint() {
   const [pollError, setPollError] = useState(null);
   const [exportingWord, setExportingWord] = useState(false);
 
+  // Timer tracking: { phaseId: { startedAt: timestamp, finalTime: seconds } }
+  const [phaseTimes, setPhaseTimes] = useState({});
+
   const pollRef = useRef(null);
   const resultsRef = useRef({});
+  const prevPhaseRef = useRef(null);
 
   // ── Read jobId from URL ─────────────────────────────────────────────────
   const params = new URLSearchParams(window.location.search);
@@ -124,7 +153,6 @@ export default function RunBlueprint() {
   const phaseResults = job?.phaseResults || {};
   const currentPhase = job?.currentPhase || 0;
 
-  // Rebuild phases array for display using the stored formData
   const phases = job?.formData
     ? buildPrompts(job.formData).map(p => ({ id: p.id, title: p.title }))
     : [];
@@ -135,6 +163,54 @@ export default function RunBlueprint() {
   const displayName = job?.formData
     ? `${job.formData.niche || job.formData.nicheBase || ''} -- ${job.formData.geo || ''}`
     : '';
+
+  // ── Track phase transitions for timing ────────────────────────────────
+  useEffect(() => {
+    if (!currentPhase || currentPhase === prevPhaseRef.current) return;
+
+    const now = Date.now();
+
+    setPhaseTimes(prev => {
+      const updated = { ...prev };
+
+      // If the previous phase was running, finalize its time
+      if (prevPhaseRef.current && updated[prevPhaseRef.current]?.startedAt && !updated[prevPhaseRef.current]?.finalTime) {
+        updated[prevPhaseRef.current] = {
+          ...updated[prevPhaseRef.current],
+          finalTime: Math.round((now - updated[prevPhaseRef.current].startedAt) / 1000),
+        };
+      }
+
+      // Start timing the new phase (if it's 1-7, not 8 which means complete)
+      if (currentPhase >= 1 && currentPhase <= 7) {
+        if (!updated[currentPhase]?.startedAt) {
+          updated[currentPhase] = { startedAt: now };
+        }
+      }
+
+      return updated;
+    });
+
+    prevPhaseRef.current = currentPhase;
+  }, [currentPhase]);
+
+  // When job completes, finalize the last running phase timer
+  useEffect(() => {
+    if (!allDone && !isFailed) return;
+
+    setPhaseTimes(prev => {
+      const updated = { ...prev };
+      for (const key of Object.keys(updated)) {
+        if (updated[key].startedAt && !updated[key].finalTime) {
+          updated[key] = {
+            ...updated[key],
+            finalTime: Math.round((Date.now() - updated[key].startedAt) / 1000),
+          };
+        }
+      }
+      return updated;
+    });
+  }, [allDone, isFailed]);
 
   // ── Polling ─────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -168,10 +244,7 @@ export default function RunBlueprint() {
       }
     };
 
-    // Initial fetch
     poll();
-
-    // Start polling every 5 seconds
     pollRef.current = setInterval(poll, 5000);
 
     return () => {
@@ -242,7 +315,6 @@ export default function RunBlueprint() {
     </div>
   );
 
-  // ── Error state ───────────────────────────────────────────────────────
   if (pollError && !job) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: C.cream, fontFamily: font, flexDirection: "column", gap: 16, padding: 24 }}>
       <div style={{ fontSize: 18, fontWeight: 700, color: C.error }}>Unable to load blueprint</div>
@@ -321,7 +393,6 @@ export default function RunBlueprint() {
         <div className="bp-grid">
           {/* LEFT: Phase cards */}
           <div>
-            {/* Info header */}
             <div style={{ background: C.navy, borderRadius: 14, padding: "20px 24px", marginBottom: 24, position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -30, right: -30, width: 160, height: 160, background: "radial-gradient(circle, rgba(201,151,58,0.12), transparent 65%)", pointerEvents: "none" }} />
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 6, fontFamily: font }}>
@@ -338,7 +409,6 @@ export default function RunBlueprint() {
               )}
             </div>
 
-            {/* Phase cards */}
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {phases.map(phase => (
                 <PhaseCard
@@ -346,11 +416,12 @@ export default function RunBlueprint() {
                   phase={phase}
                   phaseStatus={getPhaseStatus(phase.id)}
                   result={phaseResults[String(phase.id)]}
+                  finalTime={phaseTimes[phase.id]?.finalTime || null}
+                  modelLabel={getPhaseStatus(phase.id) === 'done' ? getModelLabel(phase.id) : ''}
                 />
               ))}
             </div>
 
-            {/* Completion footer */}
             {allDone && (
               <div style={{ marginTop: 24, background: C.successBg, border: `1.5px solid ${C.success}`, borderRadius: 12, padding: "16px 20px", textAlign: "center" }}>
                 <div style={{ fontSize: 16, fontWeight: 800, color: C.success, fontFamily: font, marginBottom: 4 }}>
@@ -365,7 +436,6 @@ export default function RunBlueprint() {
 
           {/* RIGHT: Sidebar */}
           <div className="bp-sidebar">
-            {/* Progress ring */}
             <div style={{ background: C.white, borderRadius: 14, border: `1px solid ${C.border}`, padding: "20px", boxShadow: "0 2px 12px rgba(27,42,74,0.06)" }}>
               <div style={{ fontSize: 14, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: C.muted, marginBottom: 14, fontFamily: font }}>Run Progress</div>
               <div style={{ textAlign: "center", marginBottom: 16 }}>
@@ -386,7 +456,6 @@ export default function RunBlueprint() {
                   {allDone ? "All phases complete" : isFailed ? "Generation stopped" : `Running phase ${currentPhase}...`}
                 </div>
               </div>
-              {/* Phase list */}
               {phases.map((phase, i) => {
                 const ps = getPhaseStatus(phase.id);
                 return (
@@ -402,12 +471,21 @@ export default function RunBlueprint() {
                     <span style={{ fontSize: 14, fontFamily: font, lineHeight: 1.4, color: ps === "pending" ? C.muted : C.text, fontWeight: ps === "running" ? 700 : 400 }}>
                       {phase.title}
                     </span>
+                    {ps === "done" && (
+                      <span style={{
+                        marginLeft: "auto", fontSize: 9, fontWeight: 700, fontFamily: font,
+                        padding: "2px 5px", borderRadius: 4,
+                        background: getModelLabel(phase.id) === 'Haiku' ? "rgba(45,106,79,0.12)" : "rgba(201,151,58,0.15)",
+                        color: getModelLabel(phase.id) === 'Haiku' ? C.success : C.gold,
+                      }}>
+                        {getModelLabel(phase.id)}
+                      </span>
+                    )}
                   </div>
                 );
               })}
             </div>
 
-            {/* NurturInk soft promo */}
             <div style={{ background: C.navy, borderRadius: 14, padding: "18px 20px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -20, right: -20, width: 100, height: 100, background: "radial-gradient(circle, rgba(201,151,58,0.2), transparent 65%)" }} />
               <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 8, fontFamily: font, position: "relative" }}>While you wait...</div>
