@@ -1,20 +1,24 @@
 import React, { useState } from "react";
-import { CHALLENGES } from "./nicheData";
+import { CHALLENGES, detectContradiction } from "./nicheData";
 import IdealClientModal from "./IdealClientModal";
+import NicheMismatchWarning from "./NicheMismatchWarning";
 
 export default function WizardStep2({ formData, onChange, onNext, onBack }) {
   const [errors, setErrors] = useState({});
   const [showClientModal, setShowClientModal] = useState(false);
+  const [contradictionWarning, setContradictionWarning] = useState(null);
 
   const handleNext = () => {
     const newErrors = {};
     if (!(formData.geo || '').trim()) newErrors.geo = true;
     if (!formData.challenge) newErrors.challenge = true;
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
+    if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
     setErrors({});
+
+    const warning = detectContradiction(formData.nicheBase, formData.client);
+    if (warning && !contradictionWarning) { setContradictionWarning(warning); return; }
+
+    setContradictionWarning(null);
     onNext();
   };
 
@@ -43,17 +47,7 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
           <button
             type="button"
             onClick={() => setShowClientModal(true)}
-            style={{
-              marginLeft: 8,
-              fontSize: 12,
-              color: 'var(--ni-gold)',
-              fontWeight: 600,
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              fontFamily: "'Sora', sans-serif"
-            }}
+            style={{ marginLeft: 8, fontSize: 12, color: 'var(--ni-gold)', fontWeight: 600, background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontFamily: "'Sora', sans-serif" }}
           >
             See examples
           </button>
@@ -61,11 +55,19 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
         <textarea
           className="d100-textarea"
           value={formData.client || ''}
-          onChange={(e) => onChange({ client: e.target.value })}
+          onChange={(e) => { onChange({ client: e.target.value }); setContradictionWarning(null); }}
           placeholder="e.g., Couples 45–65 with $1M+ in equity looking to downsize to a maintenance-free condo or 55+ community near good healthcare..."
         />
         <p className="d100-field-hint">Demographics, lifestyle, financial situation, motivations — anything that makes them distinct from the average buyer or seller.</p>
       </div>
+
+      {contradictionWarning && (
+        <NicheMismatchWarning
+          message={contradictionWarning}
+          onGoBack={onBack}
+          onContinue={() => { setContradictionWarning(null); onNext(); }}
+        />
+      )}
 
       <div className={`d100-field-group ${errors.challenge ? 'd100-has-error' : ''}`}>
         <div className="d100-field-label">Your biggest referral challenge right now</div>
