@@ -1,4 +1,3 @@
-
 export const NICHES = [
   { value: 'Luxury & High-End Residential', icon: '🏛️', title: 'Luxury & High-End', desc: '$1M+ properties' },
   { value: 'First-Time Homebuyers', icon: '🔑', title: 'First-Time Buyers', desc: 'FHA, down payment programs' },
@@ -52,6 +51,26 @@ export const CHALLENGES = [
   { value: "I've tried reaching out to partners but haven't gotten traction or real responses", label: "Reached out but can't get traction" },
   { value: "I don't know which partner types are most valuable for my specific niche", label: "Don't know which partners to prioritize" },
 ];
+
+export function detectContradiction(nicheBase, client) {
+  if (!nicheBase || !client) return null;
+  const c = client.toLowerCase();
+  const n = nicheBase.toLowerCase();
+
+  if (n.includes('luxury') && (c.includes('first-time') || c.includes('fha') || c.includes('down payment'))) {
+    return "Your niche is Luxury & High-End but your ideal client sounds like a first-time or FHA buyer. These are very different markets — your referral partner strategy will be built around your niche selection.";
+  }
+  if (n.includes('first-time') && (c.includes('$1m') || c.includes('luxury') || c.includes('estate') || c.includes('high-end'))) {
+    return "Your niche is First-Time Homebuyers but your ideal client description mentions luxury or high-end buyers. These markets typically need different referral partners.";
+  }
+  if (n.includes('investor') && (c.includes('first-time') || c.includes('starter home') || c.includes('fha'))) {
+    return "Your niche is Investors & Fix-and-Flip but your client description sounds more like a first-time buyer. These need very different partner strategies.";
+  }
+  if (n.includes('military') && !c.includes('military') && !c.includes('va') && !c.includes('pcs') && !c.includes('veteran') && c.length > 40) {
+    return "Your niche is Military Relocation but your ideal client description doesn't mention military, VA loans, or PCS. Consider whether your client profile matches your niche.";
+  }
+  return null;
+}
 
 export const YEARS_OPTIONS = [
   { value: "", label: "Prefer not to say" },
