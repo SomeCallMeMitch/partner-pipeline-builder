@@ -134,6 +134,60 @@ function token() {
   return Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 10);
 }
 
+// ── Phase 6 handwritten notes ───────────────────────────────────────────────
+// Phase 6 writes one introduction note per Dream 5 partner type under
+// "SCRIPT 4 -- Handwritten Note Introduction". Pulling them out here means the
+// tracker can show the agent the exact note for the exact partner at the moment
+// it tells them to send one, instead of sending them back into a 70-page PDF.
+
+function extractNotes(phase6Text) {
+  if (!phase6Text || typeof phase6Text !== 'string') return [];
+
+  const section = phase6Text.match(
+    /SCRIPT\s+4\s*[\u2014\-\u2013]*\s*Handwritten\s+Note\s+Introduction([\s\S]*?)(?=SCRIPT\s+5|HANDWRITTEN\s+NOTE\s+PROTOCOL|$)/i
+  );
+  if (!section) return [];
+
+  const blocks = section[1]
+    .split(/(?:^|\n)\s*\*{0,2}(?:VERSION|Version)\s+\d+\s*[\u2014\-\u2013]*/gm)
+    .filter(b => b.trim().length > 10);
+
+  const out = [];
+  for (const block of blocks) {
+    const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+    if (lines.length < 2) continue;
+    const label = clean(lines[0]);
+    const body = lines.slice(1)
+      .filter(l => !/^\|/.test(l) && !/^Handwritten\s+Note\s+Protocol/i.test(l) && !/^-{3,}$/.test(l))
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (label && body.length > 20) out.push({ label, body });
+    if (out.length >= 5) break;
+  }
+  return out;
+}
+
+// Match a note to a partner type by word overlap. The Phase 6 label and the
+// Phase 3 partner name are usually close but rarely identical, e.g.
+// "Financial Advisor (tech-focused wealth management)" vs "Financial Advisor".
+function matchNote(partnerType, notes, usedIdx) {
+  const words = new Set(
+    String(partnerType).toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/)
+      .filter(w => w.length > 3)
+  );
+  let best = -1;
+  let bestScore = 0;
+  notes.forEach((n, i) => {
+    if (usedIdx.has(i)) return;
+    const nw = String(n.label).toLowerCase().replace(/[^a-z0-9 ]/g, ' ').split(/\s+/);
+    let score = 0;
+    for (const w of nw) if (words.has(w)) score++;
+    if (score > bestScore) { bestScore = score; best = i; }
+  });
+  return bestScore > 0 ? best : -1;
+}
+
 // ── Handler ─────────────────────────────────────────────────────────────────
 
 Deno.serve(async (req) => {
