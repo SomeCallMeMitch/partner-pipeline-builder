@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { buildPrompts } from "@/components/dream100/promptBuilder";
 import PartnerNotesCTA from "@/components/dream100/PartnerNotesCTA";
+import TrackerCTA from "@/components/tracker/TrackerCTA";
 
 // ── NurturInk RE Clone URL (Workstream 3 uses this for the CTA redirect) ────
 const NURTURINK_RE_URL = 'https://nurturink-for-real-estate-mortgage.base44.app';
