@@ -421,6 +421,8 @@ export default function RunBlueprint() {
               </div>
             )}
 
+            {allDone && <TrackerCTA jobId={job?.id || jobId} />}
+
             {allDone && (
               <PartnerNotesCTA
                 phase6Text={phaseResults['6'] || null}
