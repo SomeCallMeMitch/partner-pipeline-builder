@@ -48,20 +48,24 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import Admin from './pages/Admin';
+import ClaimBlueprint from './pages/ClaimBlueprint';
 import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
 import Output from './pages/Output';
 import RunBlueprint from './pages/RunBlueprint';
+import Tracker from './pages/Tracker';
 import Wizard from './pages/Wizard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Admin": Admin,
+    "ClaimBlueprint": ClaimBlueprint,
     "Dashboard": Dashboard,
     "Landing": Landing,
     "Output": Output,
     "RunBlueprint": RunBlueprint,
+    "Tracker": Tracker,
     "Wizard": Wizard,
 }
 
