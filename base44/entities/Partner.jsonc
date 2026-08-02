@@ -1,0 +1,144 @@
+{
+  "name": "Partner",
+  "description": "One referral partner being tracked by an agent, seeded from the Dream 5 in their blueprint",
+  "type": "object",
+  "properties": {
+    "ownerUserId": {
+      "type": "string",
+      "description": "Base44 user id of the owner"
+    },
+    "trackerId": {
+      "type": "string",
+      "description": "TrackerBlueprint id this partner belongs to"
+    },
+    "jobId": {
+      "type": "string",
+      "description": "GenerationJob id the partner type came from"
+    },
+    "partnerType": {
+      "type": "string",
+      "description": "Category from the blueprint, e.g. Estate Attorney"
+    },
+    "tier": {
+      "type": "string",
+      "description": "Tier label from the Dream 5 table"
+    },
+    "rank": {
+      "type": "integer",
+      "description": "Rank from the Dream 5 table, 1 is highest",
+      "default": 99
+    },
+    "whyPriority": {
+      "type": "string",
+      "description": "Why this partner type is a priority, copied from the blueprint"
+    },
+    "firstContactStrategy": {
+      "type": "string",
+      "description": "First contact strategy copied from the blueprint"
+    },
+    "personName": {
+      "type": "string",
+      "description": "The real human being tracked",
+      "default": ""
+    },
+    "company": {
+      "type": "string",
+      "default": ""
+    },
+    "email": {
+      "type": "string",
+      "default": ""
+    },
+    "phone": {
+      "type": "string",
+      "default": ""
+    },
+    "mailingAddress": {
+      "type": "string",
+      "description": "Used later for handwritten card sends",
+      "default": ""
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "identified",
+        "named",
+        "contacted",
+        "met",
+        "active",
+        "dormant"
+      ],
+      "description": "Where this relationship stands",
+      "default": "identified"
+    },
+    "stageChangedAt": {
+      "type": "string",
+      "description": "ISO timestamp of the last stage change"
+    },
+    "lastTouchAt": {
+      "type": "string",
+      "description": "ISO timestamp of the last completed action"
+    },
+    "touchCount": {
+      "type": "integer",
+      "description": "How many outreach actions have been completed",
+      "default": 0
+    },
+    "referralReceivedAt": {
+      "type": "string",
+      "description": "ISO timestamp of the most recent referral received from this partner"
+    },
+    "referralCount": {
+      "type": "integer",
+      "default": 0
+    },
+    "snoozeUntil": {
+      "type": "string",
+      "description": "ISO timestamp before which no action is surfaced"
+    },
+    "notes": {
+      "type": "array",
+      "description": "Timestamped free text notes, newest first",
+      "items": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "actionToken": {
+      "type": "string",
+      "description": "Random token used by one-tap links in the weekly digest email"
+    },
+    "archived": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "ownerUserId",
+    "trackerId",
+    "partnerType",
+    "stage"
+  ],
+  "rls": {
+    "create": {
+      "data.ownerUserId": "{{user.id}}"
+    },
+    "read": {
+      "data.ownerUserId": "{{user.id}}"
+    },
+    "update": {
+      "data.ownerUserId": "{{user.id}}"
+    },
+    "delete": {
+      "data.ownerUserId": "{{user.id}}"
+    }
+  }
+}
