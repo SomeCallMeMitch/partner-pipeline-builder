@@ -1,13 +1,18 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 // ── Per-Phase Model Config ──────────────────────────────────────────────────
+// Phase 3 sets the Dream 5 that every later phase is locked to, so it gets a
+// stronger model than the other analysis phases -- a bad Dream 5 poisons the
+// whole report. Phases 4 and 6 produce the copy the agent actually sends, so
+// they stay on Sonnet too. Phases 1, 2, 5, 7 are structured extraction and
+// table-filling, which Haiku does well at a fifth of the cost.
 const PHASE_MODEL_CONFIG = {
   1: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
   2: { model: 'claude-haiku-4-5-20251001', max_tokens: 5000 },
-  3: { model: 'claude-haiku-4-5-20251001', max_tokens: 3000 },
-  4: { model: 'claude-sonnet-4-6',         max_tokens: 10000 },
+  3: { model: 'claude-sonnet-5',           max_tokens: 4000 },
+  4: { model: 'claude-sonnet-5',           max_tokens: 10000 },
   5: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
-  6: { model: 'claude-sonnet-4-6',         max_tokens: 5000 },
+  6: { model: 'claude-sonnet-5',           max_tokens: 5000 },
   7: { model: 'claude-haiku-4-5-20251001', max_tokens: 10000 },
 };
 

@@ -12,10 +12,10 @@ const WRITE_BECAUSE_URL = 'https://writebecause.com';
 const PHASE_MODEL_CONFIG = {
   1: { model: 'claude-haiku-4-5-20251001' },
   2: { model: 'claude-haiku-4-5-20251001' },
-  3: { model: 'claude-haiku-4-5-20251001' },
-  4: { model: 'claude-sonnet-4-6' },
+  3: { model: 'claude-sonnet-5' },
+  4: { model: 'claude-sonnet-5' },
   5: { model: 'claude-haiku-4-5-20251001' },
-  6: { model: 'claude-sonnet-4-6' },
+  6: { model: 'claude-sonnet-5' },
   7: { model: 'claude-haiku-4-5-20251001' },
 };
 
