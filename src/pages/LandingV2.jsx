@@ -170,7 +170,7 @@ export default function LandingV2() {
                   {submitError}
                 </div>
               )}
-              <WizardStep4 formData={formData} onBack={() => goToStep(3)} onGenerate={handleGenerate} />
+              <WizardStep4 formData={formData} onChange={updateForm} onBack={() => goToStep(3)} onGenerate={handleGenerate} />
             </>
           )}
           {view === 'generating' && <GeneratingCard />}
