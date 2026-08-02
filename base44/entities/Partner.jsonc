@@ -36,6 +36,11 @@
       "type": "string",
       "description": "First contact strategy copied from the blueprint"
     },
+    "handwrittenNote": {
+      "type": "string",
+      "description": "The introduction note written for this partner type in Phase 6 of the blueprint",
+      "default": ""
+    },
     "personName": {
       "type": "string",
       "description": "The real human being tracked",
