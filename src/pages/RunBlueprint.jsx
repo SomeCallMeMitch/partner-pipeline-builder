@@ -428,6 +428,7 @@ export default function RunBlueprint() {
               <PartnerNotesCTA
                 phase6Text={phaseResults['6'] || null}
                 formData={job?.formData || null}
+                jobId={job?.id || jobId}
               />
             )}
           </div>
