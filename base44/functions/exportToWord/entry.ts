@@ -848,7 +848,7 @@ function quickStartPage(config) {
 // SECTION 5C — WRITE BECAUSE CTA PAGE
 // ═════════════════════════════════════════════════════════════════════════
 
-function Write BecauseCTAPage(config) {
+function WriteBecauseCTAPage(config) {
   const { agentName } = config;
   return [
     new Paragraph({ children: [], spacing: { before: 600, after: 0 } }),
@@ -1001,7 +1001,7 @@ function assembleDocument(config, phaseResults) {
     ...(p["6"]   ? buildPhaseSection("Phase 6",  "", "Complete Outreach Script Suite",                    phaseIntros["6"],  p["6"])  : []),
     ...(p["7"]   ? buildPhaseSection("Phase 7",  "", "90-Day Plan, Tracker & 12-Month System",            phaseIntros["7a"], p["7"])  : []),
     ...researchPromptPage(config),
-    ...Write BecauseCTAPage(config),
+    ...WriteBecauseCTAPage(config),
     spacer(16),
     new Paragraph({
       alignment: AlignmentType.CENTER,
