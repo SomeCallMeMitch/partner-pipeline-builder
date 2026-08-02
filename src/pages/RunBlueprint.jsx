@@ -265,7 +265,7 @@ export default function RunBlueprint() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `Dream100_Blueprint_${(config.agentName).replace(/\s+/g, "_")}.docx`;
+      a.download = `Partner_Blueprint_${(config.agentName).replace(/\s+/g, "_")}.docx`;
       document.body.appendChild(a); a.click();
       document.body.removeChild(a); URL.revokeObjectURL(url);
     } catch (e) {
@@ -285,7 +285,7 @@ export default function RunBlueprint() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Dream100_${(displayName || "Blueprint").replace(/[^a-z0-9]/gi, "_")}.md`;
+    a.download = `Partner_Blueprint_${(displayName || "Blueprint").replace(/[^a-z0-9]/gi, "_")}.md`;
     a.click(); URL.revokeObjectURL(url);
   }
 

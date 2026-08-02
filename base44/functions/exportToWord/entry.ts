@@ -1,5 +1,5 @@
 /**
- * Write Because Dream 100 Blueprint — DOCX Builder (Deno / Base44)
+ * Write Because Partner Blueprint — DOCX Builder (Deno / Base44)
  * File: functions/exportToWord.ts
  */
 
@@ -599,7 +599,7 @@ function researchPromptPage(config) {
           margins: { top: 200, bottom: 200, left: 240, right: 240 },
           width: { size: 9360, type: WidthType.DXA },
           children: [
-            bodyText(`I am a ${niche} specialist in ${market}. My ideal client is: ${idealClient}. I am building a Dream 100 referral partner network and need help finding currently active, real local businesses and professionals in each of the following categories.`),
+            bodyText(`I am a ${niche} specialist in ${market}. My ideal client is: ${idealClient}. I am building a referral partner network, starting with five partner types, and need help finding currently active, real local businesses and professionals in each of the following categories.`),
             ...["Currently active (verified via website, LinkedIn, or recent online activity)", `Relevant to the ${niche} niche and the ${idealClient} client profile`, "Reachable through professional outreach (website, LinkedIn, or business listing)"].map(t => bullet(t)),
             spacer(8),
             new Paragraph({ children: [new TextRun({ text: "Categories to research:", font: "Arial", size: 20, bold: true, color: NAVY })] }),
@@ -1128,7 +1128,7 @@ Deno.serve(async (req) => {
     }
 
     const buffer = await buildReport(config, phaseResults);
-    const filename = `Dream100_Blueprint_${(config.agentName || "Agent").replace(/\s+/g, "_")}.docx`;
+    const filename = `Partner_Blueprint_${(config.agentName || "Agent").replace(/\s+/g, "_")}.docx`;
 
     return new Response(buffer, {
       status: 200,
