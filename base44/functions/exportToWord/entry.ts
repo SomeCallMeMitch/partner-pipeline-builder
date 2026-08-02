@@ -958,7 +958,7 @@ function Write BecauseCTAPage(config) {
             new Paragraph({
               alignment: AlignmentType.CENTER,
               spacing: { before: 0, after: 0 },
-              children: [new TextRun({ text: "nurturink.com", font: "Arial", size: 24, bold: true, color: GOLD })]
+              children: [new TextRun({ text: "writebecause.com", font: "Arial", size: 24, bold: true, color: GOLD })]
             }),
           ]
         })]
