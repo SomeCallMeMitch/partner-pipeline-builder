@@ -2,7 +2,7 @@
 //
 // Shown in RunBlueprint when the job is complete and Phase 6 has output.
 // Parses the 5 handwritten note templates from Phase 6 and offers to load
-// them into NurturInk. The POST to initiateTemplateImport is stubbed for now --
+// them into Write Because. The POST to initiateTemplateImport is stubbed for now --
 // the RE Clone receiver endpoint will be wired in when that side is built.
 
 import React, { useState, useMemo } from "react";
@@ -20,7 +20,7 @@ const C = {
 const font = "'Sora', -apple-system, sans-serif";
 
 // ── Stub: replace with real URL when RE Clone receiver is ready ──────────────
-const NURTURINK_IMPORT_URL = null; // 'https://nurturink-for-real-estate-mortgage.base44.app/functions/initiateTemplateImport'
+const WRITE BECAUSE_IMPORT_URL = null; // 'https://writebecause.com/functions/initiateTemplateImport'
 
 export default function PartnerNotesCTA({ phase6Text, formData }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,15 +38,15 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
         <div style={eyebrowStyle}>Ready to use these scripts?</div>
         <div style={headlineStyle}>Send your partner notes without writing them by hand</div>
         <p style={bodyStyle}>
-          NurturInk sends real handwritten notes for you -- real pen on real paper, mailed directly to your partners. From $2.50 a card including postage.
+          Write Because sends real handwritten notes for you -- real pen on real paper, mailed directly to your partners. From $2.50 a card including postage.
         </p>
         <a
-          href="https://nurturink-for-real-estate-mortgage.base44.app"
+          href="https://writebecause.com"
           target="_blank"
           rel="noreferrer"
           style={primaryBtnStyle}
         >
-          See How NurturInk Works →
+          See How Write Because Works →
         </a>
       </div>
     );
@@ -61,8 +61,8 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
     setSubmitting(true);
 
     // ── STUB: log intent, skip actual POST until RE Clone is ready ────────────
-    if (!NURTURINK_IMPORT_URL) {
-      console.log('[PartnerNotesCTA] Import stub -- would POST to NurturInk with:', {
+    if (!WRITE BECAUSE_IMPORT_URL) {
+      console.log('[PartnerNotesCTA] Import stub -- would POST to Write Because with:', {
         email,
         agentName: formData?.name,
         niche: formData?.niche || formData?.nicheBase,
@@ -78,7 +78,7 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
 
     // ── REAL POST (active once RE Clone receiver is wired up) ─────────────────
     try {
-      const res = await fetch(NURTURINK_IMPORT_URL, {
+      const res = await fetch(WRITE BECAUSE_IMPORT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,12 +97,12 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
       const data = await res.json();
       if (data.claimToken) {
-        window.location.href = `https://nurturink-for-real-estate-mortgage.base44.app/ClaimTemplates?token=${data.claimToken}`;
+        window.location.href = `https://writebecause.com/ClaimTemplates?token=${data.claimToken}`;
       } else {
         setSubmitted(true);
       }
     } catch (err) {
-      setError('Something went wrong. Try again or visit NurturInk directly.');
+      setError('Something went wrong. Try again or visit Write Because directly.');
     } finally {
       setSubmitting(false);
     }
@@ -115,7 +115,7 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
         <Mail size={28} color="#2D6A4F" style={{ marginBottom: 10 }} />
         <div style={{ ...headlineStyle, color: C.success }}>You're on the list</div>
         <p style={bodyStyle}>
-          We're building the direct import feature now. When it's ready, we'll send a note to <strong>{email}</strong> so you can load these templates straight into NurturInk with one click.
+          We're building the direct import feature now. When it's ready, we'll send a note to <strong>{email}</strong> so you can load these templates straight into Write Because with one click.
         </p>
         <p style={{ ...bodyStyle, marginTop: 8 }}>
           In the meantime, your blueprint has everything you need -- copy Script 4 from Phase 6 and use it as-is.
@@ -129,9 +129,9 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
       {/* ── CTA Card ────────────────────────────────────────────────────── */}
       <div style={ctaWrapStyle}>
         <div style={eyebrowStyle}>Your 5 partner outreach notes are ready</div>
-        <div style={headlineStyle}>Load them into NurturInk and send without writing a word</div>
+        <div style={headlineStyle}>Load them into Write Because and send without writing a word</div>
         <p style={bodyStyle}>
-          NurturInk sends real handwritten notes for you -- real pen on real paper, mailed directly to your referral partners. Your 5 note templates from Phase 6 are already written. From $2.50 a card including postage.
+          Write Because sends real handwritten notes for you -- real pen on real paper, mailed directly to your referral partners. Your 5 note templates from Phase 6 are already written. From $2.50 a card including postage.
         </p>
 
         {/* Preview of parsed notes */}
@@ -156,7 +156,7 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
           onClick={() => setModalOpen(true)}
           style={primaryBtnStyle}
         >
-          Load My Notes into NurturInk →
+          Load My Notes into Write Because →
         </button>
         <div style={{ fontSize: 11, color: C.muted, fontFamily: font, marginTop: 10, textAlign: 'center' }}>
           Free to try. No credit card to get started.
@@ -178,10 +178,10 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
             fontFamily: font,
           }}>
             <div style={{ fontSize: 17, fontWeight: 800, color: C.navy, marginBottom: 8 }}>
-              Load your 5 partner notes into NurturInk
+              Load your 5 partner notes into Write Because
             </div>
             <p style={{ fontSize: 13, color: C.muted, lineHeight: 1.6, marginBottom: 20 }}>
-              Enter the email you want to use for your NurturInk account. We'll create your templates and take you straight to them.
+              Enter the email you want to use for your Write Because account. We'll create your templates and take you straight to them.
             </p>
 
             <div style={{ marginBottom: 6, fontSize: 12, fontWeight: 600, color: C.text }}>
@@ -215,7 +215,7 @@ export default function PartnerNotesCTA({ phase6Text, formData }) {
                 marginBottom: 10,
               }}
             >
-              {submitting ? 'Loading...' : 'Take Me to NurturInk →'}
+              {submitting ? 'Loading...' : 'Take Me to Write Because →'}
             </button>
 
             <button

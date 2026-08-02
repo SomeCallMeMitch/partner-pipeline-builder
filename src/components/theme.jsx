@@ -6,9 +6,9 @@ export const THEMES = {
   nurturink: {
     key:        'nurturink',
     cssClass:   'theme-nurturink',
-    name:       'NurturInk (Default)',
-    brandName:  'NurturInk',
-    brandUrl:   'https://nurturink.com/realestate',
+    name:       'Write Because (Default)',
+    brandName:  'Write Because',
+    brandUrl:   'https://writebecause.com',
     footerText: 'the handwritten follow-up system for relationship-driven sales professionals',
     logoMark:   'N',
   },
@@ -32,7 +32,7 @@ export const THEMES = {
   },
 };
 
-const STORAGE_KEY = 'nurturink_theme';
+const STORAGE_KEY = 'writebecause_theme';
 
 export function getActiveThemeKey() {
   try {

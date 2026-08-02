@@ -360,7 +360,7 @@ async function sendDeliveryEmail(toEmail, jobId) {
       </p>
       <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
       <p style="font-size: 12px; color: #aaa; text-align: center;">
-        This email was sent by the Dream Partner Blueprint tool, powered by NurturInk.
+        This email was sent by the Dream Partner Blueprint tool, powered by Write Because.
       </p>
     </div>
   `;

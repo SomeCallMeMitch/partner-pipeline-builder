@@ -83,7 +83,7 @@ export default function IdealClientModal({ isOpen, onClose, onSelect }) {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", position: "relative" }}>
             <div>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#F0A422", marginBottom: 5 }}>
-                NurturInk · Ideal Client Guide
+                Write Because · Ideal Client Guide
               </div>
               <h2 style={{ fontSize: 20, fontWeight: 800, color: "#fff", lineHeight: 1.2, margin: "0 0 6px" }}>
                 Describing Your Ideal Client

@@ -1,5 +1,5 @@
 /**
- * NurturInk Dream 100 Blueprint — DOCX Builder (Deno / Base44)
+ * Write Because Dream 100 Blueprint — DOCX Builder (Deno / Base44)
  * File: functions/exportToWord.ts
  */
 
@@ -489,7 +489,7 @@ function coverPage(config) {
   const { agentName, niche, subniche, market, idealClient } = config;
   return [
     new Paragraph({ children: [], spacing: { before: 1800, after: 0 } }),
-    new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "NURTURINK  ·  pipeline.nurturink.com", font: "Arial", size: 20, color: "888888", allCaps: true, characterSpacing: 80 })] }),
+    new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "WRITE BECAUSE  ·  pipeline.nurturink.com", font: "Arial", size: 20, color: "888888", allCaps: true, characterSpacing: 80 })] }),
     spacer(20),
     new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "DREAM 100", font: "Arial", size: 72, bold: true, color: NAVY })] }),
     new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "PARTNER BLUEPRINT", font: "Arial", size: 44, bold: true, color: STEEL })] }),
@@ -845,10 +845,10 @@ function quickStartPage(config) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// SECTION 5C — NURTURINK CTA PAGE
+// SECTION 5C — WRITE BECAUSE CTA PAGE
 // ═════════════════════════════════════════════════════════════════════════
 
-function nurturInkCTAPage(config) {
+function Write BecauseCTAPage(config) {
   const { agentName } = config;
   return [
     new Paragraph({ children: [], spacing: { before: 600, after: 0 } }),
@@ -920,7 +920,7 @@ function nurturInkCTAPage(config) {
     }),
     spacer(8),
 
-    // NurturInk pitch
+    // Write Because pitch
     new Table({
       width: { size: 9360, type: WidthType.DXA },
       columnWidths: [9360],
@@ -939,7 +939,7 @@ function nurturInkCTAPage(config) {
             new Paragraph({
               alignment: AlignmentType.CENTER,
               spacing: { before: 0, after: 80 },
-              children: [new TextRun({ text: "NurturInk", font: "Arial", size: 28, bold: true, color: GOLD })]
+              children: [new TextRun({ text: "Write Because", font: "Arial", size: 28, bold: true, color: GOLD })]
             }),
             new Paragraph({
               alignment: AlignmentType.CENTER,
@@ -950,7 +950,7 @@ function nurturInkCTAPage(config) {
               alignment: AlignmentType.CENTER,
               spacing: { before: 0, after: 100 },
               children: [new TextRun({
-                text: `${agentName}, this blueprint calls for dozens of handwritten touchpoints over the next 12 months. NurturInk makes that effortless — write your message once, and we handle the handwriting, envelopes, stamps, and mailing. Your partners receive a real card in a real envelope, written in real ink.`,
+                text: `${agentName}, this blueprint calls for dozens of handwritten touchpoints over the next 12 months. Write Because makes that effortless — write your message once, and we handle the handwriting, envelopes, stamps, and mailing. Your partners receive a real card in a real envelope, written in real ink.`,
                 font: "Arial", size: 21, color: WHITE,
               })]
             }),
@@ -1001,7 +1001,7 @@ function assembleDocument(config, phaseResults) {
     ...(p["6"]   ? buildPhaseSection("Phase 6",  "", "Complete Outreach Script Suite",                    phaseIntros["6"],  p["6"])  : []),
     ...(p["7"]   ? buildPhaseSection("Phase 7",  "", "90-Day Plan, Tracker & 12-Month System",            phaseIntros["7a"], p["7"])  : []),
     ...researchPromptPage(config),
-    ...nurturInkCTAPage(config),
+    ...Write BecauseCTAPage(config),
     spacer(16),
     new Paragraph({
       alignment: AlignmentType.CENTER,
@@ -1012,7 +1012,7 @@ function assembleDocument(config, phaseResults) {
     spacer(8),
     new Paragraph({
       alignment: AlignmentType.CENTER,
-      children: [new TextRun({ text: `NurturInk  ·  pipeline.nurturink.com  ·  Generated for ${config.agentName}  ·  ${config.market}`, font: "Arial", size: 18, color: "888888" })]
+      children: [new TextRun({ text: `Write Because  ·  pipeline.nurturink.com  ·  Generated for ${config.agentName}  ·  ${config.market}`, font: "Arial", size: 18, color: "888888" })]
     })
   ];
 }
@@ -1073,7 +1073,7 @@ function buildDocumentShell(config, children) {
             spacing: { before: 120, after: 0 },
             tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
             children: [
-              new TextRun({ text: "NurturInk  ·  pipeline.nurturink.com", font: "Arial", size: 16, color: "888888" }),
+              new TextRun({ text: "Write Because  ·  pipeline.nurturink.com", font: "Arial", size: 16, color: "888888" }),
               new TextRun({ text: "\tPage ", font: "Arial", size: 16, color: "888888" }),
             ]
           })]

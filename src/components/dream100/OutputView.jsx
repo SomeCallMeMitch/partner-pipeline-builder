@@ -404,7 +404,7 @@ ${theme.footerText}
               </button>
             </div>
 
-            {/* NurturInk CTA */}
+            {/* Write Because CTA */}
             <div style={{
               background: S.white, borderRadius: 14, border: `1px solid ${S.border}`,
               boxShadow: '0 2px 14px rgba(27,42,74,0.06)', padding: '20px 20px',

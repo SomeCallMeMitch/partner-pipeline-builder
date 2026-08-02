@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function RunnerNurturInkCTA() {
+export default function RunnerWriteBecauseCTA() {
   return (
     <div style={{
       background: "#1B2A4A", borderRadius: 16, padding: 24,
@@ -32,7 +32,7 @@ export default function RunnerNurturInkCTA() {
       </p>
 
       <a
-        href="https://nurturink.com/realestate"
+        href="https://writebecause.com"
         target="_blank"
         rel="noopener noreferrer"
         style={{
@@ -43,7 +43,7 @@ export default function RunnerNurturInkCTA() {
           fontFamily: "'Sora', sans-serif",
         }}
       >
-        See How NurturInk Works →
+        See How Write Because Works →
       </a>
     </div>
   );
