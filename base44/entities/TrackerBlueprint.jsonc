@@ -1,0 +1,78 @@
+{
+  "name": "TrackerBlueprint",
+  "description": "Links a signed-in user to a completed Dream Partner Blueprint and holds tracker-level settings",
+  "type": "object",
+  "properties": {
+    "ownerUserId": {
+      "type": "string",
+      "description": "Base44 user id of the owner"
+    },
+    "jobId": {
+      "type": "string",
+      "description": "GenerationJob id this tracker was built from"
+    },
+    "agentName": {
+      "type": "string",
+      "description": "Agent display name copied from the blueprint form data"
+    },
+    "niche": {
+      "type": "string",
+      "description": "Niche copied from the blueprint form data"
+    },
+    "geography": {
+      "type": "string",
+      "description": "Market copied from the blueprint form data"
+    },
+    "claimedAt": {
+      "type": "string",
+      "description": "ISO timestamp when the user claimed this blueprint"
+    },
+    "namingComplete": {
+      "type": "boolean",
+      "description": "True once the user has named at least one real person for their partner types",
+      "default": false
+    },
+    "weeklyEmailEnabled": {
+      "type": "boolean",
+      "description": "Whether the Monday digest should be sent",
+      "default": true
+    },
+    "weeklyEmailAddress": {
+      "type": "string",
+      "description": "Address the Monday digest is sent to",
+      "default": ""
+    },
+    "lastWeeklyEmailAt": {
+      "type": "string",
+      "description": "ISO timestamp of the last digest sent"
+    },
+    "parseQuality": {
+      "type": "string",
+      "enum": [
+        "table",
+        "headings",
+        "phase2",
+        "placeholder"
+      ],
+      "description": "Which extraction path produced the partner types. Placeholder means the user must type them in."
+    }
+  },
+  "required": [
+    "ownerUserId",
+    "jobId"
+  ],
+  "rls": {
+    "create": {
+      "data.ownerUserId": "{{user.id}}"
+    },
+    "read": {
+      "data.ownerUserId": "{{user.id}}"
+    },
+    "update": {
+      "data.ownerUserId": "{{user.id}}"
+    },
+    "delete": {
+      "data.ownerUserId": "{{user.id}}"
+    }
+  }
+}

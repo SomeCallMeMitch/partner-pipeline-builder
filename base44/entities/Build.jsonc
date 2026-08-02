@@ -1,0 +1,78 @@
+{
+  "name": "Build",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "User-assigned name for this build"
+    },
+    "industry": {
+      "type": "string",
+      "enum": [
+        "Real Estate",
+        "Insurance"
+      ],
+      "description": "Selected industry vertical"
+    },
+    "niche": {
+      "type": "string",
+      "description": "Specific niche within the industry"
+    },
+    "geography": {
+      "type": "string",
+      "description": "Target geography"
+    },
+    "avg_deal_size": {
+      "type": "number",
+      "description": "Average deal/transaction size in USD"
+    },
+    "sales_cycle_months": {
+      "type": "number",
+      "description": "Average sales cycle length in months"
+    },
+    "referral_revenue_pct": {
+      "type": "number",
+      "description": "Percentage of revenue currently from referrals"
+    },
+    "team_size": {
+      "type": "number",
+      "description": "Number of people on the team"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "simple",
+        "advanced"
+      ],
+      "default": "simple"
+    },
+    "model_selection": {
+      "type": "string",
+      "description": "Selected AI model"
+    },
+    "optimize_per_phase": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to use multi-model optimization per phase"
+    },
+    "coupon_code": {
+      "type": "string"
+    },
+    "generated_output": {
+      "type": "string",
+      "description": "Full generated markdown prompt content"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "draft"
+      ],
+      "default": "complete"
+    }
+  },
+  "required": [
+    "name",
+    "industry"
+  ]
+}
