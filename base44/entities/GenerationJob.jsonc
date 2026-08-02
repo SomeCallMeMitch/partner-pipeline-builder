@@ -75,6 +75,11 @@
       "type": "string",
       "description": "Error details, if any",
       "required": false
+    },
+    "lastHealTriggerAt": {
+      "type": "string",
+      "description": "ISO timestamp of the last automatic re-trigger issued when a phase-chain trigger appeared to have dropped",
+      "required": false
     }
   },
   "required": [
