@@ -94,11 +94,39 @@ export default function PartnerCard({ partner, action, onPatch, busy }) {
         <div className="tk-action-detail">{action.detail}</div>
 
         {action.kind === "card" && (
-          <div className="tk-card-seam">
-            Write it yourself, or{" "}
-            <a href="https://writebecause.com" target="_blank" rel="noreferrer">send it through Write Because</a>{" "}
-            and it goes out in real ink without you finding a stamp.
-          </div>
+          <>
+            {p.handwrittenNote && (
+              <div style={{
+                marginTop: 12, background: C.white, border: `1px solid ${C.border}`,
+                borderRadius: 8, padding: "12px 14px",
+              }}>
+                <div style={{
+                  fontSize: 10, fontWeight: 700, letterSpacing: "0.08em",
+                  textTransform: "uppercase", color: C.gold, marginBottom: 6,
+                }}>
+                  Your note for this partner
+                </div>
+                <div style={{ fontSize: 13, color: C.text, lineHeight: 1.65 }}>
+                  {p.handwrittenNote.replace(/\[First Name\]/g, p.personName || "[First Name]")}
+                </div>
+                <button
+                  className="tk-btn-link"
+                  style={{ marginTop: 8 }}
+                  onClick={() => {
+                    const text = p.handwrittenNote.replace(/\[First Name\]/g, p.personName || "");
+                    if (navigator.clipboard) navigator.clipboard.writeText(text);
+                  }}
+                >
+                  Copy note
+                </button>
+              </div>
+            )}
+            <div className="tk-card-seam">
+              Write it yourself, or{" "}
+              <a href="https://writebecause.com" target="_blank" rel="noreferrer">send it through Write Because</a>{" "}
+              and it goes out in real ink without you finding a stamp.
+            </div>
+          </>
         )}
 
         {action.kind === "outreach" && p.firstContactStrategy && (
