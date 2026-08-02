@@ -243,7 +243,12 @@ Deno.serve(async (req) => {
     });
 
     let created = 0;
+    const notes = extractNotes((job.phaseResults || {})['6']);
+    const usedNoteIdx = new Set();
+
     for (const row of rows) {
+      const noteIdx = matchNote(row.partnerType, notes, usedNoteIdx);
+      if (noteIdx > -1) usedNoteIdx.add(noteIdx);
       try {
         await base44.asServiceRole.entities.Partner.create({
           ownerUserId: user.id,
@@ -254,6 +259,7 @@ Deno.serve(async (req) => {
           rank: row.rank || 99,
           whyPriority: row.whyPriority || '',
           firstContactStrategy: row.firstContactStrategy || '',
+          handwrittenNote: noteIdx > -1 ? notes[noteIdx].body : '',
           personName: '',
           company: '',
           stage: 'identified',
