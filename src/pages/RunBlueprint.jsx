@@ -216,7 +216,7 @@ export default function RunBlueprint() {
         setJob(data);
         resultsRef.current = data.phaseResults || {};
         setPollError(null);
-        if (data.status === 'complete' || data.status === 'failed') {
+        if (data.status === 'complete' || data.status === 'failed' || data.status === 'cancelled') {
           clearInterval(pollRef.current);
           pollRef.current = null;
         }
