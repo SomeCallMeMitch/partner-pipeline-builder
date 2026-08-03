@@ -376,6 +376,18 @@ export default function RunBlueprint() {
         </div>
       )}
 
+      {/* CANCELLED BANNER */}
+      {isCancelled && (
+        <div style={{ background: C.errorBg, padding: "16px 24px", textAlign: "center", borderBottom: `2px solid ${C.error}` }}>
+          <div style={{ fontSize: 16, fontWeight: 700, color: C.error, fontFamily: font, marginBottom: 4 }}>
+            Stopped by you at Phase {currentPhase || '?'}
+          </div>
+          <div style={{ fontSize: 13, color: C.muted, fontFamily: font }}>
+            {completedCount > 0 ? `${completedCount} phase${completedCount > 1 ? 's' : ''} completed before you stopped it.` : 'No phases had completed yet.'}
+          </div>
+        </div>
+      )}
+
       {/* TOP NAV */}
       <div style={{ background: C.navy, boxShadow: "0 2px 20px rgba(0,0,0,0.25)", position: "sticky", top: 0, zIndex: 100 }}>
         <div className="bp-nav-inner">
