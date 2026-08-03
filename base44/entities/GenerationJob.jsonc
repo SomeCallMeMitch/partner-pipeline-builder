@@ -49,11 +49,49 @@
         "queued",
         "running",
         "complete",
-        "failed"
+        "failed",
+        "cancelled"
       ],
       "description": "Current job status",
       "required": true,
       "default": "queued"
+    },
+    "phaseAttempts": {
+      "type": "array",
+      "description": "Diagnostic log, one entry per phase call attempt. Kept so a hung or slow phase can be inspected after the fact: which model, when it started, how long it ran, and how it ended.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "phaseId": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "maxTokens": {
+            "type": "integer"
+          },
+          "thinkingDisabled": {
+            "type": "boolean"
+          },
+          "promptChars": {
+            "type": "integer"
+          },
+          "startedAt": {
+            "type": "string"
+          },
+          "endedAt": {
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
     },
     "userEmail": {
       "type": "string",
