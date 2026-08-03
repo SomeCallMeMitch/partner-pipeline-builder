@@ -21,7 +21,8 @@ export default function WizardStep1({ formData, onChange, onNext }) {
 
   const handleChip = (text) => {
     const current = (formData.customNiche || '').trim();
-    onChange({ customNiche: current ? current + ', ' + text : text });
+    const combined = current ? current + ', ' + text : text;
+    onChange({ customNiche: sanitizeInput(combined, FIELD_LIMITS.customNiche) });
   };
 
   const handleNext = () => {
