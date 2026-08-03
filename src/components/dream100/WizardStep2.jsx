@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { CHALLENGES, detectContradiction } from "./nicheData";
 import IdealClientModal from "./IdealClientModal";
 import NicheMismatchWarning from "./NicheMismatchWarning";
+import { sanitizeInput, FIELD_LIMITS } from "@/lib/inputValidation";
 
 export default function WizardStep2({ formData, onChange, onNext, onBack }) {
   const [errors, setErrors] = useState({});
@@ -33,7 +34,8 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
           type="text"
           className="d100-input"
           value={formData.geo || ''}
-          onChange={(e) => { onChange({ geo: e.target.value }); setErrors(prev => ({ ...prev, geo: false })); }}
+          maxLength={FIELD_LIMITS.geo}
+          onChange={(e) => { onChange({ geo: sanitizeInput(e.target.value, FIELD_LIMITS.geo) }); setErrors(prev => ({ ...prev, geo: false })); }}
           placeholder="e.g., Scottsdale, AZ · Buckhead, Atlanta · The Hamptons, NY"
         />
         <p className="d100-field-hint">City, metro, neighborhood, or county. Be as specific as possible — "North Scottsdale" beats "Arizona."</p>
@@ -55,7 +57,8 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
         <textarea
           className="d100-textarea"
           value={formData.client || ''}
-          onChange={(e) => { onChange({ client: e.target.value }); setContradictionWarning(null); }}
+          maxLength={FIELD_LIMITS.client}
+          onChange={(e) => { onChange({ client: sanitizeInput(e.target.value, FIELD_LIMITS.client) }); setContradictionWarning(null); }}
           placeholder="e.g., Couples 45–65 with $1M+ in equity looking to downsize to a maintenance-free condo or 55+ community near good healthcare..."
         />
         <p className="d100-field-hint">Demographics, lifestyle, financial situation, motivations — anything that makes them distinct from the average buyer or seller.</p>
