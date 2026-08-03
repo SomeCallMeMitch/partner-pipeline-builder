@@ -483,9 +483,28 @@ export default function RunBlueprint() {
                     <span style={{ fontSize: 10, color: C.muted, fontFamily: font }}>{allDone ? "Done" : `of ${phases.length}`}</span>
                   </div>
                 </div>
-                <div style={{ fontSize: 17, fontWeight: 700, color: allDone ? (warningCount > 0 ? "#92400E" : C.success) : isFailed ? C.error : C.gold, fontFamily: font, marginTop: 8 }}>
-                  {allDone ? (warningCount > 0 ? `${warningCount} phase${warningCount > 1 ? 's' : ''} need review` : "All phases complete") : isFailed ? "Generation stopped" : `Running phase ${currentPhase}...`}
+                <div style={{ fontSize: 17, fontWeight: 700, color: allDone ? (warningCount > 0 ? "#92400E" : C.success) : (isFailed || isCancelled) ? C.error : C.gold, fontFamily: font, marginTop: 8 }}>
+                  {allDone ? (warningCount > 0 ? `${warningCount} phase${warningCount > 1 ? 's' : ''} need review` : "All phases complete") : isFailed ? "Generation stopped" : isCancelled ? "Stopped by you" : `Running phase ${currentPhase}...`}
                 </div>
+                {!allDone && !isFailed && !isCancelled && (
+                  <button
+                    onClick={handleCancel}
+                    disabled={cancelling}
+                    style={{
+                      marginTop: 12, background: "transparent", border: `1.5px solid ${C.error}`,
+                      color: C.error, borderRadius: 8, padding: "8px 18px", fontWeight: 700,
+                      fontSize: 13, fontFamily: font, cursor: cancelling ? "default" : "pointer",
+                      opacity: cancelling ? 0.6 : 1,
+                    }}
+                  >
+                    {cancelling ? "Stopping..." : "Stop this run"}
+                  </button>
+                )}
+                {!allDone && !isFailed && !isCancelled && (
+                  <div style={{ fontSize: 11, color: C.muted, fontFamily: font, marginTop: 6 }}>
+                    Stuck on one phase for several minutes? Stop it here rather than closing the tab, so we can see what it was doing.
+                  </div>
+                )}
               </div>
               {phases.map((phase, i) => {
                 const ps = getPhaseStatus(phase.id);
