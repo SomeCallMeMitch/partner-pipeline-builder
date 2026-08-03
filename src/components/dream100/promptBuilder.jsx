@@ -54,7 +54,7 @@ REFERRAL MATH FRAMING RULE:
 The referral math section is an ILLUSTRATION, not a forecast or income projection.
 Label it clearly as a directional model showing what consistent execution could produce over time.
 Use language like "what this system could generate" or "directional model" — never "you will close" or "expected results."
-Add a disclaimer that actual results depend on market conditions, relationship quality, and execution consistency.
+Do not write your own closing disclaimer paragraph — a standard one is appended automatically after Phase 7. Stay focused on the numbers and the framing above.
 The purpose is to show the agent that the effort is worth it — not to promise an outcome.
 
 HALVING RULE:
