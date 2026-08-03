@@ -27,6 +27,62 @@ const PHASE_MODEL_CONFIG = {
 
 const DEFAULT_MODEL_CONFIG = { model: 'claude-haiku-4-5-20251001', max_tokens: 4000 };
 
+// ── Static content ──────────────────────────────────────────────────────────────
+// This content is byte-identical in every report, so it is written once here
+// and appended directly after generation instead of being written by the
+// model on every run. Zero extra tokens, zero extra seconds, and it can
+// never drift or get reworded phase to phase. The matching instruction to
+// generate this content has been removed from the corresponding prompt in
+// promptBuilder.jsx -- if you change the wording here, the prompt does not
+// need to change, and vice versa these two files should be kept in sync.
+
+const TIER_DEFINITIONS_BLOCK = `
+
+---
+
+### Tier Definitions
+
+- **Tier 1 -- Direct Upstream:** sees the client immediately before a transaction trigger. Highest priority, fastest referral cycle.
+- **Tier 2 -- Lifestyle & Transition:** sees the client during a life-phase shift that precedes the transaction by months. Slower cycle, still direct.
+- **Tier 3 -- Community & Maintenance:** longer-term contact with slower, less predictable conversion. Use sparingly in a Dream 5.
+
+### Why Five, Not a Hundred
+
+A list of a hundred contacts produces a hundred shallow relationships and zero reliable referrals. Five well-chosen partners, worked consistently, is the number one solo agent can actually sustain: enough contact to stay top of mind with each one, not so many that the relationship becomes a mail-merge. The Dream 5 above is not a starting point to expand from. It is the whole system.`;
+
+const HANDWRITTEN_NOTE_PROTOCOL_BLOCK = `
+
+---
+
+### Handwritten Note Protocol
+
+| Step | Action |
+|---|---|
+| 1 | Write the note by hand -- do not type or print it |
+| 2 | Use quality card stock, not a plain notecard |
+| 3 | Address the envelope by hand, matching the handwriting inside |
+| 4 | Use a real stamp, not a metered or printed indicia |
+| 5 | Mail it 5-7 days before any other follow-up |
+| 6 | Do not reference the note in the follow-up email or call -- let it stand on its own |`;
+
+const REFERRAL_MATH_DISCLAIMER_BLOCK = `
+
+---
+
+### A Note on the Referral Math Above
+
+The scenarios above are a directional illustration, not a forecast, an income projection, or a guarantee. Actual referral volume, close rates, and transaction velocity depend on the quality of the partnerships built, the consistency of outreach, market conditions, and how quickly each partner engages. Year one typically runs below these numbers while relationships ramp up -- the numbers assume consistent execution over 12 months, not immediate results.`;
+
+// Appends the static block(s) for a given phase, if any. Pure string op,
+// no model call. Safe to call on every phase -- phases without a static
+// block just pass through unchanged.
+function appendStaticContent(phaseId, text) {
+  if (phaseId === 3) return text + TIER_DEFINITIONS_BLOCK;
+  if (phaseId === 6) return text + HANDWRITTEN_NOTE_PROTOCOL_BLOCK;
+  if (phaseId === 7) return text + REFERRAL_MATH_DISCLAIMER_BLOCK;
+  return text;
+}
+
 // ── System Prompt ────────────────────────────────────────────────────────────
 const SYSTEM_PROMPT = `You are a Strategic Alliances Director specializing in referral partner systems for high-performing real estate professionals. You use the Dream 100 methodology to build systematic referral networks.
 
