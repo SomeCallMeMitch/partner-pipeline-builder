@@ -241,9 +241,25 @@ export default function RunBlueprint() {
       return phaseWarnings[String(phaseId)] ? "done_warning" : "done";
     }
     if (isFailed && job?.errorPhase === phaseId) return "error";
-    if (currentPhase === phaseId && !allDone && !isFailed) return "running";
+    if (isCancelled && currentPhase === phaseId) return "error";
+    if (currentPhase === phaseId && !allDone && !isFailed && !isCancelled) return "running";
     return "pending";
   };
+
+  // ── Cancel ────────────────────────────────────────────────────────────
+  async function handleCancel() {
+    if (!jobId || cancelling) return;
+    setCancelling(true);
+    try {
+      await base44.functions.invoke("cancelGenerationJob", { jobId });
+      const response = await base44.functions.invoke("getGenerationJobStatus", { jobId });
+      if (response.data && !response.data.error) setJob(response.data);
+    } catch (err) {
+      console.error('Cancel error:', err);
+    } finally {
+      setCancelling(false);
+    }
+  }
 
   // ── Downloads ─────────────────────────────────────────────────────────
   async function downloadWord() {
