@@ -6,13 +6,16 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 // whole report. Phases 4 and 6 produce the copy the agent actually sends, so
 // they stay on Sonnet too. Phases 1, 2, 5, 7 are structured extraction and
 // table-filling, which Haiku does well at a fifth of the cost.
+//
+// Model IDs are pinned deliberately. An unrecognized ID fails the whole run,
+// and a run that dies at phase 3 loses the agent, not just the phase.
 const PHASE_MODEL_CONFIG = {
   1: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
   2: { model: 'claude-haiku-4-5-20251001', max_tokens: 5000 },
-  3: { model: 'claude-sonnet-5',           max_tokens: 4000 },
-  4: { model: 'claude-sonnet-5',           max_tokens: 10000 },
+  3: { model: 'claude-sonnet-4-5-20250929', max_tokens: 4000 },
+  4: { model: 'claude-sonnet-4-5-20250929', max_tokens: 10000 },
   5: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
-  6: { model: 'claude-sonnet-5',           max_tokens: 5000 },
+  6: { model: 'claude-sonnet-4-5-20250929', max_tokens: 5000 },
   7: { model: 'claude-haiku-4-5-20251001', max_tokens: 10000 },
 };
 
