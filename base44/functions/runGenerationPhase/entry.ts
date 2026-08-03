@@ -252,14 +252,23 @@ Deno.serve(async (req) => {
         throw new Error('Claude API ' + response.status + ': ' + errMsg);
       }
 
-      if (!data.content || !data.content[0]) {
+      if (!Array.isArray(data.content) || data.content.length === 0) {
         throw new Error('Empty response from Claude');
       }
 
-      const textBlocks = data.content.filter(b => b.type === 'text');
-      result = textBlocks.length > 0
-        ? textBlocks.map(b => b.text).join('\n\n')
-        : data.content[0].text;
+      // Newer models can return non-text blocks (thinking, tool_use) alongside
+      // or ahead of the text. Only text blocks carry the report, and falling
+      // back to content[0].text yields undefined when block 0 is not text --
+      // which then throws on result.length and fails the whole run.
+      const textBlocks = data.content.filter(b => b && b.type === 'text' && typeof b.text === 'string');
+      result = textBlocks.map(b => b.text).join('\n\n').trim();
+
+      if (!result) {
+        const kinds = data.content.map(b => (b && b.type) || 'unknown').join(', ');
+        throw new Error(
+          `No text content returned from ${config.model} (blocks: ${kinds}, stop_reason: ${data.stop_reason || 'none'})`
+        );
+      }
 
       if (data.stop_reason === 'max_tokens') {
         console.warn(`[runGenerationPhase] Phase ${phaseId} was truncated at ${config.max_tokens} tokens`);
