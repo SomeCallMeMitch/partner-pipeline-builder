@@ -239,6 +239,16 @@ Deno.serve(async (req) => {
     let result;
 
     try {
+      const requestBody = {
+        model: config.model,
+        max_tokens: config.max_tokens,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: fullPrompt }],
+      };
+      if (config.disableThinking) {
+        requestBody.thinking = { type: 'disabled' };
+      }
+
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -246,12 +256,7 @@ Deno.serve(async (req) => {
           'x-api-key': apiKey,
           'anthropic-version': '2023-06-01',
         },
-        body: JSON.stringify({
-          model: config.model,
-          max_tokens: config.max_tokens,
-          system: SYSTEM_PROMPT,
-          messages: [{ role: 'user', content: fullPrompt }],
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
