@@ -187,7 +187,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Job not found' }, { status: 404 });
     }
 
-    if (job.status === 'complete' || job.status === 'failed') {
+    if (job.status === 'complete' || job.status === 'failed' || job.status === 'cancelled') {
       console.log(`[runGenerationPhase] Job ${jobId} already ${job.status}, skipping phase ${phaseId}`);
       return Response.json({ success: true, skipped: true });
     }
