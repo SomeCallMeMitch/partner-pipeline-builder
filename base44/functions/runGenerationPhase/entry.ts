@@ -7,16 +7,22 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 // they stay on Sonnet too. Phases 1, 2, 5, 7 are structured extraction and
 // table-filling, which Haiku does well at a fifth of the cost.
 //
-// Model IDs are pinned deliberately. An unrecognized ID fails the whole run,
-// and a run that dies at phase 3 loses the agent, not just the phase.
+// disableThinking: Sonnet 5 (and other current-generation models) think by
+// default even when no thinking param is sent -- confirmed by a real failure
+// where a 4000-token budget was entirely consumed by an invisible reasoning
+// pass, leaving zero tokens for the actual report and killing the run with
+// stop_reason max_tokens. These phases produce structured tables and copy,
+// not novel reasoning, so thinking is turned off explicitly rather than left
+// to model default. This also keeps cost predictable -- thinking tokens bill
+// as output tokens at the same rate.
 const PHASE_MODEL_CONFIG = {
-  1: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
-  2: { model: 'claude-haiku-4-5-20251001', max_tokens: 5000 },
-  3: { model: 'claude-sonnet-4-5-20250929', max_tokens: 4000 },
-  4: { model: 'claude-sonnet-4-5-20250929', max_tokens: 10000 },
-  5: { model: 'claude-haiku-4-5-20251001', max_tokens: 3500 },
-  6: { model: 'claude-sonnet-4-5-20250929', max_tokens: 5000 },
-  7: { model: 'claude-haiku-4-5-20251001', max_tokens: 10000 },
+  1: { model: 'claude-haiku-4-5-20251001', max_tokens: 4000 },
+  2: { model: 'claude-haiku-4-5-20251001', max_tokens: 6000 },
+  3: { model: 'claude-sonnet-5',           max_tokens: 8000,  disableThinking: true },
+  4: { model: 'claude-sonnet-5',           max_tokens: 14000, disableThinking: true },
+  5: { model: 'claude-haiku-4-5-20251001', max_tokens: 4000 },
+  6: { model: 'claude-sonnet-5',           max_tokens: 9000,  disableThinking: true },
+  7: { model: 'claude-haiku-4-5-20251001', max_tokens: 12000 },
 };
 
 const DEFAULT_MODEL_CONFIG = { model: 'claude-haiku-4-5-20251001', max_tokens: 4000 };
