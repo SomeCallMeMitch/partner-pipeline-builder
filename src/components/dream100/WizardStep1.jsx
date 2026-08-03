@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { NICHES, NICHE_HELPERS } from "./nicheData";
+import { sanitizeInput, FIELD_LIMITS } from "@/lib/inputValidation";
 
 export default function WizardStep1({ formData, onChange, onNext }) {
   const selectedNiche = formData.nicheBase || '';
@@ -73,7 +74,8 @@ export default function WizardStep1({ formData, onChange, onNext }) {
           <textarea
             className="d100-textarea"
             value={formData.customNiche || ''}
-            onChange={(e) => onChange({ customNiche: e.target.value })}
+            onChange={(e) => onChange({ customNiche: sanitizeInput(e.target.value, FIELD_LIMITS.customNiche) })}
+            maxLength={FIELD_LIMITS.customNiche}
             placeholder={helperData ? `e.g., ${helperData.chips[0].toLowerCase()}...` : 'Describe your ideal client, price range, specific situation...'}
           />
           <p className="d100-field-hint">The more specific you are here, the more targeted your AI prompts will be. Generic inputs = generic results.</p>
