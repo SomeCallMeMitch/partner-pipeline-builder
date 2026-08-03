@@ -321,13 +321,21 @@ Deno.serve(async (req) => {
       console.log(`[runGenerationPhase] Phase ${phaseId} complete, ${result.length} chars, model=${config.model}`);
 
     } catch (apiError) {
-      console.error(`[runGenerationPhase] Phase ${phaseId} API error:`, apiError.message);
+      clearTimeout(timeoutHandle);
+      const timedOut = apiError && (apiError.name === 'AbortError');
+      const message = timedOut
+        ? `Timed out after ${PHASE_TIMEOUT_MS / 1000}s waiting on ${config.model}. The request never returned.`
+        : apiError.message;
+
+      console.error(`[runGenerationPhase] Phase ${phaseId} API error:`, message);
+      await logAttempt(timedOut ? 'timeout' : 'error', message);
+
       await db.update(jobId, {
         status: 'failed',
         errorPhase: phaseId,
-        errorMessage: apiError.message,
+        errorMessage: message,
       });
-      return Response.json({ error: apiError.message }, { status: 500 });
+      return Response.json({ error: message }, { status: 500 });
     }
 
     // ── Save result, timing, and validation warning ───────────────────────────
