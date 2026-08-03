@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { YEARS_OPTIONS } from "./nicheData";
+import { sanitizeInput, FIELD_LIMITS } from "@/lib/inputValidation";
 
 export default function WizardStep3({ formData, onChange, onNext, onBack }) {
   const [nameError, setNameError] = useState(false);
@@ -24,7 +25,8 @@ export default function WizardStep3({ formData, onChange, onNext, onBack }) {
           type="text"
           className="d100-input"
           value={formData.name || ''}
-          onChange={(e) => { onChange({ name: e.target.value }); setNameError(false); }}
+          maxLength={FIELD_LIMITS.name}
+          onChange={(e) => { onChange({ name: sanitizeInput(e.target.value, FIELD_LIMITS.name) }); setNameError(false); }}
           placeholder="e.g., Sarah"
         />
         {nameError && <div className="d100-error-msg">Please enter your first name.</div>}
