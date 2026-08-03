@@ -538,7 +538,7 @@ One summary table only — not a separate section per quarter:
 ---
 
 PART D — Referral Math
-Frame this section clearly as a DIRECTIONAL ILLUSTRATION — not a forecast, not an income projection, not a guarantee. Open with one sentence explaining that actual results depend on relationship quality, market conditions, and execution consistency.
+Frame this section clearly as a DIRECTIONAL ILLUSTRATION — not a forecast, not an income projection, not a guarantee. Do not write an opening disclaimer sentence — a standard disclaimer is appended automatically at the end of this phase. Go straight into the scenarios.
 
 Show 3 scenarios using the exact Dream 5 partner names from Phase 3:
 | Scenario | Active Partners (by name) | Referrals per Partner per Year | Annual Referrals | Close Rate | Closed Deals |
