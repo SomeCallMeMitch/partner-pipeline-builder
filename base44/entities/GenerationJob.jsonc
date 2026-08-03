@@ -99,6 +99,12 @@
       "required": false,
       "default": ""
     },
+    "clientIp": {
+      "type": "string",
+      "description": "Best-effort client IP at submission time, used for the pre-account rate limiter in startGenerationJob. Empty string if no proxy header was present.",
+      "required": false,
+      "default": ""
+    },
     "completedAt": {
       "type": "string",
       "description": "ISO timestamp when status became complete",
