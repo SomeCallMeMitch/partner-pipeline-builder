@@ -458,9 +458,7 @@ Write one version per Dream 5 partner type (5 versions total), each labeled clea
 - Must pass the 2-minute test: could ${n} write this by hand in under 2 minutes?
 - This note is sent BEFORE any other outreach. It is the most important script in the suite.
 
-After the 5 versions, add a short Handwritten Note Protocol table:
-| Step | Action |
-(Cover: write by hand, use quality card stock, address envelope by hand, real stamp, mail 5-7 days before follow-up, do not reference the note in the follow-up email.)
+Do not add a Handwritten Note Protocol table after the 5 versions — a standard one is appended automatically after this phase. Go straight to Script 5.
 
 SCRIPT 5 — Value-First Follow-Up
 - 60 words max
