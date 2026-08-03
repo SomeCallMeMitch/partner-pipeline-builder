@@ -182,6 +182,8 @@ export default function RunBlueprint() {
   // ── Derived state from job ──────────────────────────────────────────────
   const allDone      = job?.status === 'complete';
   const isFailed     = job?.status === 'failed';
+  const isCancelled  = job?.status === 'cancelled';
+  const [cancelling, setCancelling] = useState(false);
   const phaseResults = job?.phaseResults || {};
   const currentPhase = job?.currentPhase || 0;
   const phaseTiming  = job?.phaseTiming || {};
