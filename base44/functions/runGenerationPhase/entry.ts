@@ -371,6 +371,8 @@ Deno.serve(async (req) => {
         console.warn(`[runGenerationPhase] Phase ${phaseId} was truncated at ${config.max_tokens} tokens`);
       }
 
+      result = appendStaticContent(phaseId, result);
+
       clearTimeout(timeoutHandle);
       await logAttempt('success', `${result.length} chars, stop_reason=${data.stop_reason || 'none'}`);
 
