@@ -75,6 +75,7 @@ Deno.serve(async (req) => {
       phaseResults: job.phaseResults || {},
       phaseTiming: job.phaseTiming || {},
       phaseWarnings: job.phaseWarnings || {},
+      phaseAttempts: job.phaseAttempts || [],
       formData: job.formData,
       userEmail: job.userEmail || '',
       errorPhase: job.errorPhase || null,
