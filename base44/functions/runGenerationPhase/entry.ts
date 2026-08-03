@@ -238,6 +238,36 @@ Deno.serve(async (req) => {
     const config = PHASE_MODEL_CONFIG[phaseId] || DEFAULT_MODEL_CONFIG;
     let result;
 
+    const attemptStartedAt = new Date().toISOString();
+    const attemptLog = {
+      phaseId,
+      model: config.model,
+      maxTokens: config.max_tokens,
+      thinkingDisabled: !!config.disableThinking,
+      promptChars: fullPrompt.length,
+      startedAt: attemptStartedAt,
+      endedAt: null,
+      outcome: 'in_progress',
+      note: '',
+    };
+
+    async function logAttempt(outcome, note) {
+      attemptLog.endedAt = new Date().toISOString();
+      attemptLog.outcome = outcome;
+      attemptLog.note = String(note || '').slice(0, 500);
+      try {
+        const fresh = await db.filter({ id: jobId });
+        const priorAttempts = (fresh[0] && fresh[0].phaseAttempts) || [];
+        await db.update(jobId, { phaseAttempts: [...priorAttempts, attemptLog].slice(-40) });
+      } catch (logErr) {
+        console.error('[runGenerationPhase] Failed to write attempt log:', logErr.message);
+      }
+    }
+
+    const PHASE_TIMEOUT_MS = 110000;
+    const abortController = new AbortController();
+    const timeoutHandle = setTimeout(() => abortController.abort(), PHASE_TIMEOUT_MS);
+
     try {
       const requestBody = {
         model: config.model,
@@ -257,6 +287,7 @@ Deno.serve(async (req) => {
           'anthropic-version': '2023-06-01',
         },
         body: JSON.stringify(requestBody),
+        signal: abortController.signal,
       });
 
       const data = await response.json();
@@ -270,10 +301,6 @@ Deno.serve(async (req) => {
         throw new Error('Empty response from Claude');
       }
 
-      // Newer models can return non-text blocks (thinking, tool_use) alongside
-      // or ahead of the text. Only text blocks carry the report, and falling
-      // back to content[0].text yields undefined when block 0 is not text --
-      // which then throws on result.length and fails the whole run.
       const textBlocks = data.content.filter(b => b && b.type === 'text' && typeof b.text === 'string');
       result = textBlocks.map(b => b.text).join('\n\n').trim();
 
@@ -287,6 +314,9 @@ Deno.serve(async (req) => {
       if (data.stop_reason === 'max_tokens') {
         console.warn(`[runGenerationPhase] Phase ${phaseId} was truncated at ${config.max_tokens} tokens`);
       }
+
+      clearTimeout(timeoutHandle);
+      await logAttempt('success', `${result.length} chars, stop_reason=${data.stop_reason || 'none'}`);
 
       console.log(`[runGenerationPhase] Phase ${phaseId} complete, ${result.length} chars, model=${config.model}`);
 
