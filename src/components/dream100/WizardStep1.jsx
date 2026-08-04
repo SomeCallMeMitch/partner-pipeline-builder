@@ -79,7 +79,7 @@ export default function WizardStep1({ formData, onChange, onNext }) {
             maxLength={FIELD_LIMITS.customNiche}
             placeholder={helperData ? `e.g., ${helperData.chips[0].toLowerCase()}...` : 'Describe your ideal client, price range, specific situation...'}
           />
-          <p className="d100-field-hint">The more specific you are here, the more targeted your AI prompts will be. Generic inputs = generic results.</p>
+          <p className="d100-field-hint">The more specific you are here, the more targeted your partner list will be. Generic inputs produce generic partners.</p>
         </div>
       )}
 
