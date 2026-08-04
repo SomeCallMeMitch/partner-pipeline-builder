@@ -103,7 +103,7 @@ export default function HeroSectionV2({ onStart }) {
           </p>
 
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', margin: '0 0 28px' }}>
-            3 min to fill out · about 4 min to generate · yours to keep forever
+            About 4 minutes · yours to keep forever
           </p>
 
           {/* MOBILE ONLY TOP 3 LIST */}
@@ -166,7 +166,7 @@ export default function HeroSectionV2({ onStart }) {
           {/* Panel footer */}
           <div style={{ paddingTop: 14, borderTop: '1px solid #E8E2D8', marginTop: 16 }}>
             <p style={{ textAlign: 'center', fontSize: 12, color: '#888', margin: 0 }}>
-              3 min to fill out · No login · Free forever
+              About 4 minutes · No login · Free forever
             </p>
           </div>
         </div>
