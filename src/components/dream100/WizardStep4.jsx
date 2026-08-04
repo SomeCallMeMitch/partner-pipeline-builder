@@ -1,106 +1,90 @@
-import React, { useState } from "react";
+import React from "react";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export default function WizardStep4({ formData, onChange, onBack, onGenerate }) {
-  const [emailSkipped, setEmailSkipped] = useState(false);
-
   const niche = formData.customNiche
     ? `${formData.nicheBase} — ${formData.customNiche}`
     : formData.nicheBase || '—';
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
 
-  const handleSkip = () => {
-    onChange({ email: '' });
-    setEmailSkipped(true);
-  };
+  const email = (formData.email || '').trim();
+  const emailValid = EMAIL_RE.test(email);
+  const showEmailError = email.length > 0 && !emailValid;
 
   return (
     <div className="d100-form-card">
       <div className="d100-card-title">Ready to generate</div>
       <div className="d100-card-sub">Here's what's going into your report. Tap Generate to build it.</div>
 
-      {/* Email capture */}
-      {!emailSkipped && (
+      {/* Email capture — required, framed as delivery */}
+      <div style={{
+        background: isMobile ? '#1B2A4A' : '#F5F3EE',
+        border: isMobile ? 'none' : '1px solid #DDD5C5',
+        borderRadius: 12,
+        padding: '18px 20px',
+        marginBottom: 20,
+      }}>
         <div style={{
-          background: isMobile ? '#1B2A4A' : '#F5F3EE',
-          border: isMobile ? 'none' : '1px solid #DDD5C5',
-          borderRadius: 12,
-          padding: '18px 20px',
-          marginBottom: 20,
+          fontSize: 15, fontWeight: 700,
+          color: isMobile ? '#fff' : '#1B2A4A',
+          fontFamily: "'Sora', sans-serif",
+          marginBottom: 4,
         }}>
-          <div style={{
-            fontSize: 15, fontWeight: 700,
-            color: isMobile ? '#fff' : '#1B2A4A',
-            fontFamily: "'Sora', sans-serif",
-            marginBottom: 4,
-          }}>
-            Where should we send your blueprint?
-          </div>
-          <div style={{
-            fontSize: 13,
-            color: isMobile ? 'rgba(255,255,255,0.7)' : '#5A6278',
-            fontFamily: "'Sora', sans-serif",
-            lineHeight: 1.5,
-            marginBottom: 12,
-          }}>
-            Your report takes about four minutes to build. Enter your email and we'll send you the link when it's done — so you can do other things while you wait.
-          </div>
-          <input
-            type="email"
-            className="d100-input"
-            value={formData.email || ''}
-            onChange={(e) => onChange({ email: e.target.value })}
-            placeholder="yourname@email.com"
-            style={{ marginBottom: 10 }}
-          />
-          <div style={{
-            fontSize: 11,
-            color: isMobile ? 'rgba(255,255,255,0.5)' : '#888',
-            fontFamily: "'Sora', sans-serif",
-            lineHeight: 1.5,
-            marginBottom: 6,
-          }}>
-            We will not add you to any list, send you promotional emails, or share your information. This is the only email you will receive from us.
-          </div>
-          <div style={{
-            fontSize: 11,
-            color: isMobile ? 'rgba(255,255,255,0.45)' : '#888',
-            fontFamily: "'Sora', sans-serif",
-            lineHeight: 1.5,
-            marginBottom: 12,
-          }}>
-            Blueprint emails sometimes end up in spam. Check your spam folder if you don't see it within 15 minutes.
-          </div>
-          <button
-            type="button"
-            onClick={handleSkip}
-            style={{
-              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-              fontSize: 12, fontWeight: 600, fontFamily: "'Sora', sans-serif",
-              color: isMobile ? 'rgba(255,255,255,0.45)' : '#AAA',
-              textDecoration: 'underline',
-            }}
-          >
-            No thanks, I'll stay on the page
-          </button>
+          Where should we send your blueprint?
         </div>
-      )}
-
-      {emailSkipped && (
         <div style={{
-          fontSize: 12, color: '#AAA', fontFamily: "'Sora', sans-serif",
-          marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8,
+          fontSize: 13,
+          color: isMobile ? 'rgba(255,255,255,0.7)' : '#5A6278',
+          fontFamily: "'Sora', sans-serif",
+          lineHeight: 1.5,
+          marginBottom: 12,
         }}>
-          <span>No email — you're staying on the page.</span>
-          <button
-            type="button"
-            onClick={() => setEmailSkipped(false)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#C9973A', fontFamily: "'Sora', sans-serif", textDecoration: 'underline', padding: 0 }}
-          >
-            Add email instead
-          </button>
+          Your report takes about four minutes to build. Enter your email and we'll send you the link the moment it's ready, so you can close this tab and get on with your day.
         </div>
-      )}
+        <input
+          type="email"
+          className="d100-input"
+          value={formData.email || ''}
+          onChange={(e) => onChange({ email: e.target.value })}
+          placeholder="yourname@email.com"
+          autoComplete="email"
+          aria-label="Your email address"
+          aria-invalid={showEmailError ? 'true' : 'false'}
+          style={{
+            marginBottom: 8,
+            borderColor: showEmailError ? '#D9534F' : undefined,
+          }}
+        />
+        {showEmailError && (
+          <div style={{
+            fontSize: 12, fontWeight: 600,
+            color: isMobile ? '#FFB3B0' : '#C0392B',
+            fontFamily: "'Sora', sans-serif",
+            marginBottom: 8,
+          }}>
+            That doesn't look like a valid email address.
+          </div>
+        )}
+        <div style={{
+          fontSize: 11,
+          color: isMobile ? 'rgba(255,255,255,0.5)' : '#888',
+          fontFamily: "'Sora', sans-serif",
+          lineHeight: 1.5,
+          marginBottom: 6,
+        }}>
+          We'll send your blueprint, plus the occasional idea worth stealing on building referral partnerships. Unsubscribe any time in one click. We never sell or share your information.
+        </div>
+        <div style={{
+          fontSize: 11,
+          color: isMobile ? 'rgba(255,255,255,0.45)' : '#888',
+          fontFamily: "'Sora', sans-serif",
+          lineHeight: 1.5,
+        }}>
+          Blueprint emails sometimes end up in spam. Check your spam folder if you don't see it within 15 minutes.
+        </div>
+      </div>
 
       <div className="d100-confirm-box">
         <div className="d100-confirm-row">
@@ -132,7 +116,15 @@ export default function WizardStep4({ formData, onChange, onBack, onGenerate }) 
 
       <div className="d100-form-nav">
         <button className="d100-btn-back" onClick={onBack}>← Back</button>
-        <button className="d100-btn-generate" onClick={onGenerate}>⚡ Generate My Blueprint</button>
+        <button
+          className="d100-btn-generate"
+          onClick={onGenerate}
+          disabled={!emailValid}
+          title={emailValid ? undefined : 'Enter your email so we can send you the blueprint'}
+          style={emailValid ? undefined : { opacity: 0.45, cursor: 'not-allowed' }}
+        >
+          ⚡ Generate My Blueprint
+        </button>
       </div>
     </div>
   );
