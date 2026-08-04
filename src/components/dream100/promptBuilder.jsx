@@ -126,6 +126,7 @@ export function buildPrompts(formData) {
   const n = formData.name || 'I';
   const niche = formData.niche || 'General Residential';
   const geo = formData.geo || 'my market area';
+  const areas = formData.areas || '';
   const client = formData.client ? formData.client : `buyers and sellers in the ${niche} segment`;
   const challenge = formData.challenge || 'building consistent referral partner relationships';
   const years = formData.years || '';
@@ -133,6 +134,7 @@ export function buildPrompts(formData) {
   const ctx = `MY CONTEXT:
 - Real estate niche: ${niche}
 - Market area: ${geo}
+${areas ? `- Specific neighborhoods/areas I focus on within that market: ${areas}` : ''}
 - Ideal client: ${client}
 - Referral challenge: ${challenge}
 - My experience: ${years}
