@@ -15,7 +15,7 @@ const OUTCOMES = [
   {
     icon: "📜",
     title: "Complete outreach scripts, ready to personalize",
-    detail: "Email, phone, door-knock, and handwritten note templates. You fill in the name — everything else is written"
+    detail: "Email, LinkedIn, coffee invite, handwritten note, and thank-you note templates. You fill in the name — everything else is written"
   },
   {
     icon: "🛡️",
@@ -30,7 +30,12 @@ const OUTCOMES = [
   {
     icon: "📊",
     title: "12-month production math",
-    detail: "How many partners you need, at what referral rate, to hit your annual income goal — in black and white"
+    detail: "How many partners, at what referral rate, produce how many closed deals — shown with the assumptions, in black and white"
+  },
+  {
+    icon: "📌",
+    title: "A live tracker for your five partners",
+    detail: "Not a CRM. Five people, one next step each, and the handwritten note already written for every one of them. Free."
   },
 ];
 
