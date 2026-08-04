@@ -45,7 +45,18 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
     : null;
 
   const saveEdit = () => {
-    const patch = { ...draft };
+    const patch = {
+      personName: draft.personName,
+      company: draft.company,
+      email: draft.email,
+      phone: draft.phone,
+      secondary: {
+        personName: (draft.secondary.personName || "").trim(),
+        company: (draft.secondary.company || "").trim(),
+        email: (draft.secondary.email || "").trim(),
+        phone: (draft.secondary.phone || "").trim(),
+      },
+    };
     if (draft.personName.trim() && p.stage === "identified") {
       Object.assign(patch, stageChangePatch("named"));
     }
