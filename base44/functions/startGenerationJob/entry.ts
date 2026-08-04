@@ -13,6 +13,7 @@ const FIELD_LIMITS = {
   niche: 250,   // nicheBase + " — " + customNiche, composed client-side
   years: 60,
   llm: 60,
+  areas: 150,
 };
 
 // ── Sanitization ─────────────────────────────────────────────────────────────
@@ -202,6 +203,7 @@ Deno.serve(async (req) => {
       challenge: sanitizeField(formData.challenge, FIELD_LIMITS.challenge),
       years: sanitizeField(formData.years || '', FIELD_LIMITS.years),
       llm: sanitizeField(formData.llm || '', FIELD_LIMITS.llm),
+      areas: sanitizeField(formData.areas || '', FIELD_LIMITS.areas),
     };
 
     // ── Strip prompt-injection-shaped phrases from the assembled prompts ──────
