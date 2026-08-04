@@ -529,10 +529,7 @@ Week 1 must be the handwritten note. This is non-negotiable.
 DELIVERABLE — one table:
 | Week | Action | Channel | Goal | Time |
 
-Then add a Quick Reference Grid:
-| Week | Channel | Action (5 words max) |
-
-BRANCH POINTS — add two short sections after the grid:
+BRANCH POINTS — add two short sections after the table:
 If no response by Week 4:
 - 2 specific follow-up actions (1 sentence each)
 
@@ -549,7 +546,7 @@ One summary table only — not a separate section per quarter, and no explanator
 ---
 
 PART C — Referral Math
-Frame this section clearly as a DIRECTIONAL ILLUSTRATION — not a forecast, not an income projection, not a guarantee. Do not write an opening disclaimer sentence — a standard disclaimer is appended automatically at the end of this phase. Go straight into the scenarios.
+Frame this section clearly as a DIRECTIONAL ILLUSTRATION — not a forecast, not an income projection, not a guarantee. Do not write ANY disclaimer sentence or paragraph of your own, opening or closing — a standard disclaimer is appended automatically at the end of this phase, and writing your own produces two disclaimers back to back saying the same thing. Go straight into the scenarios and stop at the required closing prose below; do not add a disclaimer after it.
 
 Show 3 scenarios using the exact Dream 5 partner names from Phase 3:
 | Scenario | Active Partners (by name) | Referrals per Partner per Year | Annual Referrals | Close Rate | Closed Deals |
