@@ -125,7 +125,7 @@ export default function HeroSection({ onStart }) {
           </button>
 
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', marginTop: 12 }}>
-            Takes about 4 minutes · No account needed · Use it as many times as you want
+            Takes about 4 minutes · No credit card · We email you the finished blueprint
           </p>
 
           {/* Credit */}
@@ -187,7 +187,7 @@ export default function HeroSection({ onStart }) {
           {/* Panel footer */}
           <div style={{ padding: '16px 20px', background: '#F2EEE8', borderTop: '1px solid #DDD5C5' }}>
             <p style={{ textAlign: 'center', fontSize: 13.3, color: '#5A6278', margin: 0 }}>
-              Takes about 4 minutes · No login · Use it as many times as you want
+              Takes about 4 minutes · No credit card · We email you the finished blueprint
             </p>
           </div>
         </div>
