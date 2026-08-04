@@ -18,7 +18,7 @@ function fmt(iso) {
   }
 }
 
-export default function PartnerCard({ partner, action, onPatch, busy }) {
+export default function PartnerCard({ partner, action, onPatch, onArchive, geography, busy }) {
   const p = partner;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState({
@@ -31,8 +31,12 @@ export default function PartnerCard({ partner, action, onPatch, busy }) {
   const [noteText, setNoteText] = useState("");
   const [showNotes, setShowNotes] = useState(false);
   const [quickName, setQuickName] = useState("");
+  const [confirmArchive, setConfirmArchive] = useState(false);
 
   const notes = Array.isArray(p.notes) ? p.notes : [];
+  const mapsUrl = geography
+    ? `https://www.google.com/maps/search/${encodeURIComponent(p.partnerType + " " + geography)}`
+    : null;
 
   const saveEdit = () => {
     const patch = { ...draft };
@@ -137,18 +141,31 @@ export default function PartnerCard({ partner, action, onPatch, busy }) {
       </div>
 
       {action.kind === "name" ? (
-        <div className="tk-row">
-          <input
-            className="tk-input"
-            style={{ flex: "1 1 200px" }}
-            value={quickName}
-            onChange={e => setQuickName(e.target.value)}
-            onKeyDown={e => { if (e.key === "Enter") saveQuickName(); }}
-            placeholder="Who is it?"
-          />
-          <button className="tk-btn tk-btn-primary" disabled={busy || !quickName.trim()} onClick={saveQuickName}>
-            Save
-          </button>
+        <div>
+          <div className="tk-row">
+            <input
+              className="tk-input"
+              style={{ flex: "1 1 200px" }}
+              value={quickName}
+              onChange={e => setQuickName(e.target.value)}
+              onKeyDown={e => { if (e.key === "Enter") saveQuickName(); }}
+              placeholder="Who is it?"
+            />
+            <button className="tk-btn tk-btn-primary" disabled={busy || !quickName.trim()} onClick={saveQuickName}>
+              Save
+            </button>
+          </div>
+          {mapsUrl && (
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="tk-btn-link"
+              style={{ display: "inline-block", marginTop: 8 }}
+            >
+              Search {p.partnerType.toLowerCase()} near {geography} →
+            </a>
+          )}
         </div>
       ) : (
         <div className="tk-row">
@@ -173,6 +190,23 @@ export default function PartnerCard({ partner, action, onPatch, busy }) {
             </button>
           )}
           <button className="tk-btn-link" onClick={logReferral}>Got a referral</button>
+          {onArchive && (
+            confirmArchive ? (
+              <span style={{ display: "inline-flex", gap: 8, alignItems: "center" }}>
+                <span style={{ fontSize: 12, color: C.muted }}>Not pursuing this one?</span>
+                <button className="tk-btn-link" style={{ color: C.error }} onClick={() => onArchive(p.id)}>
+                  Yes, remove it
+                </button>
+                <button className="tk-btn-link" onClick={() => setConfirmArchive(false)}>
+                  Never mind
+                </button>
+              </span>
+            ) : (
+              <button className="tk-btn-link" style={{ color: C.muted }} onClick={() => setConfirmArchive(true)}>
+                Not pursuing this one
+              </button>
+            )
+          )}
         </div>
         <select
           value={p.stage}
