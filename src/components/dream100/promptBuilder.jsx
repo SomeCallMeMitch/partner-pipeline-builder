@@ -300,7 +300,7 @@ RANKING RULES:
 ${SCORING_RUBRIC}
 
 DELIVERABLE — one markdown table:
-| Rank | Partner Type | Tier | Est. Monthly Referral Potential | Why Top Priority for ${niche} | First Contact Strategy | Practicality Score (1-10) |
+| Rank | Partner Type | Tier | Est. Referral Potential per Year | Why Top Priority for ${niche} | First Contact Strategy | Practicality Score (1-10) |
 
 Then answer: What 3 personal characteristics should ${n} look for when identifying WHICH INDIVIDUAL at each company to target?
 
@@ -314,7 +314,7 @@ ${PRACTICALITY_OVERRIDE}
 
 ${EXCLUSION_RULES}
 
-${CONSERVATIVE_ESTIMATES}
+${ESTIMATE_CAPS}
 
 ${CONSISTENCY_RULE}
 
