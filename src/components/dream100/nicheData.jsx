@@ -11,31 +11,31 @@ export const NICHES = [
 
 export const NICHE_HELPERS = {
   'Luxury & High-End Residential': {
-    hint: 'Tap any example below or write your own. The more specific, the better your prompts:',
+    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
     chips: ['Waterfront estates $2M+', 'Gated communities with private amenities', 'Luxury condos for empty nesters', 'Primary residence to vacation home buyers', 'International/out-of-state luxury buyers']
   },
   'First-Time Homebuyers': {
-    hint: 'Tap any example or write your own:',
+    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
     chips: ['Young professionals age 25–35', 'FHA and down payment assistance buyers', 'Renters moving to suburbs', 'Dual-income couples buying their first home', 'Single buyers in urban markets']
   },
   'Empty Nesters & Downsizing': {
-    hint: 'Tap any example or write your own:',
+    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
     chips: ['Couples 55–70 selling a 4BR family home', 'Moving to a 55+ active adult community', 'Seeking lock-and-leave condos', 'Downsizing to be near grandchildren', 'Trading a large home for a smaller home + cash']
   },
   'Investor & Fix-and-Flip': {
-    hint: 'Tap any example or write your own:',
+    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
     chips: ['Out-of-state investors buying remotely', 'BRRRR strategy buyers', 'Local flippers doing 5–10 deals a year', 'Multifamily 2–4 unit investors', 'Short-term rental (Airbnb) buyers']
   },
   'Military Relocation (PCS)': {
-    hint: 'Tap any example or write your own:',
+    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
     chips: ['Active duty families on PCS orders', 'VA loan buyers near a base', 'Retiring military buying their forever home', 'Dual military couples', 'Military families relocating to/from overseas']
   },
   'Divorce & Estate Sales': {
-    hint: 'Tap any example or write your own:',
+    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
     chips: ['Divorce attorneys who refer clients needing to sell', 'Probate and estate attorneys', 'Inherited property owners', 'Court-ordered sales needing quick close', 'Executors managing estate real estate']
   },
   'New Construction & Builder Representation': {
-    hint: 'Tap any example or write your own:',
+    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
     chips: ['Representing buyers in new subdivisions', 'Exclusive builder sales rep partnerships', 'Custom home lot buyers', 'Buyers torn between resale and new build', '55+ new construction communities']
   },
   'General Residential': {
