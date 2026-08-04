@@ -154,21 +154,55 @@ function validatePhaseOutput(phaseId, text) {
 
 // ── Context builders ─────────────────────────────────────────────────────────
 
-function extractSection(text, keyword, maxLines) {
+// Structure-aware extraction. The old keyword-line version dropped every
+// data row that didn't literally contain the search word (e.g. a Phase 2
+// table row for "Title Company" never contains the word "upstream"), which
+// starved Phase 3's context down to a single partner some runs. This walks
+// the whole text and pulls every markdown table row it finds -- across
+// multiple tables in one document -- header and data rows, skipping the
+// |---|---| separator rows. Capped at maxLines total rows.
+function extractAllTables(text, maxLines) {
   if (!text) return null;
   const lines = text.split('\n');
-  const keyLines = [];
-  const kw = keyword.toLowerCase();
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (line.toLowerCase().includes(kw) && line.length > 15) {
-      for (let j = i; j < Math.min(i + 3, lines.length); j++) {
-        if (lines[j].trim()) keyLines.push(lines[j].trim());
-      }
+  const out = [];
+  for (const line of lines) {
+    const trimmed = line.trim();
+    const isRow = trimmed.startsWith('|') && trimmed.endsWith('|');
+    if (isRow && !/^\|[\s\-:|]+\|$/.test(trimmed)) {
+      out.push(trimmed);
+      if (out.length >= maxLines) break;
     }
-    if (keyLines.length >= maxLines * 2) break;
   }
-  return keyLines.length > 0 ? keyLines.slice(0, maxLines * 2).join('\n') : null;
+  return out.length >= 2 ? out.join('\n') : null;
+}
+
+// Phase 4 has no tables -- it's "### Partner Name" headers followed by
+// bold-labeled paragraphs. The old extractor grabbed 3 lines containing the
+// words "value gift" with no partner name attached, so phases 5-7 got gift
+// text with no indication of whose gift it was. This pairs each partner
+// heading with its THE VALUE GIFT line.
+function extractValueGifts(text, maxSections) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  const out = [];
+  let currentPartner = null;
+  let currentGift = null;
+  for (const line of lines) {
+    const h = line.match(/^###\s+(.+)$/);
+    if (h) {
+      if (currentPartner && currentGift) out.push(`${currentPartner}: ${currentGift}`);
+      currentPartner = h[1].replace(/\*/g, '').trim();
+      currentGift = null;
+      continue;
+    }
+    const g = line.match(/\*\*THE VALUE GIFT:\*\*\s*(.+)/i);
+    if (g && currentPartner && !currentGift) {
+      currentGift = g[1].trim().slice(0, 220);
+    }
+  }
+  if (currentPartner && currentGift) out.push(`${currentPartner}: ${currentGift}`);
+  if (out.length === 0) return null;
+  return out.slice(0, maxSections).join('\n');
 }
 
 function extractDream5(text) {
