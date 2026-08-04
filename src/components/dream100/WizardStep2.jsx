@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CHALLENGES, detectContradiction } from "./nicheData";
+import { CHALLENGES, detectContradiction, isUnmodifiedExample } from "./nicheData";
 import IdealClientModal from "./IdealClientModal";
 import NicheMismatchWarning from "./NicheMismatchWarning";
 import { sanitizeInput, FIELD_LIMITS } from "@/lib/inputValidation";
@@ -8,6 +8,7 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
   const [errors, setErrors] = useState({});
   const [showClientModal, setShowClientModal] = useState(false);
   const [contradictionWarning, setContradictionWarning] = useState(null);
+  const [exampleWarning, setExampleWarning] = useState(false);
 
   const handleNext = () => {
     const newErrors = {};
@@ -18,8 +19,16 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
 
     const warning = detectContradiction(formData.nicheBase, formData.client);
     if (warning && !contradictionWarning) { setContradictionWarning(warning); return; }
-
     setContradictionWarning(null);
+
+    // Exact-string match only, so this never fires on real typed text --
+    // just the case where a card was clicked and nothing was added to it.
+    if (!warning && isUnmodifiedExample(formData.client) && !exampleWarning) {
+      setExampleWarning(true);
+      return;
+    }
+    setExampleWarning(false);
+
     onNext();
   };
 
@@ -72,6 +81,16 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
         />
       )}
 
+      {exampleWarning && (
+        <NicheMismatchWarning
+          title="One more thing"
+          message="That's our example text, unedited. One real detail — a price band, a neighborhood, or a common situation — will change which partners we recommend."
+          backLabel="Let me add a detail"
+          onGoBack={() => setExampleWarning(false)}
+          onContinue={() => { setExampleWarning(false); onNext(); }}
+        />
+      )}
+
       <div className={`d100-field-group ${errors.challenge ? 'd100-has-error' : ''}`}>
         <div className="d100-field-label">Your biggest referral challenge right now</div>
         <select
@@ -96,7 +115,14 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
       <IdealClientModal
         isOpen={showClientModal}
         onClose={() => setShowClientModal(false)}
-        onSelect={(text) => { onChange({ client: text }); setShowClientModal(false); }}
+        nicheBase={formData.nicheBase}
+        onSelect={(text) => {
+          const current = (formData.client || '').trim();
+          const combined = current ? current + ' ' + text : text;
+          onChange({ client: sanitizeInput(combined, FIELD_LIMITS.client) });
+          setContradictionWarning(null);
+          setShowClientModal(false);
+        }}
       />
     </div>
   );
