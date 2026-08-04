@@ -4,6 +4,7 @@ import { base44 } from "@/api/base44Client";
 import { buildPrompts } from "@/components/dream100/promptBuilder";
 import PartnerNotesCTA from "@/components/dream100/PartnerNotesCTA";
 import TrackerCTA from "@/components/tracker/TrackerCTA";
+import CompletionSignupModal from "@/components/CompletionSignupModal";
 
 // ── Write Because RE Clone URL (Workstream 3 uses this for the CTA redirect) ────
 const WRITE_BECAUSE_URL = 'https://writebecause.com';
@@ -197,6 +198,47 @@ export default function RunBlueprint() {
   const warningCount   = Object.keys(phaseWarnings).length;
   const progress       = phases.length ? (completedCount / phases.length) * 100 : 0;
 
+  // ── Countdown timer (Run Progress circle) ────────────────────────────
+  // Seeded from the server's phase-1 start time so a tab reload shows the
+  // correct remaining time instead of resetting to 4:00. Target of 240s is
+  // based on measured production runtimes (174-207s), giving honest headroom
+  // so the timer rarely hits zero before a run completes.
+  const COUNTDOWN_TARGET_SECONDS = 240;
+  const phase1StartedAt = phaseTiming['1']?.startedAt || null;
+  const [remainingSeconds, setRemainingSeconds] = useState(COUNTDOWN_TARGET_SECONDS);
+  const countdownIntervalRef = useRef(null);
+
+  useEffect(() => {
+    clearInterval(countdownIntervalRef.current);
+    const isRunActive = !allDone && !isFailed && !isCancelled;
+    if (isRunActive && phase1StartedAt) {
+      const tick = () => {
+        const elapsed = Math.max(0, Math.round((Date.now() - new Date(phase1StartedAt).getTime()) / 1000));
+        setRemainingSeconds(Math.max(0, COUNTDOWN_TARGET_SECONDS - elapsed));
+      };
+      tick();
+      countdownIntervalRef.current = setInterval(tick, 1000);
+    }
+    return () => clearInterval(countdownIntervalRef.current);
+  }, [allDone, isFailed, isCancelled, phase1StartedAt]);
+
+  const countdownLabel = remainingSeconds > 0
+    ? { big: `${Math.floor(remainingSeconds / 60)}:${String(remainingSeconds % 60).padStart(2, "0")}`, small: "remaining" }
+    : { big: "Almost", small: "done" };
+
+  // ── Completion signup modal ───────────────────────────────────────────
+  // Fires once on the first transition to complete. The poll runs every 5s,
+  // so a naive `if (allDone)` check would reopen the modal on every tick
+  // after the user closes it -- the ref latch prevents that.
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const modalShownRef = useRef(false);
+  useEffect(() => {
+    if (allDone && !modalShownRef.current) {
+      modalShownRef.current = true;
+      setShowSignupModal(true);
+    }
+  }, [allDone]);
+
   const displayName = job?.formData
     ? `${job.formData.niche || job.formData.nicheBase || ''} -- ${job.formData.geo || ''}`
     : '';
@@ -327,6 +369,11 @@ export default function RunBlueprint() {
   // ── Main render ───────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: "100vh", background: C.cream, fontFamily: font }}>
+      <CompletionSignupModal
+        open={showSignupModal}
+        onClose={() => setShowSignupModal(false)}
+        jobId={job?.id || jobId}
+      />
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         .bp-grid { display: grid; grid-template-columns: 1fr 420px; gap: 36px; align-items: start; }
@@ -479,8 +526,22 @@ export default function RunBlueprint() {
                       strokeLinecap="round" style={{ transition: "stroke-dashoffset 0.5s ease" }} />
                   </svg>
                   <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
-                    <span style={{ fontSize: 22, fontWeight: 800, color: C.navy, fontFamily: font, lineHeight: 1 }}>{allDone ? (warningCount > 0 ? "!" : "✓") : completedCount}</span>
-                    <span style={{ fontSize: 10, color: C.muted, fontFamily: font }}>{allDone ? "Done" : `of ${phases.length}`}</span>
+                    {allDone ? (
+                      <>
+                        <span style={{ fontSize: 22, fontWeight: 800, color: C.navy, fontFamily: font, lineHeight: 1 }}>{warningCount > 0 ? "!" : "✓"}</span>
+                        <span style={{ fontSize: 10, color: C.muted, fontFamily: font }}>Done</span>
+                      </>
+                    ) : isFailed || isCancelled ? (
+                      <>
+                        <span style={{ fontSize: 22, fontWeight: 800, color: C.navy, fontFamily: font, lineHeight: 1 }}>{completedCount}</span>
+                        <span style={{ fontSize: 10, color: C.muted, fontFamily: font }}>of {phases.length}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span style={{ fontSize: 19, fontWeight: 800, color: C.navy, fontFamily: font, lineHeight: 1 }}>{countdownLabel.big}</span>
+                        <span style={{ fontSize: 10, color: C.muted, fontFamily: font }}>{countdownLabel.small}</span>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div style={{ fontSize: 17, fontWeight: 700, color: allDone ? (warningCount > 0 ? "#92400E" : C.success) : (isFailed || isCancelled) ? C.error : C.gold, fontFamily: font, marginTop: 8 }}>
