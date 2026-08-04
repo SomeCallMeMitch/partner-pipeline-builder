@@ -96,7 +96,12 @@ export default function Landing() {
 
     } catch (err) {
       console.error('startGenerationJob failed:', err);
-      setSubmitError(err.message || 'Failed to start blueprint generation. Please try again.');
+      // axios throws on non-2xx (422 from the preflight coherence check, 429
+      // from rate limiting), so the friendly message the backend put in the
+      // JSON body lives at err.response.data.error, not err.message -- err.message
+      // on a thrown axios error is a generic "Request failed with status code NNN".
+      const friendlyMessage = err?.response?.data?.error || err.message || 'Failed to start blueprint generation. Please try again.';
+      setSubmitError(friendlyMessage);
       setView('wizard');
       setWizardStep(4);
     }
