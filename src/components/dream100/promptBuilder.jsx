@@ -135,7 +135,7 @@ export function buildPrompts(formData) {
 - Market area: ${geo}
 - Ideal client: ${client}
 - Referral challenge: ${challenge}
-${years ? `- My experience: ${years}` : ''}
+- My experience: ${years}
 - My name: ${n}`;
 
   return [
