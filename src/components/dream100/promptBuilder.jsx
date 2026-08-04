@@ -498,10 +498,10 @@ ${OUTPUT_RULES}`
     // ── Phase 7 ──────────────────────────────────────────────────────────────
     {
       id: 7,
-      title: 'Phase 7: 90-Day Plan, Tracker & 12-Month System',
+      title: 'Phase 7: 90-Day Plan, 12-Month Calendar & Referral Math',
       prompt: `${ctx}
 
-TASK — 90-Day Launch Plan, Relationship Tracker, 12-Month Calendar & Referral Math
+TASK — 90-Day Launch Plan, 12-Month Calendar & Referral Math
 
 OUTREACH TARGETING RULE:
 When naming specific firms or practices as outreach examples, prefer:
@@ -541,20 +541,14 @@ If no response by Week 8:
 
 ---
 
-PART B — Relationship Tracker
-A simple table for managing all 5 Dream Partners. Columns:
-| Partner Name | Tier | Last Contact | Next Action | Stage (Cold/Warm/Active/Advocate) | Notes | Referrals In | Referrals Out |
-
----
-
-PART C — 12-Month Quarterly Calendar
+PART B — 12-Month Quarterly Calendar
 After a partner becomes active, what does ${n} do each quarter?
-One summary table only — not a separate section per quarter:
+One summary table only — not a separate section per quarter, and no explanatory prose about how to use the table:
 | Quarter | Touchpoints | Value Gift | Personal Gesture | Handwritten Note Moment |
 
 ---
 
-PART D — Referral Math
+PART C — Referral Math
 Frame this section clearly as a DIRECTIONAL ILLUSTRATION — not a forecast, not an income projection, not a guarantee. Do not write an opening disclaimer sentence — a standard disclaimer is appended automatically at the end of this phase. Go straight into the scenarios.
 
 Show 3 scenarios using the exact Dream 5 partner names from Phase 3:
@@ -574,6 +568,8 @@ ${CONSERVATIVE_ESTIMATES}
 
 End with: WHAT ${n} NEEDS TO BELIEVE
 3 bullet points. Honest gut-check on patience and consistency. Plain spoken.
+
+STOP THERE. Do not add anything after those 3 bullets -- no weekly getting-started checklist, no handwritten note template, no additional sections. Phase 6 already wrote the handwritten notes and a tracker pointer is appended automatically after this phase. Repeating either wastes the agent's time.
 
 ${CONSISTENCY_RULE}
 
