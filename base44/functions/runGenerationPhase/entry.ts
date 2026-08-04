@@ -491,7 +491,7 @@ Deno.serve(async (req) => {
 
       if (job.userEmail) {
         try {
-          await sendDeliveryEmail(job.userEmail, jobId);
+          await sendDeliveryEmail(base44, job.userEmail, jobId);
         } catch (emailErr) {
           console.error('[runGenerationPhase] Delivery email failed:', emailErr.message);
         }
@@ -506,15 +506,12 @@ Deno.serve(async (req) => {
   }
 });
 
-// ── Resend email helper ───────────────────────────────────────────────────────
+// ── Delivery email helper (Base44 built-in email) ─────────────────────────────
+// Uses the Core.SendEmail integration via the service-role client so this
+// works from a backend function context with no user request in scope --
+// no external API key required.
 
-async function sendDeliveryEmail(toEmail, jobId) {
-  const resendKey = Deno.env.get('RESEND_API_KEY');
-  if (!resendKey) {
-    console.warn('[runGenerationPhase] RESEND_API_KEY not set, skipping delivery email');
-    return;
-  }
-
+async function sendDeliveryEmail(base44, toEmail, jobId) {
   const blueprintUrl = 'https://pipeline.nurturink.com/RunBlueprint?jobId=' + jobId;
 
   const htmlBody = `
@@ -541,24 +538,11 @@ async function sendDeliveryEmail(toEmail, jobId) {
     </div>
   `;
 
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + resendKey,
-    },
-    body: JSON.stringify({
-      from: Deno.env.get('RESEND_FROM_ADDRESS') || 'blueprint@pipeline.nurturink.com',
-      to: [toEmail],
-      subject: 'Your Dream Partner Blueprint is ready',
-      html: htmlBody,
-    }),
+  await base44.asServiceRole.integrations.Core.SendEmail({
+    to: toEmail,
+    subject: 'Your Dream Partner Blueprint is ready',
+    body: htmlBody,
   });
-
-  if (!response.ok) {
-    const errData = await response.json().catch(() => ({}));
-    throw new Error('Resend ' + response.status + ': ' + (errData.message || 'unknown error'));
-  }
 
   console.log('[runGenerationPhase] Delivery email sent to', toEmail);
 }

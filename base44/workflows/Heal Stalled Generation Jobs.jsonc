@@ -1,0 +1,44 @@
+{
+  "name": "Heal Stalled Generation Jobs",
+  "description": "Every 5 minutes, checks GenerationJob records stuck in queued or running status and re-triggers the dropped phase, so runs still complete (and send their completion email) even if the user closed the tab.",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "heal_stalled_generation_jobs",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "heal_jobs": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "healStalledJobs"
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Heal stalled jobs",
+            "description": "Re-trigger dropped phases"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "*/5 * * * *",
+      "one_time_date": null,
+      "timezone": "America/Los_Angeles",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}
