@@ -229,12 +229,12 @@ For each upstream partner include:
 - Why they see the ${niche} client early
 - The specific problem they are solving at that moment
 - What ${n} can offer in return (specific value exchange)
-- Estimated monthly referral frequency
+- Estimated referrals per year (see the annual cap rule below -- do not estimate monthly)
 - Outreach accessibility: Easy / Moderate / Hard
 - Why this partner beats the next-best alternative (1 sentence)
 
 DELIVERABLE — Table 1:
-| Upstream Partner Type | Why They See Client Early | Problem They Solve | Value Exchange | Est. Monthly Referrals | Outreach Accessibility | Why They Beat Next-Best |
+| Upstream Partner Type | Why They See Client Early | Problem They Solve | Value Exchange | Est. Referrals per Year | Outreach Accessibility | Why They Beat Next-Best |
 
 ---
 
@@ -245,13 +245,13 @@ List exactly 2 side-stream partner types most relevant to ${niche} transactions.
 Same format as upstream, same columns.
 
 DELIVERABLE — Table 2:
-| Side-Stream Partner Type | Why They Appear During Transaction | Problem They Solve | Value Exchange | Est. Monthly Referrals | Outreach Accessibility | Why They Beat Next-Best |
+| Side-Stream Partner Type | Why They Appear During Transaction | Problem They Solve | Value Exchange | Est. Referrals per Year | Outreach Accessibility | Why They Beat Next-Best |
 
 ${PRACTICALITY_OVERRIDE}
 
 ${EXCLUSION_RULES}
 
-${CONSERVATIVE_ESTIMATES}
+${ESTIMATE_CAPS}
 
 ${OUTPUT_RULES}`
     },
