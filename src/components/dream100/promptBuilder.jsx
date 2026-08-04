@@ -66,6 +66,27 @@ The halved number is the honest year-one expectation. Show only the halved numbe
 If uncertain on any number, choose the lower estimate. Conservative numbers build credibility.
 An agent who exceeds a conservative projection feels successful. An agent who falls short of an aggressive one loses faith in the system.`;
 
+// Lighter version of the block above, for phases 2 and 3. Those phases only
+// need the caps to size a rough per-partner estimate for ranking; the full
+// framing/halving rules belong to Phase 7, which is the only phase that
+// actually builds the referral math section. Previously all three phases
+// got the full block, which meant Phase 2 -- asked only for two tables --
+// also produced an unrequested full referral-math section with its own
+// numbers, and those numbers did not match Phase 7's later, more careful
+// ones. Same bug for Phase 3.
+const ESTIMATE_CAPS = `ESTIMATE CAP RULE:
+If this phase's table includes a referral-volume column, use real-world conservative ANNUAL caps, never monthly:
+- Mortgage broker or property manager: maximum 8-12 referrals per year
+- Financial planner, attorney, CPA, or lender: maximum 4-8 referrals per year
+- Slower relationship-based or Tier 2 professionals: maximum 2-4 referrals per year
+
+Do not convert monthly estimates into annual totals by multiplication -- that produces inflated numbers. Use the annual caps above as the ceiling, not a starting point.
+
+CLOSE RATE RULE:
+If you reference a close rate, use 35-45% for warm referrals. Do not exceed 45%.
+
+DO NOT BUILD A REFERRAL MATH, PROJECTION, OR SCENARIO SECTION IN THIS PHASE. That belongs to Phase 7 only, which applies the halving rule to produce the honest year-one number. Any referral-volume figure in this phase's table is a rough annual estimate used only to rank partners against each other, not a forecast.`;
+
 const CONSISTENCY_RULE = `HARD CONSISTENCY RULE:
 - Do not introduce any new partner types in this phase
 - Do not rename, broaden, or swap the Dream 5 partner types established in Phase 3
