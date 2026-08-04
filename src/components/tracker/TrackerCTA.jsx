@@ -32,7 +32,7 @@ export default function TrackerCTA({ jobId }) {
         color: C.white, fontWeight: 800, fontSize: 20, lineHeight: 1.35,
         marginBottom: 12, position: "relative",
       }}>
-        Your blueprint names partner types. It becomes real when five actual people are on it.
+        Your blueprint names partner types. It becomes real when actual people are on it.
       </div>
       <p style={{
         color: "rgba(255,255,255,0.68)", fontSize: 14, lineHeight: 1.7,
