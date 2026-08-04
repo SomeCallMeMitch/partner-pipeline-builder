@@ -126,6 +126,12 @@ export const IDEAL_CLIENT_EXAMPLES = [
     text: "Growing families 35–50, outgrowing their starter home, $800K–$1.5M budget. Prioritize school district, yard, safety. Both partners in the decision. Usually 60–90 days before school starts.",
     niches: ["General Residential", "New Construction & Builder Representation"],
   },
+  {
+    icon: "🔁",
+    label: "Referral-Based Repeat Client",
+    text: "Long-time client base built on referrals rather than a single defining niche, spanning several price points and neighborhoods. Loyal to the agent specifically, not to a property type.",
+    niches: ["General Residential"],
+  },
 ];
 
 // Exact-match check: the person clicked a card and submitted it completely
