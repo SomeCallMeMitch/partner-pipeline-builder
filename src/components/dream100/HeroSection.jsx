@@ -34,8 +34,8 @@ const OUTCOMES = [
   },
   {
     icon: "📌",
-    title: "A live tracker for your five partners",
-    detail: "Not a CRM. Five people, one next step each, and the handwritten note already written for every one of them. Free."
+    title: "A live tracker for your referral partners",
+    detail: "Not a CRM. One next step each, and the handwritten note already written for every one of them. Free."
   },
 ];
 
