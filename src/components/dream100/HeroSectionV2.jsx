@@ -189,7 +189,7 @@ export default function HeroSectionV2({ onStart }) {
           {' '}— {theme.footerText}.
         </p>
         <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)' }}>
-          © 2025 {theme.brandName} ·{' '}
+          © 2026 {theme.brandName} ·{' '}
           <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer"
             style={{ color: '#D15704', textDecoration: 'none' }}>
             Learn More
