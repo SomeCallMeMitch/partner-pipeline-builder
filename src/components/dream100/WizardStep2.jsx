@@ -49,6 +49,19 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
       </div>
 
       <div className="d100-field-group">
+        <div className="d100-field-label">Specific neighborhoods or areas <span className="opt">(optional)</span></div>
+        <input
+          type="text"
+          className="d100-input"
+          value={formData.areas || ''}
+          maxLength={FIELD_LIMITS.areas}
+          onChange={(e) => onChange({ areas: sanitizeInput(e.target.value, FIELD_LIMITS.areas) })}
+          placeholder="e.g., North County coastal, or Westside, or specific towns"
+        />
+        <p className="d100-field-hint">If your market spans a big or varied metro — like Los Angeles or San Diego — this keeps partner suggestions to the part of it you actually work.</p>
+      </div>
+
+      <div className="d100-field-group">
         <div className="d100-field-label">
           Describe your ideal client{' '}
           <span className="opt">(optional — adds a lot of value)</span>
