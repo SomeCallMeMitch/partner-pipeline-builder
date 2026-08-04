@@ -147,7 +147,7 @@ export default function Tracker() {
               You have not built a blueprint yet
             </div>
             <p style={{ fontSize: 14, color: C.muted, lineHeight: 1.65, marginBottom: 16 }}>
-              The tracker is built from your Dream Partner Blueprint. Build one first, it takes about ten minutes
+              The tracker is built from your Dream Partner Blueprint. Build one first, it takes about four minutes
               and costs nothing.
             </p>
             <button className="tk-btn tk-btn-primary" onClick={() => navigate("/")}>Build my blueprint</button>
