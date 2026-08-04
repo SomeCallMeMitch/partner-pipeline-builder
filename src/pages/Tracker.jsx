@@ -222,7 +222,15 @@ export default function Tracker() {
             </div>
 
             {ordered.map(({ p, a }) => (
-              <PartnerCard key={p.id} partner={p} action={a} onPatch={patchPartner} busy={busy} />
+              <PartnerCard
+                key={p.id}
+                partner={p}
+                action={a}
+                onPatch={patchPartner}
+                onArchive={archivePartner}
+                geography={tracker.geography}
+                busy={busy}
+              />
             ))}
 
             <div style={{ textAlign: "center", marginTop: 20, fontSize: 12, color: C.muted, lineHeight: 1.7 }}>
