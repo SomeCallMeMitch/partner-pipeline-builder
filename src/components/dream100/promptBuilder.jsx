@@ -567,7 +567,7 @@ After the table, add 2-3 sentences in plain language:
 ${CONSERVATIVE_ESTIMATES}
 
 End with: WHAT ${n} NEEDS TO BELIEVE
-3 bullet points. Honest gut-check on patience and consistency. Plain spoken.
+3 bullet points. Honest gut-check on patience and consistency. Plain spoken. At least one of the three bullets must speak directly to ${n}'s stated referral challenge above (${challenge}) — not generic patience advice, but the specific thing that has to be true for ${n} to get past that exact challenge.
 
 STOP THERE. Do not add anything after those 3 bullets -- no weekly getting-started checklist, no handwritten note template, no additional sections. Phase 6 already wrote the handwritten notes and a tracker pointer is appended automatically after this phase. Repeating either wastes the agent's time.
 
