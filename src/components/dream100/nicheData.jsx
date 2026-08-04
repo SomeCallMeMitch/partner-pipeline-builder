@@ -11,36 +11,36 @@ export const NICHES = [
 
 export const NICHE_HELPERS = {
   'Luxury & High-End Residential': {
-    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
-    chips: ['Waterfront estates $2M+', 'Gated communities with private amenities', 'Luxury condos for empty nesters', 'Primary residence to vacation home buyers', 'International/out-of-state luxury buyers']
+    hint: 'Or start from one of these:',
+    chips: ['Waterfront or view estates', 'Gated and private communities', 'Buyers relocating from out of state', 'Luxury condos and lock-and-leave', 'Second homes and vacation properties', 'Estate and legacy properties']
   },
   'First-Time Homebuyers': {
-    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
-    chips: ['Young professionals age 25–35', 'FHA and down payment assistance buyers', 'Renters moving to suburbs', 'Dual-income couples buying their first home', 'Single buyers in urban markets']
+    hint: 'Or start from one of these:',
+    chips: ['FHA and down payment assistance', 'Young professionals 25–35', 'Renters priced out of the city', 'Dual-income couples buying together', 'Single buyers on one income', 'Buyers using family gift funds']
   },
   'Empty Nesters & Downsizing': {
-    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
-    chips: ['Couples 55–70 selling a 4BR family home', 'Moving to a 55+ active adult community', 'Seeking lock-and-leave condos', 'Downsizing to be near grandchildren', 'Trading a large home for a smaller home + cash']
+    hint: 'Or start from one of these:',
+    chips: ['Selling the four-bedroom family home', 'Moving to a 55+ community', 'Single-story and low-maintenance', 'Relocating near adult children', 'Trading equity for a smaller home plus cash', 'Snowbirds splitting time']
   },
   'Investor & Fix-and-Flip': {
-    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
-    chips: ['Out-of-state investors buying remotely', 'BRRRR strategy buyers', 'Local flippers doing 5–10 deals a year', 'Multifamily 2–4 unit investors', 'Short-term rental (Airbnb) buyers']
+    hint: 'Or start from one of these:',
+    chips: ['Local flippers doing 5–10 a year', 'Buy-and-hold rental investors', 'Out-of-state investors buying remotely', 'Small multifamily, 2–4 units', 'Short-term rental buyers', '1031 exchange buyers on a deadline']
   },
   'Military Relocation (PCS)': {
-    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
-    chips: ['Active duty families on PCS orders', 'VA loan buyers near a base', 'Retiring military buying their forever home', 'Dual military couples', 'Military families relocating to/from overseas']
+    hint: 'Or start from one of these:',
+    chips: ['Active duty on PCS orders', 'VA loan buyers near a base', 'Retiring military buying to stay', 'Dual military couples', 'Families arriving from overseas', 'Sellers with orders and a hard deadline']
   },
   'Divorce & Estate Sales': {
-    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
-    chips: ['Divorce attorneys who refer clients needing to sell', 'Probate and estate attorneys', 'Inherited property owners', 'Court-ordered sales needing quick close', 'Executors managing estate real estate']
+    hint: 'Or start from one of these:',
+    chips: ['Executors selling estate property', 'Court-ordered sales with a deadline', 'Divorcing couples splitting the house', 'Probate and inherited property', 'Heirs who cannot agree', 'Trust and conservatorship sales']
   },
   'New Construction & Builder Representation': {
-    hint: 'Write your own in a sentence or two. Tap an example if you want a starting point:',
-    chips: ['Representing buyers in new subdivisions', 'Exclusive builder sales rep partnerships', 'Custom home lot buyers', 'Buyers torn between resale and new build', '55+ new construction communities']
+    hint: 'Or start from one of these:',
+    chips: ['Buyer representation in new subdivisions', 'Exclusive builder sales partnerships', 'Custom home and lot buyers', 'Buyers weighing new build against resale', '55+ new communities', 'Spec homes and quick move-ins']
   },
   'General Residential': {
-    hint: 'Describe who you most often work with:',
-    chips: ['Mix of move-up buyers and sellers', 'Suburban families in a specific price range', 'Buyers and sellers in a specific neighborhood', 'Referral-based business, all price points']
+    hint: 'Or start from one of these:',
+    chips: ['Move-up buyers and sellers', 'Families in a specific price band', 'One or two specific neighborhoods', 'Repeat and referral clients', 'Relocating buyers new to the area', 'Sellers timing a purchase and sale together']
   }
 };
 
