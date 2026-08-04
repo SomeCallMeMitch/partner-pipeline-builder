@@ -154,7 +154,6 @@ export const CHALLENGES = [
 ];
 
 export const YEARS_OPTIONS = [
-  { value: "", label: "Prefer not to say" },
   { value: "I'm in my first 2 years and building my referral base from scratch", label: "Under 2 years" },
   { value: "I have 3–5 years of experience and am building more consistent systems", label: "3–5 years" },
   { value: "I have 6–10 years of experience and am refining my referral approach", label: "6–10 years" },
