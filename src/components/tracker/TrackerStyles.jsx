@@ -58,6 +58,11 @@ export default function TrackerStyles() {
         margin: 0 auto;
         padding: 24px 20px 64px;
       }
+      /* The naming step lays out a two-column card grid, so it needs more
+         width than the single-column list that follows it. */
+      .tk-main.tk-main-wide {
+        max-width: 1140px;
+      }
       .tk-card {
         background: ${C.white};
         border: 1px solid ${C.border};
