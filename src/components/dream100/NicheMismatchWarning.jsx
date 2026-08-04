@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function NicheMismatchWarning({ message, onGoBack, onContinue }) {
+export default function NicheMismatchWarning({ message, onGoBack, onContinue, title, backLabel }) {
   return (
     <div style={{
       background: '#FFFBEB',
@@ -10,7 +10,7 @@ export default function NicheMismatchWarning({ message, onGoBack, onContinue }) 
       marginBottom: 8,
     }}>
       <div style={{ fontSize: 13, fontWeight: 700, color: '#92400E', marginBottom: 6 }}>
-        Heads up — possible niche mismatch
+        {title || 'Heads up — possible niche mismatch'}
       </div>
       <div style={{ fontSize: 13, color: '#78350F', lineHeight: 1.6, marginBottom: 12 }}>
         {message}
@@ -25,7 +25,7 @@ export default function NicheMismatchWarning({ message, onGoBack, onContinue }) 
             fontFamily: "'Sora', sans-serif",
           }}
         >
-          Go back and fix my niche
+          {backLabel || 'Go back and fix my niche'}
         </button>
         <button
           onClick={onContinue}
