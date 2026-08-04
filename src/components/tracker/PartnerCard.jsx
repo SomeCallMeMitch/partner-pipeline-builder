@@ -26,6 +26,12 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
     company: p.company || "",
     email: p.email || "",
     phone: p.phone || "",
+    secondary: {
+      personName: p.secondary?.personName || "",
+      company: p.secondary?.company || "",
+      email: p.secondary?.email || "",
+      phone: p.secondary?.phone || "",
+    },
   });
   const [noteOpen, setNoteOpen] = useState(false);
   const [noteText, setNoteText] = useState("");
@@ -88,6 +94,11 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
           </div>
           {p.company && (
             <div style={{ fontSize: 13, color: C.muted, marginTop: 2 }}>{p.company}</div>
+          )}
+          {p.secondary?.personName && (
+            <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>
+              Backup: {p.secondary.personName}{p.secondary.company ? ` · ${p.secondary.company}` : ""}
+            </div>
           )}
         </div>
         <span className={"tk-pill" + (action.isDue ? " tk-pill-due" : "")}>{dueSummary(action)}</span>
@@ -277,6 +288,33 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
               <label className="tk-label">Phone</label>
               <input className="tk-input" value={draft.phone}
                 onChange={e => setDraft({ ...draft, phone: e.target.value })} />
+            </div>
+          </div>
+          <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.creamDark}` }}>
+            <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", color: C.navy, marginBottom: 10 }}>
+              Backup contact
+            </div>
+            <div className="tk-grid2">
+              <div>
+                <label className="tk-label">Name</label>
+                <input className="tk-input" value={draft.secondary.personName}
+                  onChange={e => setDraft({ ...draft, secondary: { ...draft.secondary, personName: e.target.value } })} />
+              </div>
+              <div>
+                <label className="tk-label">Company</label>
+                <input className="tk-input" value={draft.secondary.company}
+                  onChange={e => setDraft({ ...draft, secondary: { ...draft.secondary, company: e.target.value } })} />
+              </div>
+              <div>
+                <label className="tk-label">Email</label>
+                <input className="tk-input" value={draft.secondary.email}
+                  onChange={e => setDraft({ ...draft, secondary: { ...draft.secondary, email: e.target.value } })} />
+              </div>
+              <div>
+                <label className="tk-label">Phone</label>
+                <input className="tk-input" value={draft.secondary.phone}
+                  onChange={e => setDraft({ ...draft, secondary: { ...draft.secondary, phone: e.target.value } })} />
+              </div>
             </div>
           </div>
           <div className="tk-row" style={{ marginTop: 12 }}>
