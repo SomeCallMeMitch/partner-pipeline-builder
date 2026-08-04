@@ -186,8 +186,8 @@ Deno.serve(async (req) => {
     }
 
     // ── Required fields, re-checked server-side ───────────────────────────────
-    if (isBlank(formData.name) || isBlank(formData.geo) || isBlank(formData.niche) || isBlank(formData.challenge)) {
-      return Response.json({ error: 'Name, market, niche, and referral challenge are all required.' }, { status: 400 });
+    if (isBlank(formData.name) || isBlank(formData.geo) || isBlank(formData.niche) || isBlank(formData.challenge) || isBlank(formData.years)) {
+      return Response.json({ error: 'Name, market, niche, referral challenge, and years of experience are all required.' }, { status: 400 });
     }
 
     // ── Sanitize + re-cap every field server-side ─────────────────────────────
