@@ -414,11 +414,11 @@ export default function RunBlueprint() {
               </div>
               <div style={{ color: C.white, fontWeight: 800, fontSize: 17, fontFamily: font, marginBottom: 4 }}>{displayName}</div>
               <div style={{ color: C.white, fontSize: 16, fontFamily: font }}>
-                7 phases, each building on the last. <strong>Total time: approximately 7-12 minutes.</strong>
+                7 phases, each building on the last. <strong>Total time: approximately 4 minutes.</strong>
               </div>
               {!allDone && !isFailed && (
                 <div style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, fontFamily: font, marginTop: 8 }}>
-                  You can close this tab. {job?.userEmail ? "We'll email you when it's done." : "Come back to this URL to check progress."}
+                  Keep this tab open, or come back to this URL to check on it.
                 </div>
               )}
             </div>
