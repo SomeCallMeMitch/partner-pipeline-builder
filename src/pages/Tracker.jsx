@@ -84,6 +84,21 @@ export default function Tracker() {
     }
   }, []);
 
+  // Removes a partner type the agent has decided not to pursue. Soft-delete
+  // via the existing archived flag rather than a real delete, so nothing is
+  // lost if they change their mind -- there's just no unarchive UI yet.
+  const archivePartner = useCallback(async (id) => {
+    setBusy(true);
+    setPartners(prev => prev.filter(p => p.id !== id));
+    try {
+      await base44.entities.Partner.update(id, { archived: true });
+    } catch (err) {
+      setError("That did not save. Check your connection and try again.");
+    } finally {
+      setBusy(false);
+    }
+  }, []);
+
   const saveNaming = useCallback(async (drafts) => {
     setBusy(true);
     const now = new Date().toISOString();
