@@ -228,20 +228,20 @@ function extractDream5(text) {
 function buildContextForPhase(phaseId, phaseResults) {
   const parts = [];
   if (phaseResults['1'] && [2, 3, 4, 5, 6, 7].includes(phaseId)) {
-    const triggers = extractSection(phaseResults['1'], 'trigger', 5);
-    if (triggers) parts.push('TOP LIFECYCLE TRIGGERS IDENTIFIED (from Phase 1):\n' + triggers);
+    const triggers = extractAllTables(phaseResults['1'], 10);
+    if (triggers) parts.push('LIFECYCLE TRIGGER TABLE (from Phase 1, all rows):\n' + triggers);
   }
   if (phaseResults['2'] && [3, 4, 5, 6, 7].includes(phaseId)) {
-    const partners = extractSection(phaseResults['2'], 'upstream', 8);
-    if (partners) parts.push('KEY PARTNER TYPES IDENTIFIED (from Phase 2):\n' + partners);
+    const partners = extractAllTables(phaseResults['2'], 14);
+    if (partners) parts.push('ALL UPSTREAM AND SIDE-STREAM PARTNER TYPES (from Phase 2, all rows -- every partner type listed here is real and must be considered):\n' + partners);
   }
   if (phaseResults['3'] && [4, 5, 6, 7].includes(phaseId)) {
     const dream5 = extractDream5(phaseResults['3']);
     if (dream5) parts.push('THE DREAM 5 PARTNER LIST (from Phase 3):\n' + dream5);
   }
   if (phaseResults['4'] && [5, 6, 7].includes(phaseId)) {
-    const value = extractSection(phaseResults['4'], 'value gift', 3);
-    if (value) parts.push('VALUE GIFTS IDENTIFIED (from Phase 4):\n' + value);
+    const value = extractValueGifts(phaseResults['4'], 5);
+    if (value) parts.push('VALUE GIFTS BY PARTNER NAME (from Phase 4):\n' + value);
   }
   if (parts.length === 0) return '';
   return '\n\n' + '='.repeat(50) + '\n' +
