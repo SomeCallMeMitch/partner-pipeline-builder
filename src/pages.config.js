@@ -49,24 +49,23 @@
  */
 import Admin from './pages/Admin';
 import ClaimBlueprint from './pages/ClaimBlueprint';
-import Dashboard from './pages/Dashboard';
 import Landing from './pages/Landing';
-import Output from './pages/Output';
 import RunBlueprint from './pages/RunBlueprint';
 import Tracker from './pages/Tracker';
-import Wizard from './pages/Wizard';
 import __Layout from './Layout.jsx';
 
+// Removed Dashboard, Output, Wizard -- the old manual copy-into-ChatGPT
+// prompt library flow. It never left b44's testing, was not reachable by
+// real users, and duplicated the live automated flow (Landing -> wizard
+// steps -> RunBlueprint) with worse, self-contradicting messaging. See
+// dream_partner_blueprint_changes.md for the removal note.
 
 export const PAGES = {
     "Admin": Admin,
     "ClaimBlueprint": ClaimBlueprint,
-    "Dashboard": Dashboard,
     "Landing": Landing,
-    "Output": Output,
     "RunBlueprint": RunBlueprint,
     "Tracker": Tracker,
-    "Wizard": Wizard,
 }
 
 export const pagesConfig = {
