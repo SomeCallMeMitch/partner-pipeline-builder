@@ -407,6 +407,12 @@ Deno.serve(async (req) => {
 
       result = appendStaticContent(phaseId, result);
 
+      // Real token accounting instead of chars/4 estimates. Lets future
+      // prompt-trim changes be measured rather than argued about, and
+      // confirms whether disableThinking is actually needed on phases that
+      // don't currently set it.
+      attemptLog.usage = data.usage || null;
+
       clearTimeout(timeoutHandle);
       await logAttempt('success', `${result.length} chars, stop_reason=${data.stop_reason || 'none'}`);
 
