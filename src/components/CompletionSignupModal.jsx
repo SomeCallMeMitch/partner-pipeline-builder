@@ -11,6 +11,22 @@ const C = {
 };
 const font = "'Sora', -apple-system, sans-serif";
 
+// Three concrete promises, each tied to something the tracker actually does.
+const BENEFITS = [
+  {
+    title: "It remembers who to contact, and when",
+    body: "You never open a blank list wondering who is next. Each partner shows the one action that is due, in order.",
+  },
+  {
+    title: "It holds the note already written for each person",
+    body: "The handwritten introduction from your blueprint is attached to the right partner, ready when it is time to send it.",
+  },
+  {
+    title: "It turns a filed-away report into real relationships",
+    body: "A strategy you read once does nothing. This is the checklist that gets you to three or four partners who actually send you business.",
+  },
+];
+
 // Fires once on run completion (controlled by RunBlueprint via the `open`
 // prop, latched with a ref there so this never reopens on a later poll tick).
 // Closing must never navigate -- the report and download buttons stay
@@ -25,76 +41,141 @@ export default function CompletionSignupModal({ open, onClose, jobId }) {
   }
 
   return (
-    <div
-      style={{
-        position: "fixed", inset: 0, zIndex: 200,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        padding: 16, background: "rgba(0,0,0,0.75)", backdropFilter: "blur(4px)",
-      }}
-      onClick={onClose}
-    >
-      <div
-        style={{
-          position: "relative", width: "100%", maxWidth: 400,
-          background: C.navyDeep, border: "1px solid rgba(255,255,255,0.12)",
-          borderRadius: 18, padding: "26px 24px 24px",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.6)", fontFamily: font,
-        }}
-        onClick={e => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          aria-label="Close"
-          style={{
-            position: "absolute", top: 14, right: 14, background: "transparent",
-            border: "none", color: "rgba(255,255,255,0.5)", fontSize: 22,
-            lineHeight: 1, cursor: "pointer", padding: 4,
-          }}
-        >
-          ×
-        </button>
+    <div className="csm-overlay" onClick={onClose}>
+      <div className="csm-card" onClick={e => e.stopPropagation()}>
+        <button className="csm-close" onClick={onClose} aria-label="Close">×</button>
 
-        <div style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
-          color: C.goldLight, marginBottom: 10, paddingRight: 20,
-        }}>
-          Write Because · Dream Partner Blueprint
+        <div className="csm-grid">
+          {/* ── Left: the pitch ─────────────────────────────────────────── */}
+          <div className="csm-left">
+            <div className="csm-eyebrow">Write Because · Dream Partner Blueprint</div>
+            <h2 className="csm-title">Your blueprint is done. Here is the part almost everyone skips.</h2>
+            <p className="csm-lead">
+              The blueprint names your partner types. A type cannot take your call. The tracker turns each type
+              into two real people, a primary you start with and a backup you keep warm, and walks you through
+              building the relationship one step at a time.
+            </p>
+            <p className="csm-why">
+              Not a hundred names. Ten people, worked properly. You are asking a partner to trust you with their
+              own clients, and that trust is built over time, not in one call. Ten is far more than enough to
+              create a steady stream of referrals.
+            </p>
+            <p className="csm-reassure">
+              Free. About three minutes to start. Nothing here is behind a paywall, and your report stays
+              available either way.
+            </p>
+          </div>
+
+          {/* ── Right: what the tracker does ────────────────────────────── */}
+          <div className="csm-right">
+            <div className="csm-right-head">What the tracker does for you</div>
+            {BENEFITS.map((b, i) => (
+              <div className="csm-benefit" key={i}>
+                <div className="csm-benefit-num">{i + 1}</div>
+                <div>
+                  <div className="csm-benefit-title">{b.title}</div>
+                  <div className="csm-benefit-body">{b.body}</div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div style={{ color: C.white, fontWeight: 800, fontSize: 20, lineHeight: 1.35, marginBottom: 12 }}>
-          Your blueprint is done. Here's the part almost everyone skips.
+        {/* ── Actions ───────────────────────────────────────────────────── */}
+        <div className="csm-actions">
+          <button className="csm-primary" onClick={handlePrimary}>
+            Set up my tracker · Name my ten →
+          </button>
+          <button className="csm-secondary" onClick={onClose}>
+            I'll just download for now
+          </button>
         </div>
-
-        <p style={{ color: "rgba(255,255,255,0.68)", fontSize: 13.5, lineHeight: 1.7, margin: "0 0 14px" }}>
-          The blueprint names partner types. A type can't take your call. The tracker turns them into real people, tells you the one next step for each, and holds the note already written for them so you're not hunting through a PDF when it's time to send it.
-        </p>
-
-        <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 12.5, lineHeight: 1.6, margin: "0 0 20px" }}>
-          Free. About three minutes. Nothing here is behind a paywall, and your report stays available either way.
-        </p>
-
-        <button
-          onClick={handlePrimary}
-          style={{
-            width: "100%", background: C.gold, color: C.navy, border: "none",
-            fontWeight: 800, fontSize: 15, padding: "13px 20px", borderRadius: 10,
-            cursor: "pointer", fontFamily: font, marginBottom: 10,
-          }}
-        >
-          Name My Five →
-        </button>
-
-        <button
-          onClick={onClose}
-          style={{
-            width: "100%", background: "transparent", border: "none",
-            color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: font,
-            cursor: "pointer", padding: "6px 0",
-          }}
-        >
-          I'll just download for now
-        </button>
       </div>
+
+      <style>{`
+        .csm-overlay {
+          position: fixed; inset: 0; z-index: 200;
+          display: flex; align-items: center; justify-content: center;
+          padding: 20px; background: rgba(0,0,0,0.75);
+          backdrop-filter: blur(4px);
+          overflow-y: auto;
+        }
+        .csm-card {
+          position: relative; width: 100%; max-width: 680px;
+          background: ${C.navyDeep}; border: 1px solid rgba(255,255,255,0.12);
+          border-radius: 20px; padding: 30px 32px 26px;
+          box-shadow: 0 24px 70px rgba(0,0,0,0.6); font-family: ${font};
+          margin: auto;
+        }
+        .csm-close {
+          position: absolute; top: 16px; right: 18px; background: transparent;
+          border: none; color: rgba(255,255,255,0.5); font-size: 26px;
+          line-height: 1; cursor: pointer; padding: 4px; z-index: 2;
+        }
+        .csm-close:hover { color: rgba(255,255,255,0.85); }
+
+        .csm-grid {
+          display: grid; grid-template-columns: 1.15fr 1fr; gap: 30px;
+        }
+        .csm-eyebrow {
+          font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+          text-transform: uppercase; color: ${C.goldLight};
+          margin-bottom: 12px; padding-right: 24px;
+        }
+        .csm-title {
+          color: ${C.white}; font-weight: 800; font-size: 23px; line-height: 1.3;
+          margin: 0 0 14px;
+        }
+        .csm-lead {
+          color: rgba(255,255,255,0.72); font-size: 14px; line-height: 1.7; margin: 0 0 12px;
+        }
+        .csm-why {
+          color: rgba(255,255,255,0.82); font-size: 13.5px; line-height: 1.7;
+          margin: 0 0 12px; border-left: 3px solid ${C.gold}; padding-left: 14px;
+        }
+        .csm-reassure {
+          color: rgba(255,255,255,0.5); font-size: 12.5px; line-height: 1.6; margin: 0;
+        }
+
+        .csm-right {
+          background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 14px; padding: 18px 18px 8px;
+        }
+        .csm-right-head {
+          color: ${C.goldLight}; font-size: 11px; font-weight: 700;
+          letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px;
+        }
+        .csm-benefit { display: flex; gap: 12px; margin-bottom: 16px; }
+        .csm-benefit-num {
+          flex: 0 0 24px; height: 24px; border-radius: 999px;
+          background: ${C.gold}; color: ${C.navy}; font-weight: 800; font-size: 13px;
+          display: flex; align-items: center; justify-content: center;
+        }
+        .csm-benefit-title {
+          color: ${C.white}; font-size: 13.5px; font-weight: 700; line-height: 1.35; margin-bottom: 3px;
+        }
+        .csm-benefit-body { color: rgba(255,255,255,0.6); font-size: 12.5px; line-height: 1.6; }
+
+        .csm-actions { margin-top: 24px; }
+        .csm-primary {
+          width: 100%; background: ${C.gold}; color: ${C.navy}; border: none;
+          font-weight: 800; font-size: 16px; padding: 15px 20px; border-radius: 11px;
+          cursor: pointer; font-family: ${font}; margin-bottom: 12px;
+        }
+        .csm-primary:hover { background: ${C.goldLight}; }
+        .csm-secondary {
+          width: 100%; background: transparent; border: none;
+          color: rgba(255,255,255,0.55); font-size: 13px; font-family: ${font};
+          cursor: pointer; padding: 6px 0;
+        }
+        .csm-secondary:hover { color: rgba(255,255,255,0.8); }
+
+        @media (max-width: 620px) {
+          .csm-card { padding: 26px 22px 22px; border-radius: 16px; }
+          .csm-grid { grid-template-columns: 1fr; gap: 20px; }
+          .csm-title { font-size: 20px; }
+        }
+      `}</style>
     </div>
   );
 }
