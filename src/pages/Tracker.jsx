@@ -227,7 +227,7 @@ export default function Tracker() {
 
             <div style={{ textAlign: "center", marginTop: 20, fontSize: 12, color: C.muted, lineHeight: 1.7 }}>
               This is a checklist with a memory, not a CRM.<br />
-              Five relationships done properly beat a hundred names in a spreadsheet.
+              A few relationships done properly beat a hundred names in a spreadsheet.
             </div>
           </>
         )}
