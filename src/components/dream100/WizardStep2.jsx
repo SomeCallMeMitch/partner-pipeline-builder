@@ -8,7 +8,6 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
   const [errors, setErrors] = useState({});
   const [showClientModal, setShowClientModal] = useState(false);
   const [contradictionWarning, setContradictionWarning] = useState(null);
-  const [exampleWarning, setExampleWarning] = useState(false);
 
   const handleNext = () => {
     const newErrors = {};
@@ -21,16 +20,14 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
     if (warning && !contradictionWarning) { setContradictionWarning(warning); return; }
     setContradictionWarning(null);
 
-    // Exact-string match only, so this never fires on real typed text --
-    // just the case where a card was clicked and nothing was added to it.
-    if (!warning && isUnmodifiedExample(formData.client) && !exampleWarning) {
-      setExampleWarning(true);
-      return;
-    }
-    setExampleWarning(false);
-
     onNext();
   };
+
+  // Exact-string match only, so this never fires on real typed text -- just
+  // the case where a card was clicked and nothing was added to it. Quiet and
+  // non-blocking on purpose: a modal here was too heavy for a free tool with
+  // a warm audience.
+  const isUnedited = isUnmodifiedExample(formData.client);
 
   return (
     <div className="d100-form-card">
@@ -71,6 +68,11 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
           placeholder="e.g., Couples 45–65 with $1M+ in equity looking to downsize to a maintenance-free condo or 55+ community near good healthcare..."
         />
         <p className="d100-field-hint">Demographics, lifestyle, financial situation, motivations — anything that makes them distinct from the average buyer or seller.</p>
+        {isUnedited && (
+          <p style={{ fontSize: 12, color: '#9A9484', fontStyle: 'italic', margin: '6px 0 0' }}>
+            Tip: add one real detail — a price band, a neighborhood, or a common situation — and we'll match partners to it more precisely.
+          </p>
+        )}
       </div>
 
       {contradictionWarning && (
@@ -78,16 +80,6 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
           message={contradictionWarning}
           onGoBack={onBack}
           onContinue={() => { setContradictionWarning(null); onNext(); }}
-        />
-      )}
-
-      {exampleWarning && (
-        <NicheMismatchWarning
-          title="One more thing"
-          message="That's our example text, unedited. One real detail — a price band, a neighborhood, or a common situation — will change which partners we recommend."
-          backLabel="Let me add a detail"
-          onGoBack={() => setExampleWarning(false)}
-          onContinue={() => { setExampleWarning(false); onNext(); }}
         />
       )}
 
@@ -103,7 +95,7 @@ export default function WizardStep2({ formData, onChange, onNext, onBack }) {
             <option key={c.value} value={c.value}>{c.label}</option>
           ))}
         </select>
-        <p className="d100-field-hint">This shapes your objection handling and outreach scripts — your prompts will directly address your specific situation.</p>
+        <p className="d100-field-hint">This shapes your objection handling and outreach scripts to directly address your specific situation.</p>
         {errors.challenge && <div className="d100-error-msg">Please select your biggest challenge.</div>}
       </div>
 
