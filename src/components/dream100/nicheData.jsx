@@ -55,9 +55,21 @@ export const IDEAL_CLIENT_EXAMPLES = [
     niches: ["First-Time Homebuyers"],
   },
   {
+    icon: "🏠",
+    label: "Renter Ready to Stop Renting",
+    text: "Single-income renter in their late 20s, tired of rising rent, has never owned before and assumes they cannot afford to buy. Needs someone to walk them through what is actually possible on their budget.",
+    niches: ["First-Time Homebuyers"],
+  },
+  {
     icon: "🔨",
     label: "Investor / Fix-and-Flip",
     text: "Men 35–55, high net worth, doing 5–10 flips per year. Self-made, data-driven, moves fast. Values an agent who speaks investor language. Usually referred by their hard money lender or CPA.",
+    niches: ["Investor & Fix-and-Flip"],
+  },
+  {
+    icon: "📈",
+    label: "Buy-and-Hold Landlord",
+    text: "Building a long-term rental portfolio, one or two properties a year, cares more about cash flow and cap rate than resale flip margin. Slower pace, wants a patient agent who understands rental math.",
     niches: ["Investor & Fix-and-Flip"],
   },
   {
@@ -91,9 +103,21 @@ export const IDEAL_CLIENT_EXAMPLES = [
     niches: ["Military Relocation (PCS)"],
   },
   {
+    icon: "🏡",
+    label: "Retiring Military, Buying to Stay",
+    text: "Service member on their final PCS-adjacent move, using VA benefits to buy the home they intend to keep for good. Less rushed than an active-duty move, more particular about the fit.",
+    niches: ["Military Relocation (PCS)"],
+  },
+  {
     icon: "⚖️",
     label: "Divorce or Estate Sale",
     text: "Court-ordered or executor-directed sale. The decision is often shared between parties who are not on the best terms, and the priority is a clean, fast, defensible sale over squeezing out maximum price.",
+    niches: ["Divorce & Estate Sales"],
+  },
+  {
+    icon: "✈️",
+    label: "Out-of-State Heir",
+    text: "Inherited a property from a relative and lives out of state. Wants a fast, mostly-remote sale with minimal repairs and hand-holding, and values an agent who can manage everything without many in-person visits.",
     niches: ["Divorce & Estate Sales"],
   },
   {
