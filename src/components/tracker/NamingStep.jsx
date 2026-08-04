@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { C } from "./TrackerStyles";
 
-export default function NamingStep({ partners, needsTypes, onSave, onSkip, saving }) {
+export default function NamingStep({ partners, needsTypes, geography, onSave, onSkip, saving }) {
   const [drafts, setDrafts] = useState(() => {
     const d = {};
     (partners || []).forEach(p => {
@@ -75,6 +75,17 @@ export default function NamingStep({ partners, needsTypes, onSave, onSkip, savin
                   onChange={e => update(p.id, "personName", e.target.value)}
                   placeholder="First and last name"
                 />
+                {geography && !d.personName.trim() && (
+                  <a
+                    href={`https://www.google.com/maps/search/${encodeURIComponent(p.partnerType + " " + geography)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="tk-btn-link"
+                    style={{ display: "inline-block", marginTop: 6, fontSize: 12 }}
+                  >
+                    Search nearby →
+                  </a>
+                )}
               </div>
               <div>
                 <label className="tk-label">Where they work</label>
