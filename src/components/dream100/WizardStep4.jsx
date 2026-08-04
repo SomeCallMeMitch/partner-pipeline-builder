@@ -43,7 +43,7 @@ export default function WizardStep4({ formData, onChange, onBack, onGenerate }) 
             lineHeight: 1.5,
             marginBottom: 12,
           }}>
-            Your report takes 7-10 minutes to build. Enter your email and we'll send you the link when it's done — so you can do other things while you wait.
+            Your report takes about four minutes to build. Enter your email and we'll send you the link when it's done — so you can do other things while you wait.
           </div>
           <input
             type="email"
@@ -127,7 +127,7 @@ export default function WizardStep4({ formData, onChange, onBack, onGenerate }) 
       </div>
 
       <div className="d100-confirm-what">
-        You'll get <strong>7 personalized AI prompts</strong> covering: lifecycle trigger mapping, partner identification, Dream 5 ranking, value strategy cards, objection prep, outreach scripts including a handwritten note template, and a 90-day launch plan with 12-month calendar — all built for <strong>{niche}</strong> in <strong>{formData.geo || 'your market'}</strong>.
+        We'll build a <strong>7-phase strategy report</strong> covering: lifecycle trigger mapping, partner identification, Dream 5 ranking, value strategy cards, objection prep, outreach scripts including your handwritten note, and a 90-day launch plan with 12-month calendar — all for <strong>{niche}</strong> in <strong>{formData.geo || 'your market'}</strong>. Then turn your Dream 5 into a live tracker in one click.
       </div>
 
       <div className="d100-form-nav">
