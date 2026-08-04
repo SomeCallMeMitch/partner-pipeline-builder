@@ -104,7 +104,7 @@ export default function LandingV2() {
 
   const handleRestart = () => {
     setFormData({
-      nicheBase: '', customNiche: '', geo: '', client: '',
+      nicheBase: '', customNiche: '', geo: '', areas: '', client: '',
       challenge: '', name: '', years: '', llm: 'ChatGPT', email: '',
     });
     setView('hero');
