@@ -1,39 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
+import { IDEAL_CLIENT_EXAMPLES } from "./nicheData";
 
-const examples = [
-  {
-    icon: "🔨",
-    label: "Investor / Fix-and-Flip",
-    text: "Men 35–55, high net worth, doing 5–10 flips per year. Self-made, data-driven, moves fast. Values an agent who speaks investor language. Usually referred by their hard money lender or CPA.",
-  },
-  {
-    icon: "🏡",
-    label: "Luxury Downsizer",
-    text: "Couples 55–70, empty nesters, $3M+ home, ready to right-size into a gated community or luxury condo. Emotionally attached to their current home. Need patience and a clear financial case.",
-  },
-  {
-    icon: "✨",
-    label: "First-Time Luxury Buyer",
-    text: "Tech professionals 30–45, dual income $400K+, buying their forever home in a top school district. Overwhelmed by the market, need guidance. Often referred by their financial advisor.",
-  },
-  {
-    icon: "✈️",
-    label: "Relocation Executive",
-    text: "Corporate executives relocating from out of state, 45–60, company-assisted move, $1.5–$3M budget. Time-pressed and decisive. Want an agent who makes fast, confident decisions on their behalf.",
-  },
-  {
-    icon: "🌅",
-    label: "55+ Active Adult",
-    text: "Active retirees 60–75, downsizing from a large family home. Want community amenities, single-story living, low maintenance. Often have significant equity and are paying cash or close to it.",
-  },
-  {
-    icon: "👨‍👩‍👧‍👦",
-    label: "Move-Up Family Buyer",
-    text: "Growing families 35–50, outgrowing their starter home, $800K–$1.5M budget. Prioritize school district, yard, safety. Both partners in the decision. Usually 60–90 days before school starts.",
-  },
-];
+export default function IdealClientModal({ isOpen, onClose, onSelect, nicheBase }) {
+  // Filtered to the agent's selected niche so the modal can't hand out a
+  // client description that contradicts the niche they just picked (e.g. a
+  // $400K dual-income buyer under a First-Time Homebuyers niche). Falls
+  // back to the full list if a niche has no tagged example yet.
+  const examples = useMemo(() => {
+    if (!nicheBase) return IDEAL_CLIENT_EXAMPLES;
+    const filtered = IDEAL_CLIENT_EXAMPLES.filter(ex => ex.niches.includes(nicheBase));
+    return filtered.length > 0 ? filtered : IDEAL_CLIENT_EXAMPLES;
+  }, [nicheBase]);
 
-export default function IdealClientModal({ isOpen, onClose, onSelect }) {
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e) => { if (e.key === "Escape") onClose(); };
