@@ -40,7 +40,29 @@ Deno.serve(async (req) => {
     }
 
     // ── Self-heal a dropped phase trigger ────────────────────────────────
-    if (job.status === 'running' && job.currentPhase && job.currentPhase < 7) {
+    // Two distinct drop points share one cooldown gate:
+    // 1. Mid-chain: a phase completed and saved its result, but the next
+    //    phase's invoke never arrived. Detected via phaseTiming.
+    // 2. Startup: startGenerationJob's own fire-and-forget invoke for
+    //    phase 1 dropped, so the job never left 'queued' and has no
+    //    phaseTiming at all -- the mid-chain check can't see this case,
+    //    since it requires a completed phase to compare against.
+    const cooledDown = msSince(job.lastHealTriggerAt) > HEAL_COOLDOWN_MS;
+
+    if (job.status === 'queued' && cooledDown && msSince(job.created_date) > STALL_THRESHOLD_MS) {
+      console.warn(`[getGenerationJobStatus] Job ${jobId} still queued after ${msSince(job.created_date)}ms with no phase 1 result. Re-triggering phase 1.`);
+
+      await db.update(jobId, { lastHealTriggerAt: new Date().toISOString() });
+
+      base44.functions.invoke('runGenerationPhase', { jobId, phaseId: 1 })
+        .catch(err => console.error('[getGenerationJobStatus] Heal trigger for phase 1 failed:', err));
+
+      await new Promise(r => setTimeout(r, 500));
+
+      const refreshed = await db.filter({ id: jobId });
+      if (refreshed[0]) job = refreshed[0];
+
+    } else if (job.status === 'running' && job.currentPhase && job.currentPhase < 7 && cooledDown) {
       const currentPhase = job.currentPhase;
       const phaseResults = job.phaseResults || {};
       const phaseTiming = job.phaseTiming || {};
@@ -49,9 +71,8 @@ Deno.serve(async (req) => {
       const resultSaved = !!phaseResults[String(currentPhase)];
       const completedAt = currentTiming && currentTiming.completedAt;
       const idleLongEnough = resultSaved && completedAt && msSince(completedAt) > STALL_THRESHOLD_MS;
-      const cooledDown = msSince(job.lastHealTriggerAt) > HEAL_COOLDOWN_MS;
 
-      if (idleLongEnough && cooledDown) {
+      if (idleLongEnough) {
         const nextPhase = currentPhase + 1;
         console.warn(`[getGenerationJobStatus] Job ${jobId} looks stalled after phase ${currentPhase} (idle ${msSince(completedAt)}ms). Re-triggering phase ${nextPhase}.`);
 
