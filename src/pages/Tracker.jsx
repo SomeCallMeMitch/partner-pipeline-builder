@@ -226,7 +226,7 @@ export default function Tracker() {
         </div>
       </div>
 
-      <div className="tk-main">
+      <div className={"tk-main" + (showNaming ? " tk-main-wide" : "")}>
         {error && (
           <div className="tk-card" style={{ borderColor: C.error, background: "#FEF2F2" }}>
             <div style={{ fontSize: 13, color: "#B91C1C" }}>{error}</div>
