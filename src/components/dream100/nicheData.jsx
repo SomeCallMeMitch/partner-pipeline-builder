@@ -44,6 +44,77 @@ export const NICHE_HELPERS = {
   }
 };
 
+// Shared by IdealClientModal (shown filtered by the selected niche) and
+// WizardStep2's isUnmodifiedExample check (so a click-through-unedited
+// submission can be detected and nudged once, without blocking).
+export const IDEAL_CLIENT_EXAMPLES = [
+  {
+    icon: "🔑",
+    label: "First-Time Buyer, Modest Down Payment",
+    text: "Single or dual-income buyer in their late 20s to mid-30s, FHA or low-down-payment loan, tight budget, first time navigating the process and needs extra guidance.",
+    niches: ["First-Time Homebuyers"],
+  },
+  {
+    icon: "🔨",
+    label: "Investor / Fix-and-Flip",
+    text: "Men 35–55, high net worth, doing 5–10 flips per year. Self-made, data-driven, moves fast. Values an agent who speaks investor language. Usually referred by their hard money lender or CPA.",
+    niches: ["Investor & Fix-and-Flip"],
+  },
+  {
+    icon: "🏡",
+    label: "Luxury Downsizer",
+    text: "Couples 55–70, empty nesters, $3M+ home, ready to right-size into a gated community or luxury condo. Emotionally attached to their current home. Need patience and a clear financial case.",
+    niches: ["Luxury & High-End Residential", "Empty Nesters & Downsizing"],
+  },
+  {
+    icon: "✨",
+    label: "High-Income Next-Home Buyer",
+    text: "Tech professionals 30–45, dual income $400K+, buying their forever home in a top school district. Overwhelmed by the market, need guidance. Often referred by their financial advisor.",
+    niches: ["Luxury & High-End Residential", "New Construction & Builder Representation"],
+  },
+  {
+    icon: "✈️",
+    label: "Relocation Executive",
+    text: "Corporate executives relocating from out of state, 45–60, company-assisted move, $1.5–$3M budget. Time-pressed and decisive. Want an agent who makes fast, confident decisions on their behalf.",
+    niches: ["Luxury & High-End Residential"],
+  },
+  {
+    icon: "🌅",
+    label: "55+ Active Adult",
+    text: "Active retirees 60–75, downsizing from a large family home. Want community amenities, single-story living, low maintenance. Often have significant equity and are paying cash or close to it.",
+    niches: ["Empty Nesters & Downsizing"],
+  },
+  {
+    icon: "🎖️",
+    label: "Military PCS Family",
+    text: "Active-duty family relocating on PCS orders, using a VA loan, working a tight window between orders and report date. Needs someone who moves fast and already knows the area around the base.",
+    niches: ["Military Relocation (PCS)"],
+  },
+  {
+    icon: "⚖️",
+    label: "Divorce or Estate Sale",
+    text: "Court-ordered or executor-directed sale. The decision is often shared between parties who are not on the best terms, and the priority is a clean, fast, defensible sale over squeezing out maximum price.",
+    niches: ["Divorce & Estate Sales"],
+  },
+  {
+    icon: "👨‍👩‍👧",
+    label: "Move-Up Family Buyer",
+    text: "Growing families 35–50, outgrowing their starter home, $800K–$1.5M budget. Prioritize school district, yard, safety. Both partners in the decision. Usually 60–90 days before school starts.",
+    niches: ["General Residential", "New Construction & Builder Representation"],
+  },
+];
+
+// Exact-match check: the person clicked a card and submitted it completely
+// unedited. Used to show a one-time, non-blocking nudge to add one real
+// detail, rather than silently letting the example stand in for their
+// actual clients.
+export function isUnmodifiedExample(clientText) {
+  if (!clientText) return false;
+  const trimmed = clientText.trim();
+  if (!trimmed) return false;
+  return IDEAL_CLIENT_EXAMPLES.some(ex => ex.text.trim() === trimmed);
+}
+
 export const CHALLENGES = [
   { value: "I don't have a systematic approach to finding referral partners", label: "No systematic approach yet" },
   { value: "I rely on one or two relationships that aren't consistent enough", label: "Too dependent on a few people" },
