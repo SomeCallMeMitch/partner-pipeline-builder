@@ -17,7 +17,7 @@ export default function WizardStep4({ formData, onChange, onBack, onGenerate }) 
   return (
     <div className="d100-form-card">
       <div className="d100-card-title">Ready to generate</div>
-      <div className="d100-card-sub">Here's what's going into your blueprint. Tap Generate to build all your prompts.</div>
+      <div className="d100-card-sub">Here's what's going into your report. Tap Generate to build it.</div>
 
       {/* Email capture */}
       {!emailSkipped && (
