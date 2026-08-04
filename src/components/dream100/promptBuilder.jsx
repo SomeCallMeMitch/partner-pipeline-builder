@@ -329,11 +329,9 @@ ${OUTPUT_RULES}`
 
 TASK — Value Strategy Cards for All 5 Dream Partners + Value Manifesto
 
-Using ONLY the top 3 ranked Dream 5 partner types from Phase 3, create one Value Strategy Card for each of those 3 partners.
+Using the full Dream 5 partner list from Phase 3, create one Value Strategy Card for each of the 5 partners, using their exact names from Phase 3. Every Dream 5 partner gets a card -- none are skipped.
 
-Note: Cards are created for the top 3 only — not all 5. This keeps the output focused on the highest-ROI relationships.
-
-For each of the top 3 partner types use this EXACT format — no variations:
+For each of the 5 partner types use this EXACT format — no variations:
 
 ### [Partner Type — use exact name from Phase 3]
 
