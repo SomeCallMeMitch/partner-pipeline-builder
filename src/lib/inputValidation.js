@@ -7,6 +7,7 @@ export const FIELD_LIMITS = {
   name: 60,
   client: 600,
   customNiche: 120,
+  areas: 150,
 };
 
 // Strips control characters (keeps normal whitespace) and enforces a max
