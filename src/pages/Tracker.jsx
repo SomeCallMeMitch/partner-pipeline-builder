@@ -209,6 +209,7 @@ export default function Tracker() {
           <NamingStep
             partners={partners}
             needsTypes={needsTypes}
+            geography={tracker.geography}
             saving={busy}
             onSave={saveNaming}
             onSkip={() => setForceList(true)}
