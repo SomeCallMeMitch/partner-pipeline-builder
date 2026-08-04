@@ -105,7 +105,7 @@ export default function HeroSection({ onStart }) {
           </h1>
 
           <p style={{ fontSize: 18, color: '#fff', lineHeight: 1.55, margin: '0 0 28px', maxWidth: 500 }}>
-            Get a complete 7-prompt AI blueprint to build your Dream 100 referral partner system — built for your niche and your market in minutes.
+            Two things, both free: a complete 7-phase referral partner strategy written for your niche and your market, and a tracker that tells you the one next step for each partner. We build it for you — nothing to copy or paste.
           </p>
 
           <button onClick={onStart} style={{
@@ -131,12 +131,7 @@ export default function HeroSection({ onStart }) {
           }}>
             <span style={{ fontSize: 22, flexShrink: 0, marginTop: 1 }}>🧠</span>
             <p style={{ fontSize: 14, color: '#fff', lineHeight: 1.6, margin: 0 }}>
-              Built on a framework co-developed by a leading AI strategist and a top-producing agent who's used AI to transform his real estate business — adapted by {theme.brandName} into a tool anyone can use in minutes.<br /><br />
-              <a href="https://www.facebook.com/groups/aipromptsforrealestateprofessionals"
-                target="_blank" rel="noopener noreferrer"
-                style={{ color: '#F0A422', textDecoration: 'underline' }}>
-                For more excellent AI advice for Realtors, visit their Facebook group →
-              </a>
+              Built on the Dream 100 referral methodology, adapted by {theme.brandName} into a tool any agent can run in minutes.
             </p>
           </div>
         </div>
@@ -157,10 +152,10 @@ export default function HeroSection({ onStart }) {
               fontSize: 16.7, fontWeight: 800, letterSpacing: '0.04em',
               textTransform: 'uppercase', color: '#fff', marginBottom: 6,
             }}>
-              What These Prompts Will Build For You
+              What You'll Have When It's Done
             </div>
             <p style={{ fontSize: 15.5, color: '#fff', lineHeight: 1.5, margin: 0 }}>
-              Implement these prompts using the included step-by-step instructions and you'll have all of this:
+              We build all of this for you and hand you the finished report. About four minutes.
             </p>
           </div>
 
@@ -210,7 +205,7 @@ export default function HeroSection({ onStart }) {
           {' '}— {theme.footerText}.
         </p>
         <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)' }}>
-          © 2025 {theme.brandName} ·{' '}
+          © 2026 {theme.brandName} ·{' '}
           <a href={theme.brandUrl} target="_blank" rel="noopener noreferrer"
             style={{ color: '#F0A422', textDecoration: 'none' }}>
             Learn More
