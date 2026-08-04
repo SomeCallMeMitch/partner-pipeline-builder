@@ -451,6 +451,7 @@ SCRIPT REALISM RULES:
 - Do not invent new assets, offers, or positioning angles in this phase — use only what was established in Phase 4
 - Simpler language is better than elegant language when both convey the same meaning
 - The handwritten note must sound like something a real agent would actually write in under 2 minutes
+- Calibrate confidence to ${n}'s stated experience above — a newer agent leads with curiosity and specialization, not claims of a track record they do not have yet; a veteran agent can reference volume and tenure where it strengthens the script
 
 ---
 
