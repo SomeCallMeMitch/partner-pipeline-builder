@@ -413,6 +413,8 @@ OBJECTIONS:
 
 TONE: ${IND.scriptTone}. Not salesy. Responses must sound like spoken language.
 
+EXPERIENCE CALIBRATION: Weight the objection responses and both Trust Reset scripts to ${n}'s stated experience above. A newer agent should lean on specialization, curiosity, and specific effort rather than claims of a long track record or high volume. A veteran agent can reference tenure and volume naturally where it strengthens the response. Do not have a newer agent claim years of experience they do not have.
+
 BONUS — Trust Reset Scripts:
 Add two short scripts after the objections:
 
