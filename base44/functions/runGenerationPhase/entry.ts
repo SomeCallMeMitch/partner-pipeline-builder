@@ -73,13 +73,25 @@ const REFERRAL_MATH_DISCLAIMER_BLOCK = `
 
 The scenarios above are a directional illustration, not a forecast, an income projection, or a guarantee. Actual referral volume, close rates, and transaction velocity depend on the quality of the partnerships built, the consistency of outreach, market conditions, and how quickly each partner engages. Year one typically runs below these numbers while relationships ramp up -- the numbers assume consistent execution over 12 months, not immediate results.`;
 
+// Replaces the old model-generated Part B (a blank Relationship Tracker
+// table the agent was told to copy into Google Sheets -- a worse version of
+// the real Tracker feature this app ships, recommending a competitor to
+// itself). Static, zero tokens, can't drift, and points at the real thing.
+const TRACKER_POINTER_BLOCK = `
+
+---
+
+### Turn This Into a Tracker
+
+Everything above names partner types. The tracker turns each one into an actual person, with one next action and a note attached, including the handwritten note already written for them in Phase 6. Free, and it takes about three minutes. Look for "Name My Five" wherever this report is delivered. This is a checklist with a memory, not a CRM.`;
+
 // Appends the static block(s) for a given phase, if any. Pure string op,
 // no model call. Safe to call on every phase -- phases without a static
 // block just pass through unchanged.
 function appendStaticContent(phaseId, text) {
   if (phaseId === 3) return text + TIER_DEFINITIONS_BLOCK;
   if (phaseId === 6) return text + HANDWRITTEN_NOTE_PROTOCOL_BLOCK;
-  if (phaseId === 7) return text + REFERRAL_MATH_DISCLAIMER_BLOCK;
+  if (phaseId === 7) return text + REFERRAL_MATH_DISCLAIMER_BLOCK + TRACKER_POINTER_BLOCK;
   return text;
 }
 
