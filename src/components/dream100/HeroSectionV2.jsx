@@ -103,7 +103,7 @@ export default function HeroSectionV2({ onStart }) {
           </p>
 
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', margin: '0 0 28px' }}>
-            3 min to fill out · 7–12 min to generate · yours to keep forever
+            3 min to fill out · about 4 min to generate · yours to keep forever
           </p>
 
           {/* MOBILE ONLY TOP 3 LIST */}
