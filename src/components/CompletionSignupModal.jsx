@@ -101,79 +101,80 @@ export default function CompletionSignupModal({ open, onClose, jobId }) {
           overflow-y: auto;
         }
         .csm-card {
-          position: relative; width: 100%; max-width: 680px;
+          position: relative; width: 100%; max-width: 880px;
           background: ${C.navyDeep}; border: 1px solid rgba(255,255,255,0.12);
-          border-radius: 20px; padding: 30px 32px 26px;
+          border-radius: 22px; padding: 40px 44px 34px;
           box-shadow: 0 24px 70px rgba(0,0,0,0.6); font-family: ${font};
           margin: auto;
         }
         .csm-close {
-          position: absolute; top: 16px; right: 18px; background: transparent;
-          border: none; color: rgba(255,255,255,0.5); font-size: 26px;
+          position: absolute; top: 18px; right: 20px; background: transparent;
+          border: none; color: rgba(255,255,255,0.5); font-size: 30px;
           line-height: 1; cursor: pointer; padding: 4px; z-index: 2;
         }
         .csm-close:hover { color: rgba(255,255,255,0.85); }
 
         .csm-grid {
-          display: grid; grid-template-columns: 1.15fr 1fr; gap: 30px;
+          display: grid; grid-template-columns: 1.15fr 1fr; gap: 40px;
         }
         .csm-eyebrow {
-          font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+          font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
           text-transform: uppercase; color: ${C.goldLight};
-          margin-bottom: 12px; padding-right: 24px;
+          margin-bottom: 16px; padding-right: 28px;
         }
         .csm-title {
-          color: ${C.white}; font-weight: 800; font-size: 23px; line-height: 1.3;
-          margin: 0 0 14px;
+          color: ${C.white}; font-weight: 800; font-size: 30px; line-height: 1.25;
+          margin: 0 0 18px;
         }
         .csm-lead {
-          color: rgba(255,255,255,0.72); font-size: 14px; line-height: 1.7; margin: 0 0 12px;
+          color: rgba(255,255,255,0.75); font-size: 16.5px; line-height: 1.65; margin: 0 0 16px;
         }
         .csm-why {
-          color: rgba(255,255,255,0.82); font-size: 13.5px; line-height: 1.7;
-          margin: 0 0 12px; border-left: 3px solid ${C.gold}; padding-left: 14px;
+          color: rgba(255,255,255,0.85); font-size: 16px; line-height: 1.65;
+          margin: 0 0 16px; border-left: 3px solid ${C.gold}; padding-left: 16px;
         }
         .csm-reassure {
-          color: rgba(255,255,255,0.5); font-size: 12.5px; line-height: 1.6; margin: 0;
+          color: rgba(255,255,255,0.5); font-size: 14.5px; line-height: 1.6; margin: 0;
         }
 
         .csm-right {
           background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 14px; padding: 18px 18px 8px;
+          border-radius: 16px; padding: 24px 24px 10px;
         }
         .csm-right-head {
-          color: ${C.goldLight}; font-size: 11px; font-weight: 700;
-          letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px;
+          color: ${C.goldLight}; font-size: 12px; font-weight: 700;
+          letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 18px;
         }
-        .csm-benefit { display: flex; gap: 12px; margin-bottom: 16px; }
+        .csm-benefit { display: flex; gap: 14px; margin-bottom: 20px; }
         .csm-benefit-num {
-          flex: 0 0 24px; height: 24px; border-radius: 999px;
-          background: ${C.gold}; color: ${C.navy}; font-weight: 800; font-size: 13px;
+          flex: 0 0 28px; height: 28px; border-radius: 999px;
+          background: ${C.gold}; color: ${C.navy}; font-weight: 800; font-size: 15px;
           display: flex; align-items: center; justify-content: center;
         }
         .csm-benefit-title {
-          color: ${C.white}; font-size: 13.5px; font-weight: 700; line-height: 1.35; margin-bottom: 3px;
+          color: ${C.white}; font-size: 15.5px; font-weight: 700; line-height: 1.35; margin-bottom: 4px;
         }
-        .csm-benefit-body { color: rgba(255,255,255,0.6); font-size: 12.5px; line-height: 1.6; }
+        .csm-benefit-body { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.6; }
 
-        .csm-actions { margin-top: 24px; }
+        .csm-actions { margin-top: 30px; }
         .csm-primary {
           width: 100%; background: ${C.gold}; color: ${C.navy}; border: none;
-          font-weight: 800; font-size: 16px; padding: 15px 20px; border-radius: 11px;
-          cursor: pointer; font-family: ${font}; margin-bottom: 12px;
+          font-weight: 800; font-size: 18px; padding: 17px 22px; border-radius: 12px;
+          cursor: pointer; font-family: ${font}; margin-bottom: 14px;
         }
         .csm-primary:hover { background: ${C.goldLight}; }
         .csm-secondary {
           width: 100%; background: transparent; border: none;
-          color: rgba(255,255,255,0.55); font-size: 13px; font-family: ${font};
+          color: rgba(255,255,255,0.55); font-size: 14px; font-family: ${font};
           cursor: pointer; padding: 6px 0;
         }
         .csm-secondary:hover { color: rgba(255,255,255,0.8); }
 
-        @media (max-width: 620px) {
-          .csm-card { padding: 26px 22px 22px; border-radius: 16px; }
-          .csm-grid { grid-template-columns: 1fr; gap: 20px; }
-          .csm-title { font-size: 20px; }
+        @media (max-width: 720px) {
+          .csm-card { padding: 28px 24px 24px; border-radius: 16px; }
+          .csm-grid { grid-template-columns: 1fr; gap: 22px; }
+          .csm-title { font-size: 24px; }
+          .csm-lead { font-size: 15px; }
         }
       `}</style>
     </div>
