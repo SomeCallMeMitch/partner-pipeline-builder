@@ -137,13 +137,13 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
                   Your note for this partner
                 </div>
                 <div style={{ fontSize: 13, color: C.text, lineHeight: 1.65 }}>
-                  {p.handwrittenNote.replace(/\[First Name\]/g, p.personName || "[First Name]")}
+                  {fillNoteName(p.handwrittenNote, p.personName)}
                 </div>
                 <button
                   className="tk-btn-link"
                   style={{ marginTop: 8 }}
                   onClick={() => {
-                    const text = p.handwrittenNote.replace(/\[First Name\]/g, p.personName || "");
+                    const text = fillNoteName(p.handwrittenNote, p.personName);
                     if (navigator.clipboard) navigator.clipboard.writeText(text);
                   }}
                 >
