@@ -61,7 +61,7 @@ export default function TrackerStyles() {
       /* The naming step lays out a two-column card grid, so it needs more
          width than the single-column list that follows it. */
       .tk-main.tk-main-wide {
-        max-width: 1140px;
+        max-width: 1280px;
       }
       .tk-card {
         background: ${C.white};
