@@ -5,6 +5,7 @@ import { buildPrompts } from "@/components/dream100/promptBuilder";
 import PartnerNotesCTA from "@/components/dream100/PartnerNotesCTA";
 import TrackerCTA from "@/components/tracker/TrackerCTA";
 import CompletionSignupModal from "@/components/CompletionSignupModal";
+import BlueprintReport from "@/components/report/BlueprintReport";
 
 // ── Write Because RE Clone URL (Workstream 3 uses this for the CTA redirect) ────
 const WRITE_BECAUSE_URL = 'https://writebecause.com';
@@ -452,8 +453,21 @@ export default function RunBlueprint() {
       <div className="bp-main">
         <div className="bp-grid">
 
-          {/* LEFT: Phase cards */}
+          {/* LEFT: report when finished, live phase cards while running */}
           <div>
+            {allDone ? (
+              <BlueprintReport
+                phases={phases}
+                phaseResults={phaseResults}
+                phaseWarnings={phaseWarnings}
+                formData={job?.formData || null}
+                jobId={job?.id || jobId}
+                onDownloadWord={downloadWord}
+                onDownloadMarkdown={downloadMarkdown}
+                exportingWord={exportingWord}
+              />
+            ) : (
+              <>
             <div style={{ background: C.navy, borderRadius: 14, padding: "20px 24px", marginBottom: 24, position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: -30, right: -30, width: 160, height: 160, background: "radial-gradient(circle, rgba(201,151,58,0.12), transparent 65%)", pointerEvents: "none" }} />
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: C.goldLight, marginBottom: 6, fontFamily: font }}>
