@@ -305,6 +305,12 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
                 onChange={e => setDraft({ ...draft, phone: e.target.value })} />
             </div>
           </div>
+          <div style={{ marginTop: 10 }}>
+            <label className="tk-label">Mailing address · for sending a handwritten card</label>
+            <input className="tk-input" value={draft.mailingAddress}
+              onChange={e => setDraft({ ...draft, mailingAddress: e.target.value })}
+              placeholder="Office or mailing address" />
+          </div>
           <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.creamDark}` }}>
             <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", color: C.navy, marginBottom: 10 }}>
               Backup contact
@@ -330,6 +336,12 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
                 <input className="tk-input" value={draft.secondary.phone}
                   onChange={e => setDraft({ ...draft, secondary: { ...draft.secondary, phone: e.target.value } })} />
               </div>
+            </div>
+            <div style={{ marginTop: 10 }}>
+              <label className="tk-label">Mailing address · for sending a handwritten card</label>
+              <input className="tk-input" value={draft.secondary.mailingAddress}
+                onChange={e => setDraft({ ...draft, secondary: { ...draft.secondary, mailingAddress: e.target.value } })}
+                placeholder="Office or mailing address" />
             </div>
           </div>
           <div className="tk-row" style={{ marginTop: 12 }}>
