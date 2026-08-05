@@ -7,6 +7,7 @@ import {
   stageChangePatch,
   addNotePatch,
   dueSummary,
+  fillNoteName,
 } from "./nextAction";
 
 function fmt(iso) {
