@@ -180,6 +180,21 @@ export function stageChangePatch(nextStage, nowIso) {
   };
 }
 
+/**
+ * Fills the [Name] placeholder in a Phase 6 handwritten note with the real
+ * contact's first name. [Name] is the token the generator actually uses
+ * (confirmed against real generated reports); [First Name] is kept as a
+ * defensive fallback in case a future generation uses that form instead.
+ * Falls back to the literal token if no name has been entered yet, so the
+ * note never silently shows a blank.
+ */
+export function fillNoteName(noteText, personName) {
+  const text = String(noteText || '');
+  const name = (personName || '').trim().split(/\s+/)[0] || '';
+  if (!name) return text;
+  return text.replace(/\[Name\]/g, name).replace(/\[First Name\]/g, name);
+}
+
 export function addNotePatch(partner, text, nowIso) {
   const now = nowIso || new Date().toISOString();
   const existing = Array.isArray(partner?.notes) ? partner.notes : [];
