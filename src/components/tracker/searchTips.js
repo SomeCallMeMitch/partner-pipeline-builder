@@ -1,10 +1,20 @@
 // searchTips.js
-// The generic "how to actually pick a good partner" advice shown in the
-// expandable "What to look for" panel on each naming card. This is the half
-// that is the same for every partner type -- the type-specific half comes from
-// each partner's own whyPriority line, written by the blueprint.
+// The generic "how to actually pick a good partner" advice shown before the
+// agent goes off to search. This is the half that is the same for every
+// partner type -- the type-specific half comes from each partner's own
+// whyPriority line, written by the blueprint.
 //
-// Pure data + one helper. No React here.
+// Pure data + helpers. No React here.
+
+export const RESEARCH_TIME_NOTE = {
+  title: "This is where the real time goes",
+  body: "If you actually want this to produce referrals, this is the step that takes some real investment, not the naming. Read a few reviews, not just the star count. Look at how they talk about clients, whether people mention feeling rushed or genuinely cared for. You are looking for someone you would click with, not just the first listing. A relationship you are asking someone to trust you with is worth ten extra minutes of reading.",
+};
+
+export const REACH_OUT_TO_BOTH = {
+  title: "Reach out to both, not just the primary",
+  body: "Contact your primary and your secondary around the same time, not one after the other. If you work one person for weeks before trying the other, a single quiet inbox costs you a month. Two in motion at once means a stall on one doesn't stall the whole line.",
+};
 
 export const GENERIC_SEARCH_TIPS = [
   {
@@ -16,19 +26,15 @@ export const GENERIC_SEARCH_TIPS = [
     body: "You want a name and a face. Open the firm's site and find the team or about page. Someone with their own bio, photo, and direct line is someone you can actually build a relationship with.",
   },
   {
-    title: "Grab the phone and email while you are there",
-    body: "You are already on their website. Copy their direct phone and email into the fields here now, so when it is time to reach out you are not starting the search over.",
-  },
-  {
-    title: "Line up two, not one",
-    body: "Put a primary and a backup on each type. Not to contact both at once, but because the first person may not bite, and a relationship you are building toward should never rest on a single name.",
+    title: "Grab the phone, email, and address while you are there",
+    body: "You are already on their website. Copy their direct phone, email, and office address into the fields here now, so when it is time to reach out, or send a card, you are not starting the search over.",
   },
 ];
 
 // A short, honest answer to the question every agent asks: why only ten?
 export const WHY_TEN = {
   title: "Why ten people and not a hundred",
-  body: "Anyone can hand you a list of a hundred names. A hundred names produces a hundred cold, shallow contacts and almost no referrals. What you are really asking a partner to do is trust you with their own clients and friends. That trust is earned over time, not in one call. Ten people, worked properly, is the most a solo agent can actually sustain, and it is far more than enough to build a steady stream of business.",
+  body: "Anyone can hand you a list of a hundred names. A hundred names produces a hundred cold, shallow contacts and almost no referrals. What you are really asking a partner to do is trust you with their own clients and friends. That trust is earned over time, not in one call. Ten people, worked properly, two per type, is the most a solo agent can actually sustain, and it is far more than enough to build a steady stream of business.",
 };
 
 // Builds the full tip set for one card: the type-specific "why this partner"
