@@ -97,8 +97,6 @@ function ContactBlock({ label, sub, value, onChange }) {
   );
 }
 
-const emptyContact = () => ({ personName: "", company: "", email: "", phone: "", mailingAddress: "" });
-
 function draftFromPartner(p) {
   return {
     partnerType: p?.partnerType || "",
@@ -209,11 +207,18 @@ export default function NamingStep({ partners, needsTypes, geography, onPatch, o
     setNoteSent(true);
   }
 
-  function goToNext() {
-    let next = -1;
-    for (let i = currentIndex + 1; i < partners.length; i++) {
-      if (!((partners[i].personName || "").trim())) { next = i; break; }
+  // Single source of truth for "where does Next go" -- used both to decide
+  // the post-save button label and to actually navigate, so the two can
+  // never disagree.
+  function findNextUnnamedAfter(idx) {
+    for (let i = idx + 1; i < partners.length; i++) {
+      if (!((partners[i].personName || "").trim())) return i;
     }
+    return -1;
+  }
+
+  function goToNext() {
+    const next = findNextUnnamedAfter(currentIndex);
     if (next === -1) onExit();
     else setCurrentIndex(next);
   }
@@ -225,10 +230,7 @@ export default function NamingStep({ partners, needsTypes, geography, onPatch, o
     onExit();
   }
 
-  const isLast = currentIndex === partners.length - 1 &&
-    partners.slice(currentIndex + 1).every(p => (p.personName || "").trim());
-  const hasMoreAfterThis = !partners.slice(currentIndex + 1).every(p => false) &&
-    partners.some((p, i) => i > currentIndex && !((p.personName || "").trim()));
+  const hasMoreAfterThis = findNextUnnamedAfter(currentIndex) !== -1;
 
   const noteText = current.handwrittenNote
     ? fillNoteName(current.handwrittenNote, draft.primary.personName)
@@ -336,7 +338,7 @@ export default function NamingStep({ partners, needsTypes, geography, onPatch, o
             )}
 
             <div className="nm-saved-actions">
-              {!isLast && hasMoreAfterThis ? (
+              {hasMoreAfterThis ? (
                 <button className="tk-btn tk-btn-primary nm-save-btn" onClick={goToNext}>
                   Next partner →
                 </button>
