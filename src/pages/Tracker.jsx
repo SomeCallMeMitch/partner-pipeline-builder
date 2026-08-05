@@ -122,6 +122,7 @@ export default function Tracker() {
       if ((primary.personName || "") !== (p.personName || "")) patch.personName = (primary.personName || "").trim();
       if ((primary.email || "") !== (p.email || "")) patch.email = (primary.email || "").trim();
       if ((primary.phone || "") !== (p.phone || "")) patch.phone = (primary.phone || "").trim();
+      if ((primary.mailingAddress || "") !== (p.mailingAddress || "")) patch.mailingAddress = (primary.mailingAddress || "").trim();
 
       const prevSecondary = p.secondary || {};
       const nextSecondary = {
@@ -129,12 +130,14 @@ export default function Tracker() {
         company: (secondary.company || "").trim(),
         email: (secondary.email || "").trim(),
         phone: (secondary.phone || "").trim(),
+        mailingAddress: (secondary.mailingAddress || "").trim(),
       };
       const secondaryChanged =
         nextSecondary.personName !== (prevSecondary.personName || "") ||
         nextSecondary.company !== (prevSecondary.company || "") ||
         nextSecondary.email !== (prevSecondary.email || "") ||
-        nextSecondary.phone !== (prevSecondary.phone || "");
+        nextSecondary.phone !== (prevSecondary.phone || "") ||
+        nextSecondary.mailingAddress !== (prevSecondary.mailingAddress || "");
       if (secondaryChanged) patch.secondary = nextSecondary;
 
       // The primary name is what moves the relationship from a type to a
