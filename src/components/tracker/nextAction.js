@@ -71,9 +71,9 @@ export function getNextAction(partner, nowMs) {
   } else if (stage === 'named') {
     action = {
       key: 'first_touch',
-      kind: 'outreach',
-      label: 'Send the first touch',
-      detail: 'Lead with something useful to them. Your blueprint wrote this one already.',
+      kind: 'card',
+      label: 'Send the handwritten note first',
+      detail: 'This is already written for you. Mail it before any call or email -- a note on a desk gets read, an intro email does not.',
       dueAt: addDays(anchor, 3),
       priority: 2,
     };
