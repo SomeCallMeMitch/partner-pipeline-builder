@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { buildPrompts } from "@/components/dream100/promptBuilder";
-import CompletionSignupModal from "@/components/CompletionSignupModal";
 import BlueprintReport from "@/components/report/BlueprintReport";
 
 // ── Write Because RE Clone URL (Workstream 3 uses this for the CTA redirect) ────
@@ -364,11 +363,6 @@ export default function RunBlueprint() {
   // ── Main render ───────────────────────────────────────────────────────
   return (
     <div style={{ minHeight: "100vh", background: C.cream, fontFamily: font }}>
-      <CompletionSignupModal
-        open={showSignupModal}
-        onClose={() => setShowSignupModal(false)}
-        jobId={job?.id || jobId}
-      />
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
         .bp-grid { display: grid; grid-template-columns: 1fr 420px; gap: 36px; align-items: start; }
