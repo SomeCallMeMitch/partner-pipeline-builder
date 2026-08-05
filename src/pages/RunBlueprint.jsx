@@ -225,18 +225,14 @@ export default function RunBlueprint() {
     ? { big: `${Math.floor(remainingSeconds / 60)}:${String(remainingSeconds % 60).padStart(2, "0")}`, small: "remaining" }
     : { big: "Almost", small: "done" };
 
-  // ── Completion signup modal ───────────────────────────────────────────
-  // Fires once on the first transition to complete. The poll runs every 5s,
-  // so a naive `if (allDone)` check would reopen the modal on every tick
-  // after the user closes it -- the ref latch prevents that.
-  const [showSignupModal, setShowSignupModal] = useState(false);
-  const modalShownRef = useRef(false);
-  useEffect(() => {
-    if (allDone && !modalShownRef.current) {
-      modalShownRef.current = true;
-      setShowSignupModal(true);
-    }
-  }, [allDone]);
+  // Note: the completion signup modal that used to auto-fire here on
+  // allDone was removed. It popped up the instant generation finished,
+  // covering the report before the person had read a word of it, exactly
+  // the ask-before-value problem identified when the report was rebuilt.
+  // BlueprintReport now carries its own in-page tracker handoff ("The next
+  // ten minutes") right under the start-here summary, which does the same
+  // job without the interruption. CompletionSignupModal.jsx still exists
+  // if a deliberate, engagement-triggered version of this ask is wanted later.
 
   const displayName = job?.formData
     ? `${job.formData.niche || job.formData.nicheBase || ''} -- ${job.formData.geo || ''}`
