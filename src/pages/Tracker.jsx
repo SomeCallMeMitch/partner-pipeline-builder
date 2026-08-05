@@ -4,7 +4,7 @@ import { base44 } from "@/api/base44Client";
 import TrackerStyles, { C } from "@/components/tracker/TrackerStyles";
 import NamingStep from "@/components/tracker/NamingStep";
 import PartnerCard from "@/components/tracker/PartnerCard";
-import { sortPartners, stageChangePatch } from "@/components/tracker/nextAction";
+import { sortPartners } from "@/components/tracker/nextAction";
 
 export default function Tracker() {
   const [params] = useSearchParams();
@@ -16,7 +16,6 @@ export default function Tracker() {
   const [tracker, setTracker] = useState(null);
   const [partners, setPartners] = useState([]);
   const [busy, setBusy] = useState(false);
-  const [forceList, setForceList] = useState(false);
 
   // ── Load ──────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -99,74 +98,21 @@ export default function Tracker() {
     }
   }, []);
 
-  const saveNaming = useCallback(async (drafts) => {
-    setBusy(true);
-    const now = new Date().toISOString();
-    const updated = [];
-
-    for (const p of partners) {
-      const d = drafts[p.id];
-      if (!d) continue;
-
-      // drafts now carry a nested { primary, secondary, partnerType } shape
-      // (NamingStep collects two people per type). Primary maps to the flat
-      // fields the rest of the tracker already reads; secondary is stored as
-      // its own nested object and does not affect next-action logic.
-      const primary = d.primary || {};
-      const secondary = d.secondary || {};
-      const patch = {};
-
-      if (d.partnerType && d.partnerType !== p.partnerType) patch.partnerType = d.partnerType.trim();
-
-      if ((primary.company || "") !== (p.company || "")) patch.company = (primary.company || "").trim();
-      if ((primary.personName || "") !== (p.personName || "")) patch.personName = (primary.personName || "").trim();
-      if ((primary.email || "") !== (p.email || "")) patch.email = (primary.email || "").trim();
-      if ((primary.phone || "") !== (p.phone || "")) patch.phone = (primary.phone || "").trim();
-      if ((primary.mailingAddress || "") !== (p.mailingAddress || "")) patch.mailingAddress = (primary.mailingAddress || "").trim();
-
-      const prevSecondary = p.secondary || {};
-      const nextSecondary = {
-        personName: (secondary.personName || "").trim(),
-        company: (secondary.company || "").trim(),
-        email: (secondary.email || "").trim(),
-        phone: (secondary.phone || "").trim(),
-        mailingAddress: (secondary.mailingAddress || "").trim(),
-      };
-      const secondaryChanged =
-        nextSecondary.personName !== (prevSecondary.personName || "") ||
-        nextSecondary.company !== (prevSecondary.company || "") ||
-        nextSecondary.email !== (prevSecondary.email || "") ||
-        nextSecondary.phone !== (prevSecondary.phone || "") ||
-        nextSecondary.mailingAddress !== (prevSecondary.mailingAddress || "");
-      if (secondaryChanged) patch.secondary = nextSecondary;
-
-      // The primary name is what moves the relationship from a type to a
-      // person, so stage only advances on the primary being filled.
-      if ((primary.personName || "").trim() && p.stage === "identified") {
-        Object.assign(patch, stageChangePatch("named", now));
-      }
-      if (Object.keys(patch).length === 0) {
-        updated.push(p);
-        continue;
-      }
-      try {
-        await base44.entities.Partner.update(p.id, patch);
-        updated.push({ ...p, ...patch });
-      } catch (err) {
-        updated.push(p);
-      }
-    }
-
+  // NamingStep now saves each partner as they go (via patchPartner, same as
+  // the main list), one type at a time -- there is no batched end-of-form
+  // save anymore. This just marks the onboarding queue as exited, whether
+  // that happens after one type or after all five. A partner left un-named
+  // simply shows "Name the person" as its next action in the main list,
+  // using the same quick-name flow PartnerCard already has.
+  const finishNaming = useCallback(async () => {
+    setTracker(prev => ({ ...prev, namingComplete: true }));
     try {
       await base44.entities.TrackerBlueprint.update(tracker.id, { namingComplete: true });
     } catch (err) {
-      // Non-fatal: the list still renders, the naming step just reappears next visit.
+      // Non-fatal: the list still renders this session; the naming queue
+      // would just reappear on a future reload since the write didn't stick.
     }
-
-    setPartners(updated);
-    setTracker(prev => ({ ...prev, namingComplete: true }));
-    setBusy(false);
-  }, [partners, tracker]);
+  }, [tracker]);
 
   const ordered = useMemo(() => sortPartners(partners), [partners]);
   const dueCount = ordered.filter(x => x.a.isDue).length;
@@ -203,7 +149,7 @@ export default function Tracker() {
     );
   }
 
-  const showNaming = !tracker.namingComplete && !forceList;
+  const showNaming = !tracker.namingComplete;
   const needsTypes = tracker.parseQuality === "placeholder";
 
   return (
@@ -229,7 +175,7 @@ export default function Tracker() {
         </div>
       </div>
 
-      <div className={"tk-main" + (showNaming ? " tk-main-wide" : "")}>
+      <div className="tk-main">
         {error && (
           <div className="tk-card" style={{ borderColor: C.error, background: "#FEF2F2" }}>
             <div style={{ fontSize: 13, color: "#B91C1C" }}>{error}</div>
@@ -242,8 +188,8 @@ export default function Tracker() {
             needsTypes={needsTypes}
             geography={tracker.geography}
             saving={busy}
-            onSave={saveNaming}
-            onSkip={() => setForceList(true)}
+            onPatch={patchPartner}
+            onExit={finishNaming}
           />
         ) : (
           <>
