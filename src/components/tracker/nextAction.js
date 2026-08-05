@@ -148,7 +148,10 @@ export function completeActionPatch(partner, action, nowIso) {
     snoozeUntil: '',
   };
 
-  if (action.kind === 'outreach' && p.stage === 'named') {
+  // Keyed on the action identity, not its display kind -- kind is a rendering
+  // hint (whether PartnerCard shows the note block) and changed independently
+  // of what actually advances the stage.
+  if (action.key === 'first_touch' && p.stage === 'named') {
     patch.stage = 'contacted';
     patch.stageChangedAt = now;
   }
