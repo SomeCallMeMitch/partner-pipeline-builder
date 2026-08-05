@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { buildPrompts } from "@/components/dream100/promptBuilder";
-import PartnerNotesCTA from "@/components/dream100/PartnerNotesCTA";
-import TrackerCTA from "@/components/tracker/TrackerCTA";
 import CompletionSignupModal from "@/components/CompletionSignupModal";
 import BlueprintReport from "@/components/report/BlueprintReport";
 
@@ -498,30 +496,6 @@ export default function RunBlueprint() {
               ))}
             </div>
 
-            {allDone && (
-              <div style={{ marginTop: 24, background: warningCount > 0 ? C.warningBg : C.successBg, border: `1.5px solid ${warningCount > 0 ? C.warningBorder : C.success}`, borderRadius: 12, padding: "16px 20px", textAlign: "center" }}>
-                <div style={{ fontSize: 16, fontWeight: 800, color: warningCount > 0 ? C.warning : C.success, fontFamily: font, marginBottom: 4 }}>
-                  {warningCount > 0
-                    ? `${warningCount} phase${warningCount > 1 ? 's' : ''} flagged for review -- expand them above`
-                    : `✓ All ${phases.length} Phases Complete`}
-                </div>
-                <div style={{ fontSize: 13, color: C.muted, fontFamily: font }}>
-                  {warningCount > 0
-                    ? "The report ran to completion but some phases may have incomplete output. Expand the flagged phases to review before using."
-                    : "Scroll up to download your blueprint, or expand any phase above to review."}
-                </div>
-              </div>
-            )}
-
-            {allDone && <TrackerCTA jobId={job?.id || jobId} />}
-
-            {allDone && (
-              <PartnerNotesCTA
-                phase6Text={phaseResults['6'] || null}
-                formData={job?.formData || null}
-                jobId={job?.id || jobId}
-              />
-            )}
               </>
             )}
           </div>
