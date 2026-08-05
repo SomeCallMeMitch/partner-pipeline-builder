@@ -26,11 +26,13 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
     company: p.company || "",
     email: p.email || "",
     phone: p.phone || "",
+    mailingAddress: p.mailingAddress || "",
     secondary: {
       personName: p.secondary?.personName || "",
       company: p.secondary?.company || "",
       email: p.secondary?.email || "",
       phone: p.secondary?.phone || "",
+      mailingAddress: p.secondary?.mailingAddress || "",
     },
   });
   const [noteOpen, setNoteOpen] = useState(false);
@@ -50,11 +52,13 @@ export default function PartnerCard({ partner, action, onPatch, onArchive, geogr
       company: draft.company,
       email: draft.email,
       phone: draft.phone,
+      mailingAddress: draft.mailingAddress,
       secondary: {
         personName: (draft.secondary.personName || "").trim(),
         company: (draft.secondary.company || "").trim(),
         email: (draft.secondary.email || "").trim(),
         phone: (draft.secondary.phone || "").trim(),
+        mailingAddress: (draft.secondary.mailingAddress || "").trim(),
       },
     };
     if (draft.personName.trim() && p.stage === "identified") {
