@@ -522,6 +522,8 @@ export default function RunBlueprint() {
                 jobId={job?.id || jobId}
               />
             )}
+              </>
+            )}
           </div>
 
           {/* RIGHT: Sidebar */}
